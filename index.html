@@ -881,35 +881,48 @@
 <div id="webhookAdminSection" style="display: none;">
   <main style="padding: 28px 32px 80px; max-width: 1440px; margin: 0 auto;">
     <div class="webhook-section">
-      <h3>Webhook Admin (Zapier Integration)</h3>
-      <p>Send real-time event notifications to external systems via Zapier. Paste your unique webhook URL into Zapier to start automating workflows.</p>
+      <h3>Webhook Admin — Zapier Configuration</h3>
+      <p>Paste Zapier's webhook URL below to receive real-time event notifications. Events automatically send to Zapier when statuses change.</p>
 
-      <!-- Webhook URL -->
+      <!-- Configure Zapier Webhook URL -->
       <div class="webhook-url-box">
-        <label>Step 1: Copy Your Webhook URL</label>
-        <div class="url-input-group">
-          <input type="text" id="webhookUrl" readonly />
-          <button class="btn small" onclick="copyWebhookUrl()">Copy</button>
+        <label>Step 1: Paste Zapier Webhook URL</label>
+        <div style="display: flex; gap: 8px; align-items: flex-start; margin-bottom: 12px;">
+          <div style="flex: 1;">
+            <input type="url" id="zapierWebhookUrl" placeholder="https://hooks.zapier.com/hooks/catch/..." style="width: 100%;" />
+          </div>
+          <button class="btn small" onclick="saveZapierWebhook()">Save</button>
+          <button class="btn small ghost" onclick="testZapierWebhook()" id="testBtn" style="display: none;">Test</button>
         </div>
-        <p style="font-size: 12px; color: #666; margin-top: 8px;">This URL is your unique webhook endpoint for Zapier integration.</p>
+        <p style="font-size: 12px; color: #666;">Paste your Zapier webhook URL from "Catch Raw Hook" in your Zap.</p>
+      </div>
+
+      <!-- Status -->
+      <div id="webhookStatus" style="padding: 14px; border-radius: 6px; margin-bottom: 24px; display: none;">
+        <div style="font-size: 13px;">
+          <strong id="statusText"></strong>
+          <div id="statusTime" style="font-size: 11px; color: #666; margin-top: 4px;"></div>
+        </div>
       </div>
 
       <!-- Setup Steps -->
       <div class="webhook-steps">
-        <h4>Step 2: Zapier Setup Instructions</h4>
+        <h4>Zapier Setup Instructions</h4>
         <ol>
-          <li>Log in to Zapier</li>
-          <li>Create new Zap → "Webhooks by Zapier" trigger</li>
+          <li>Log in to Zapier → Create new Zap</li>
+          <li>Choose "Webhooks by Zapier" as trigger</li>
           <li>Select "Catch Raw Hook"</li>
-          <li>Copy the webhook URL above and paste into Zapier</li>
-          <li>Set up your action (email, Slack, Google Sheets, etc.)</li>
-          <li>Test and activate your Zap</li>
+          <li>Copy the webhook URL that Zapier generates</li>
+          <li>Paste it above and click "Save"</li>
+          <li>Configure your action (email, Slack, etc.)</li>
+          <li>Click "Test" button above to verify connection</li>
+          <li>Activate your Zap</li>
         </ol>
       </div>
 
       <!-- Example Payload -->
       <div class="webhook-payload-box">
-        <div class="label">Example Webhook Payload</div>
+        <div class="label">Example Payload Sent to Zapier</div>
         <div class="code-block">{
   "event": "approved",
   "timestamp": 1713187200000,
@@ -923,13 +936,25 @@
 
       <!-- Events That Trigger -->
       <div class="webhook-events-box">
-        <h4>Events That Trigger Webhook</h4>
+        <h4>Events That Automatically Send to Zapier</h4>
         <ul>
           <li>✓ Event submitted (new or resubmitted)</li>
           <li>✓ Event approved by VP</li>
           <li>✓ Event denied by VP</li>
           <li>✓ Event marked as executing</li>
           <li>✓ Event completed with report</li>
+        </ul>
+      </div>
+
+      <!-- Common Zapier Actions -->
+      <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 6px; padding: 18px; margin-top: 24px;">
+        <h4 style="color: #0369a1; margin-bottom: 10px;">Common Zapier Actions</h4>
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.7; font-size: 13px;">
+          <li><strong>Email:</strong> Send notification to stakeholders</li>
+          <li><strong>Slack:</strong> Post message to #events channel</li>
+          <li><strong>Google Sheets:</strong> Append event to spreadsheet</li>
+          <li><strong>SMS:</strong> Send text alert to coordinator</li>
+          <li><strong>Microsoft Teams:</strong> Post to team channel</li>
         </ul>
       </div>
     </div>
@@ -986,7 +1011,7 @@ function render() {
   // Show webhook section for VP only
   document.getElementById('webhookAdminSection').style.display = role === 'vp' ? 'block' : 'none';
   if (role === 'vp') {
-    initWebhookUrl();
+    loadZapierWebhook();
   }
 }
 
@@ -4312,24 +4337,140 @@ async function clearAllData() {
 }
 
 /* ---------- Webhook Management (Zapier) ---------- */
-function initWebhookUrl() {
-  const url = window.location.origin + window.location.pathname + '?webhook=true';
-  document.getElementById('webhookUrl').value = url;
+const ZAPIER_WEBHOOK_KEY = 'pw_zapier_webhook_v1';
+
+async function loadZapierWebhook() {
+  try {
+    const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
+    if (r) {
+      const webhook = JSON.parse(r.value);
+      document.getElementById('zapierWebhookUrl').value = webhook.url || '';
+      updateWebhookStatus();
+    }
+  } catch (e) {
+    // Fallback to localStorage
+    const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
+    if (stored) {
+      const webhook = JSON.parse(stored);
+      document.getElementById('zapierWebhookUrl').value = webhook.url || '';
+      updateWebhookStatus();
+    }
+  }
 }
 
-function copyWebhookUrl() {
-  const url = document.getElementById('webhookUrl').value;
-  if (!url) return;
-  navigator.clipboard.writeText(url).then(() => {
-    toast('Webhook URL copied to clipboard');
-  }).catch(() => {
-    alert('Copy failed. Please manually copy the URL.');
-  });
+async function saveZapierWebhook() {
+  const url = document.getElementById('zapierWebhookUrl').value.trim();
+  
+  if (!url) {
+    toast('Webhook URL cannot be empty');
+    return;
+  }
+  
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    toast('Invalid URL - must start with http:// or https://');
+    return;
+  }
+  
+  const webhook = {
+    url,
+    savedAt: Date.now(),
+    status: 'saved'
+  };
+  
+  try {
+    await window.storage?.set(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook), SHARED);
+  } catch (e) {
+    // Fallback to localStorage
+    localStorage.setItem(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook));
+  }
+  
+  toast('Zapier webhook saved ✓');
+  updateWebhookStatus();
+}
+
+function updateWebhookStatus() {
+  const url = document.getElementById('zapierWebhookUrl').value;
+  const statusEl = document.getElementById('webhookStatus');
+  const statusText = document.getElementById('statusText');
+  const statusTime = document.getElementById('statusTime');
+  const testBtn = document.getElementById('testBtn');
+  
+  if (url) {
+    statusEl.style.display = 'block';
+    statusEl.style.background = '#dcfce7';
+    statusEl.style.border = '1px solid #22c55e';
+    statusText.textContent = '✓ Zapier webhook configured';
+    statusTime.textContent = 'Ready to send events';
+    testBtn.style.display = 'inline-flex';
+  } else {
+    statusEl.style.display = 'none';
+    testBtn.style.display = 'none';
+  }
+}
+
+async function testZapierWebhook() {
+  const url = document.getElementById('zapierWebhookUrl').value.trim();
+  if (!url) {
+    toast('No webhook URL configured');
+    return;
+  }
+  
+  const payload = {
+    event: 'test',
+    timestamp: Date.now(),
+    data: {
+      message: 'Test webhook from Event Tracker',
+      id: 'test_' + Date.now(),
+      name: 'Test Event',
+      status: 'pending'
+    }
+  };
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      toast('Test webhook sent ✓ Check Zapier Activity');
+    } else {
+      toast('Webhook returned error: ' + response.status);
+    }
+  } catch (err) {
+    toast('Network error: ' + err.message);
+  }
 }
 
 async function fireWebhook(event, eventData) {
-  // Webhooks are handled via Zapier - log for reference
-  console.log('Webhook event:', event, eventData);
+  try {
+    const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
+    let webhook = r ? JSON.parse(r.value) : null;
+    
+    // Fallback to localStorage
+    if (!webhook) {
+      const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
+      webhook = stored ? JSON.parse(stored) : null;
+    }
+    
+    if (!webhook || !webhook.url) return;
+    
+    const payload = {
+      event,
+      timestamp: Date.now(),
+      data: eventData
+    };
+    
+    // Send to Zapier (non-blocking)
+    fetch(webhook.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => console.log('Webhook error:', err));
+  } catch (e) {
+    console.log('Webhook config error:', e);
+  }
 }
 
 /* ---------- Boot ---------- */
