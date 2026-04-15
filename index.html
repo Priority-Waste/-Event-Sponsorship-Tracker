@@ -4341,6 +4341,16 @@ const ZAPIER_WEBHOOK_KEY = 'pw_zapier_webhook_v1';
 
 async function loadZapierWebhook() {
   try {
+    // Try localStorage first (most reliable)
+    const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
+    if (stored) {
+      const webhook = JSON.parse(stored);
+      document.getElementById('zapierWebhookUrl').value = webhook.url || '';
+      updateWebhookStatus();
+      return;
+    }
+    
+    // Fallback to window.storage if available
     const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
     if (r) {
       const webhook = JSON.parse(r.value);
@@ -4348,13 +4358,7 @@ async function loadZapierWebhook() {
       updateWebhookStatus();
     }
   } catch (e) {
-    // Fallback to localStorage
-    const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
-    if (stored) {
-      const webhook = JSON.parse(stored);
-      document.getElementById('zapierWebhookUrl').value = webhook.url || '';
-      updateWebhookStatus();
-    }
+    console.log('Error loading webhook:', e);
   }
 }
 
@@ -4378,14 +4382,23 @@ async function saveZapierWebhook() {
   };
   
   try {
-    await window.storage?.set(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook), SHARED);
-  } catch (e) {
-    // Fallback to localStorage
+    // Save to localStorage first (most reliable)
     localStorage.setItem(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook));
+    
+    // Also try window.storage if available
+    try {
+      await window.storage?.set(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook), SHARED);
+    } catch (e) {
+      // window.storage failed but localStorage succeeded
+      console.log('window.storage save failed, using localStorage');
+    }
+    
+    toast('✓ Zapier webhook saved');
+    updateWebhookStatus();
+  } catch (e) {
+    toast('Error saving webhook: ' + e.message);
+    console.log('Error:', e);
   }
-  
-  toast('Zapier webhook saved ✓');
-  updateWebhookStatus();
 }
 
 function updateWebhookStatus() {
@@ -4445,16 +4458,31 @@ async function testZapierWebhook() {
 
 async function fireWebhook(event, eventData) {
   try {
-    const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
-    let webhook = r ? JSON.parse(r.value) : null;
+    let webhook = null;
     
-    // Fallback to localStorage
-    if (!webhook) {
-      const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
-      webhook = stored ? JSON.parse(stored) : null;
+    // Try localStorage first (most reliable)
+    const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
+    if (stored) {
+      webhook = JSON.parse(stored);
     }
     
-    if (!webhook || !webhook.url) return;
+    // Fallback to window.storage if localStorage doesn't have it
+    if (!webhook) {
+      try {
+        const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
+        if (r) {
+          webhook = JSON.parse(r.value);
+        }
+      } catch (e) {
+        // window.storage failed
+        console.log('window.storage failed:', e);
+      }
+    }
+    
+    if (!webhook || !webhook.url) {
+      console.log('No webhook URL configured');
+      return;
+    }
     
     const payload = {
       event,
@@ -4467,7 +4495,7 @@ async function fireWebhook(event, eventData) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(err => console.log('Webhook error:', err));
+    }).catch(err => console.log('Webhook delivery error:', err));
   } catch (e) {
     console.log('Webhook config error:', e);
   }
