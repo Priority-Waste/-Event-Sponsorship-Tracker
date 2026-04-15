@@ -1225,7 +1225,7 @@ async function decide(id, approved) {
   e.log = e.log || [];
   e.log.push({ action: approved ? 'Approved' : 'Denied', by: 'VP / Michael French', note, at: Date.now() });
   await saveEvents();
-  await fireWebhook(approved ? 'approved' : 'denied', { id: e.id, name: e.name, status: e.status });
+  await fireWebhook(approved ? 'approved' : 'denied', e);
   closeDetail();
   toast(approved ? 'Approved' : 'Denied');
   render();
@@ -1235,7 +1235,7 @@ async function markExecuting(id) {
   e.status = 'executing';
   e.log.push({ action: 'Marked In Progress', by: 'Coordinator', note: '', at: Date.now() });
   await saveEvents();
-  await fireWebhook('executing', { id: e.id, name: e.name, status: e.status });
+  await fireWebhook('executing', e);
   closeDetail();
   toast('Now executing');
   render();
@@ -1250,7 +1250,7 @@ async function completeEvent(id) {
   e.completedAt = Date.now();
   e.log.push({ action: 'Completed with report', by: 'Coordinator', note: '', at: Date.now() });
   await saveEvents();
-  await fireWebhook('completed', { id: e.id, name: e.name, status: e.status, actualSpend: e.actualSpend });
+  await fireWebhook('completed', e);
   closeDetail();
   toast('Event completed');
   render();
@@ -1336,7 +1336,7 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
     events.push(data);
   }
   await saveEvents();
-  await fireWebhook('submitted', { id: data.id, name: data.name, status: 'pending' });
+  await fireWebhook('submitted', data);
   document.getElementById('formModal').classList.remove('open');
   toast(existing ? 'Resubmitted' : 'Submitted for approval');
   render();
