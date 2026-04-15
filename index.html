@@ -1,0 +1,4117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Event & Sponsorship Tracker — Priority Waste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Priority Waste Official Brand Colors */
+    --pw-yellow: #FFC20E;
+    --pw-yellow-hover: #E5AD00;
+    --pw-black: #000000;
+    --pw-dark-gray: #333333;
+    --pw-light-gray: #F4F4F4;
+    --pw-white: #FFFFFF;
+    
+    /* Extended Palette */
+    --pw-yellow-soft: rgba(255, 194, 14, 0.12);
+    --pw-yellow-medium: rgba(255, 194, 14, 0.25);
+    
+    /* Status Colors */
+    --status-pending: #F59E0B;
+    --status-approved: #22C55E;
+    --status-denied: #EF4444;
+    --status-executing: #3B82F6;
+    --status-completed: #8B5CF6;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html, body { 
+    background: var(--pw-light-gray); 
+    color: var(--pw-dark-gray); 
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body { min-height: 100vh; }
+
+  /* ===== HEADER ===== */
+  header.masthead {
+    background: var(--pw-black);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  
+  .brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+    background: var(--pw-yellow);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--pw-black);
+    letter-spacing: -0.02em;
+  }
+  
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .brand-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--pw-white);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+  
+  .brand-title span {
+    color: var(--pw-yellow);
+  }
+  
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .role-switcher {
+    display: flex;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 4px;
+    gap: 2px;
+  }
+  
+  .role-switcher button {
+    background: transparent;
+    border: 0;
+    padding: 10px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  
+  .role-switcher button:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--pw-white);
+  }
+  
+  .role-switcher button.active {
+    background: var(--pw-yellow);
+    color: var(--pw-black);
+  }
+
+  /* ===== MAIN ===== */
+  main {
+    padding: 28px 32px 80px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* ===== STATS ===== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .stat {
+    background: var(--pw-white);
+    border-radius: 8px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--pw-yellow);
+  }
+  
+  .stat .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .stat .value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--pw-black);
+    letter-spacing: 0.01em;
+  }
+  
+  .stat .delta {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  /* ===== TOOLBAR ===== */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E0E0E0;
+  }
+  
+  .toolbar h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--pw-black);
+    margin-right: auto;
+    letter-spacing: 0.02em;
+  }
+  
+  .filter-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 8px 14px;
+    border: 2px solid #DDD;
+    border-radius: 4px;
+    background: var(--pw-white);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--pw-dark-gray);
+  }
+  
+  .filter-pill:hover {
+    border-color: var(--pw-yellow);
+    background: var(--pw-yellow-soft);
+  }
+  
+  .filter-pill.active {
+    background: var(--pw-black);
+    border-color: var(--pw-black);
+    color: var(--pw-white);
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  
+  .btn:not(.ghost):not(.danger):not(.green) {
+    background: var(--pw-yellow);
+    color: var(--pw-black);
+    box-shadow: 0 2px 8px rgba(255, 194, 14, 0.4);
+  }
+  
+  .btn:not(.ghost):not(.danger):not(.green):hover {
+    background: var(--pw-yellow-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 194, 14, 0.5);
+  }
+  
+  .btn:active {
+    transform: translateY(0);
+  }
+  
+  .btn.ghost {
+    background: var(--pw-white);
+    color: var(--pw-dark-gray);
+    border: 2px solid #DDD;
+  }
+  
+  .btn.ghost:hover {
+    background: var(--pw-light-gray);
+    border-color: #CCC;
+  }
+  
+  .btn.green {
+    background: var(--status-approved);
+    color: var(--pw-white);
+  }
+  
+  .btn.green:hover {
+    background: #16A34A;
+  }
+  
+  .btn.danger {
+    background: var(--status-denied);
+    color: var(--pw-white);
+  }
+  
+  .btn.danger:hover {
+    background: #DC2626;
+  }
+  
+  .btn.small {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  /* ===== CARD GRID ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+  }
+  
+  .card {
+    background: var(--pw-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    padding: 22px 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+  
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--pw-yellow);
+  }
+  
+  .card .corner-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+  
+  .card .corner-tag.pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: #B45309;
+  }
+  
+  .card .corner-tag.approved {
+    background: rgba(34, 197, 94, 0.15);
+    color: #15803D;
+  }
+  
+  .card .corner-tag.denied {
+    background: rgba(239, 68, 68, 0.15);
+    color: #B91C1C;
+  }
+  
+  .card .corner-tag.executing {
+    background: rgba(59, 130, 246, 0.15);
+    color: #1D4ED8;
+  }
+  
+  .card .corner-tag.completed {
+    background: rgba(139, 92, 246, 0.15);
+    color: #6D28D9;
+  }
+  
+  .card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    color: var(--pw-black);
+    padding-right: 90px;
+  }
+  
+  .card .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .card .meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .card .meta span::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--pw-yellow);
+    border-radius: 1px;
+  }
+  
+  .card .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--pw-light-gray);
+  }
+  
+  .card .row:last-of-type {
+    border-bottom: none;
+  }
+  
+  .card .row .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+  }
+  
+  .card .row .val {
+    font-weight: 600;
+    color: var(--pw-black);
+  }
+  
+  .card .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 2px solid var(--pw-light-gray);
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    padding: 48px 20px;
+    overflow-y: auto;
+  }
+  
+  .modal-overlay.open {
+    display: flex;
+  }
+  
+  .modal {
+    background: var(--pw-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 760px;
+    padding: 32px;
+    animation: modalSlide 0.25s ease;
+    border-top: 4px solid var(--pw-yellow);
+  }
+  
+  @keyframes modalSlide {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 0.02em;
+    color: var(--pw-black);
+    margin-bottom: 4px;
+  }
+  
+  .modal .modal-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 24px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .form-grid .full {
+    grid-column: 1 / -1;
+  }
+  
+  label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #DDD;
+    border-radius: 4px;
+    background: var(--pw-white);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--pw-dark-gray);
+    transition: all 0.15s ease;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--pw-yellow);
+    box-shadow: 0 0 0 3px var(--pw-yellow-soft);
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  fieldset {
+    border: 2px solid #DDD;
+    border-radius: 6px;
+    padding: 18px;
+    margin: 18px 0;
+    grid-column: 1 / -1;
+    background: var(--pw-light-gray);
+  }
+  
+  fieldset legend {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    background: var(--pw-black);
+    color: var(--pw-yellow);
+    border-radius: 4px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 2px solid #E0E0E0;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--pw-white);
+    border-radius: 8px;
+    border: 2px dashed #DDD;
+  }
+  
+  .empty p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+  }
+
+  /* ===== APPROVAL LOG ===== */
+  .approval-log {
+    background: var(--pw-light-gray);
+    border-left: 4px solid var(--pw-yellow);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  
+  .approval-log .when {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--pw-black);
+    color: var(--pw-white);
+    padding: 14px 26px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    box-shadow: var(--shadow-lg);
+    z-index: 200;
+    display: none;
+    border-left: 4px solid var(--pw-yellow);
+  }
+  
+  .toast.show {
+    display: block;
+    animation: toastUp 0.3s ease;
+  }
+  
+  @keyframes toastUp {
+    from { transform: translate(-50%, 16px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    main { padding: 20px 16px 60px; }
+    header.masthead { padding: 0 16px; height: 64px; }
+    .brand-logo { width: 38px; height: 38px; font-size: 18px; }
+    .brand-title { font-size: 18px; }
+    .brand-sub { font-size: 9px; }
+    .role-switcher button { padding: 8px 12px; font-size: 10px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand-wrap">
+    <div class="brand-logo">PW</div>
+    <div class="brand-text">
+      <div class="brand-title">Event & Sponsorship <span>Tracker</span></div>
+      <div class="brand-sub">Priority Waste · Garbage. Made Simple.</div>
+    </div>
+  </div>
+  <div class="role-switcher" id="roleSwitcher">
+    <button data-role="coordinator" class="active">Coordinator</button>
+    <button data-role="vp">VP Approval</button>
+    <button data-role="reports">Reports</button>
+  </div>
+</header>
+
+<main>
+  <section class="stats" id="stats"></section>
+
+  <div class="toolbar">
+    <h2 id="viewTitle">Event Coordinator Workspace</h2>
+    <div id="filters"></div>
+    <button class="btn" id="newBtn">+ New Event</button>
+  </div>
+
+  <div id="content"></div>
+</main>
+
+<!-- Create / Edit Modal -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <h2 id="formTitle">New Event Submission</h2>
+    <div class="modal-sub">Coordinator Intake Form</div>
+    <form id="eventForm">
+      <input type="hidden" id="f_id" />
+      <div class="form-grid">
+        <div class="full">
+          <label>Event / Sponsorship Name</label>
+          <input id="f_name" required placeholder="e.g. City of Sterling Heights Spring Festival" />
+        </div>
+        <div>
+          <label>Type</label>
+          <select id="f_type">
+            <option>Community Event</option>
+            <option>Sponsorship</option>
+            <option>Trade Show</option>
+            <option>Municipal Mtg.</option>
+            <option>Charity / Donation</option>
+          </select>
+        </div>
+        <div>
+          <label>Municipality / Partner</label>
+          <input id="f_partner" placeholder="e.g. City of Warren" />
+        </div>
+        <div>
+          <label>Event Date</label>
+          <input id="f_date" type="date" required />
+        </div>
+        <div>
+          <label>Location</label>
+          <input id="f_location" placeholder="Address or venue" />
+        </div>
+        <div>
+          <label>Primary Contact</label>
+          <input id="f_contact" placeholder="Name" />
+        </div>
+        <div>
+          <label>Contact Email / Phone</label>
+          <input id="f_contactInfo" placeholder="email@city.gov · 555-..." />
+        </div>
+        <div class="full">
+          <label>Description / Objective</label>
+          <textarea id="f_desc" placeholder="What are we doing & why does it matter?"></textarea>
+        </div>
+        <div class="full">
+          <label>Deliverables (one per line)</label>
+          <textarea id="f_deliverables" placeholder="Branded tent&#10;500 swag bags&#10;Logo on event banner"></textarea>
+        </div>
+
+        <fieldset>
+          <legend>Budget Breakdown ($)</legend>
+          <div class="form-grid">
+            <div><label>Sponsorship Fee</label><input id="f_b_sponsor" type="number" min="0" step="50" value="0" /></div>
+            <div><label>Marketing / Print</label><input id="f_b_marketing" type="number" min="0" step="50" value="0" /></div>
+            <div><label>Swag / Giveaways</label><input id="f_b_swag" type="number" min="0" step="50" value="0" /></div>
+            <div><label>Staff / Travel</label><input id="f_b_staff" type="number" min="0" step="50" value="0" /></div>
+            <div><label>Equipment / Booth</label><input id="f_b_equipment" type="number" min="0" step="50" value="0" /></div>
+            <div><label>Other</label><input id="f_b_other" type="number" min="0" step="50" value="0" /></div>
+          </div>
+        </fieldset>
+
+        <div>
+          <label>Expected Attendance</label>
+          <input id="f_attendance" type="number" min="0" placeholder="0" />
+        </div>
+        <div>
+          <label>Expected ROI / Goal</label>
+          <input id="f_roi" placeholder="e.g. 3 contract leads" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="cancelForm">Cancel</button>
+        <button type="submit" class="btn">Submit for Approval</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Detail / Approval / Report Modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" id="detailContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- State ---------- */
+const SHARED = true;
+const KEY = 'pw_events_v1';
+let events = [];
+let role = 'coordinator';
+let activeFilter = 'all';
+
+/* ---------- Storage ---------- */
+async function loadEvents() {
+  try {
+    const r = await window.storage.get(KEY, SHARED);
+    events = r ? JSON.parse(r.value) : [];
+  } catch { events = []; }
+}
+async function saveEvents() {
+  try { await window.storage.set(KEY, JSON.stringify(events), SHARED); }
+  catch (e) { toast('Save failed — try again'); }
+}
+
+/* ---------- Helpers ---------- */
+const uid = () => 'e_' + Math.random().toString(36).slice(2, 9);
+const fmt$ = n => '$' + (Number(n)||0).toLocaleString();
+const fmtDate = d => d ? new Date(d + 'T00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+const totalBudget = e => Object.values(e.budget||{}).reduce((a,b)=>a+(+b||0),0);
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---------- Render ---------- */
+function render() {
+  document.getElementById('newBtn').style.display = role === 'coordinator' ? '' : 'none';
+  const titles = {
+    coordinator: 'Event Coordinator Workspace',
+    vp: 'VP Approval Queue',
+    reports: 'Reports & Completed'
+  };
+  document.getElementById('viewTitle').textContent = titles[role];
+
+  renderStats();
+  renderFilters();
+  renderList();
+}
+
+function renderStats() {
+  const counts = {
+    pending: events.filter(e=>e.status==='pending').length,
+    approved: events.filter(e=>e.status==='approved').length,
+    executing: events.filter(e=>e.status==='executing').length,
+    completed: events.filter(e=>e.status==='completed').length,
+    denied: events.filter(e=>e.status==='denied').length,
+  };
+  const totalApproved = events.filter(e=>['approved','executing','completed'].includes(e.status))
+    .reduce((s,e)=>s+totalBudget(e), 0);
+  const totalSpent = events.filter(e=>e.status==='completed')
+    .reduce((s,e)=>s+(+e.actualSpend||totalBudget(e)), 0);
+
+  const stats = [
+    { label: 'Pending Approval', value: counts.pending, delta: 'Awaiting VP review' },
+    { label: 'Approved', value: counts.approved, delta: 'Ready to execute' },
+    { label: 'In Progress', value: counts.executing, delta: 'Currently executing' },
+    { label: 'Completed', value: counts.completed, delta: 'Fiscal year' },
+    { label: 'Approved Budget', value: fmt$(totalApproved), delta: 'Committed budget' },
+    { label: 'Actual Spend', value: fmt$(totalSpent), delta: 'On completed events' },
+  ];
+  document.getElementById('stats').innerHTML = stats.map(s=>`
+    <div class="stat">
+      <div class="label">${s.label}</div>
+      <div class="value">${s.value}</div>
+      <div class="delta">${s.delta}</div>
+    </div>
+  `).join('');
+}
+
+function renderFilters() {
+  let opts = [];
+  if (role === 'coordinator') {
+    opts = [
+      ['all','All Mine'], ['pending','Pending'], ['approved','Approved'],
+      ['executing','Executing'], ['denied','Denied'], ['completed','Completed']
+    ];
+  } else if (role === 'vp') {
+    opts = [['pending','Pending'], ['all','All Submissions'], ['approved','Approved'], ['denied','Denied']];
+    if (!['pending','all','approved','denied'].includes(activeFilter)) activeFilter = 'pending';
+  } else {
+    opts = [['completed','Completed'], ['executing','In Progress'], ['all','All Records']];
+    if (!['completed','executing','all'].includes(activeFilter)) activeFilter = 'completed';
+  }
+  document.getElementById('filters').innerHTML = opts.map(([k,v])=>
+    `<button class="filter-pill ${activeFilter===k?'active':''}" data-filter="${k}">${v}</button>`
+  ).join('');
+  document.querySelectorAll('.filter-pill').forEach(b=>{
+    b.onclick = () => { activeFilter = b.dataset.filter; render(); };
+  });
+}
+
+function renderList() {
+  const list = events.filter(e => activeFilter === 'all' ? true : e.status === activeFilter)
+    .sort((a,b)=> new Date(a.date||'9999') - new Date(b.date||'9999'));
+
+  const c = document.getElementById('content');
+  if (!list.length) {
+    c.innerHTML = `<div class="empty"><p>No events match this view yet.</p></div>`;
+    return;
+  }
+  c.innerHTML = `<div class="grid">${list.map(cardHtml).join('')}</div>`;
+  document.querySelectorAll('[data-open]').forEach(b=>{
+    b.onclick = ()=> openDetail(b.dataset.open);
+  });
+}
+
+function cardHtml(e) {
+  const budget = totalBudget(e);
+  return `
+    <div class="card">
+      <span class="corner-tag ${e.status}">${e.status}</span>
+      <h3>${escapeHtml(e.name)}</h3>
+      <div class="meta">
+        <span>${escapeHtml(e.type)}</span>
+        ${e.partner ? `<span>${escapeHtml(e.partner)}</span>` : ''}
+      </div>
+      <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
+      <div class="row"><span class="lbl">Location</span><span class="val">${escapeHtml(e.location||'—')}</span></div>
+      <div class="row"><span class="lbl">Budget</span><span class="val">${fmt$(budget)}</span></div>
+      ${e.status==='completed' ? `<div class="row"><span class="lbl">Actual</span><span class="val">${fmt$(e.actualSpend||budget)}</span></div>` : ''}
+      <div class="actions">
+        <button class="btn ghost small" data-open="${e.id}">View / Manage</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Detail Modal ---------- */
+function openDetail(id) {
+  const e = events.find(x=>x.id===id);
+  if (!e) return;
+  const budget = totalBudget(e);
+  const budgetRows = Object.entries(e.budget||{})
+    .filter(([,v])=>+v>0)
+    .map(([k,v])=>`<div class="row"><span class="lbl">${labelize(k)}</span><span class="val">${fmt$(v)}</span></div>`)
+    .join('') || '<div class="row"><span class="lbl">No line items</span><span class="val">—</span></div>';
+
+  const logs = (e.log||[]).map(l=>`
+    <div class="approval-log">
+      <div>${escapeHtml(l.action)} — <strong>${escapeHtml(l.by)}</strong></div>
+      ${l.note ? `<div>"${escapeHtml(l.note)}"</div>` : ''}
+      <div class="when">${new Date(l.at).toLocaleString()}</div>
+    </div>`).join('');
+
+  let actions = '';
+  if (role === 'vp' && e.status === 'pending') {
+    actions = `
+      <div style="margin-top:14px">
+        <label>Note (optional)</label>
+        <textarea id="vpNote" placeholder="Reason for decision, conditions, etc."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" onclick="closeDetail()">Close</button>
+        <button class="btn danger" onclick="decide('${e.id}', false)">Deny</button>
+        <button class="btn green" onclick="decide('${e.id}', true)">Approve</button>
+      </div>`;
+  } else if (role === 'coordinator' && e.status === 'approved') {
+    actions = `
+      <div class="modal-actions">
+        <button class="btn ghost" onclick="closeDetail()">Close</button>
+        <button class="btn danger" onclick="deleteEvent('${e.id}')">Delete</button>
+        <button class="btn" onclick="markExecuting('${e.id}')">Mark In Progress →</button>
+      </div>`;
+  } else if (role === 'coordinator' && e.status === 'executing') {
+    actions = `
+      <fieldset>
+        <legend>Post-Event Report</legend>
+        <div class="form-grid">
+          <div><label>Actual Spend ($)</label><input type="number" id="r_spend" min="0" step="50" value="${e.actualSpend||budget}" /></div>
+          <div><label>Actual Attendance</label><input type="number" id="r_att" min="0" value="${e.actualAttendance||''}" /></div>
+          <div class="full"><label>Outcomes / Leads Generated</label><textarea id="r_outcomes" placeholder="3 contract leads, 2 RFPs requested...">${escapeHtml(e.outcomes||'')}</textarea></div>
+          <div class="full"><label>Notes / Lessons Learned</label><textarea id="r_notes" placeholder="What worked, what didn't...">${escapeHtml(e.notes||'')}</textarea></div>
+        </div>
+      </fieldset>
+      <div class="modal-actions">
+        <button class="btn ghost" onclick="closeDetail()">Close</button>
+        <button class="btn green" onclick="completeEvent('${e.id}')">Mark Completed</button>
+      </div>`;
+  } else if (role === 'coordinator' && (e.status === 'denied' || e.status === 'pending')) {
+    actions = `
+      <div class="modal-actions">
+        <button class="btn ghost" onclick="closeDetail()">Close</button>
+        <button class="btn danger" onclick="deleteEvent('${e.id}')">Delete</button>
+        ${e.status==='denied' ? `<button class="btn" onclick="resubmit('${e.id}')">Edit & Resubmit</button>` : ''}
+      </div>`;
+  } else {
+    actions = `<div class="modal-actions"><button class="btn ghost" onclick="closeDetail()">Close</button></div>`;
+  }
+
+  const reportSection = e.status === 'completed' ? `
+    <fieldset>
+      <legend>Final Report</legend>
+      <div class="row"><span class="lbl">Actual Spend</span><span class="val">${fmt$(e.actualSpend||budget)}</span></div>
+      <div class="row"><span class="lbl">Variance vs Budget</span><span class="val">${fmt$((e.actualSpend||budget) - budget)}</span></div>
+      <div class="row"><span class="lbl">Actual Attendance</span><span class="val">${e.actualAttendance||'—'}</span></div>
+      <div style="margin-top:10px"><div class="lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:#888">Outcomes</div><div>${escapeHtml(e.outcomes||'—')}</div></div>
+      <div style="margin-top:10px"><div class="lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:#888">Notes</div><div>${escapeHtml(e.notes||'—')}</div></div>
+    </fieldset>` : '';
+
+  document.getElementById('detailContent').innerHTML = `
+    <h2>${escapeHtml(e.name)}</h2>
+    <div class="modal-sub">${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span></div>
+
+    <div class="form-grid">
+      <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
+      <div class="row"><span class="lbl">Location</span><span class="val">${escapeHtml(e.location||'—')}</span></div>
+      <div class="row"><span class="lbl">Contact</span><span class="val">${escapeHtml(e.contact||'—')}</span></div>
+      <div class="row"><span class="lbl">Contact Info</span><span class="val">${escapeHtml(e.contactInfo||'—')}</span></div>
+      <div class="row"><span class="lbl">Expected Attendance</span><span class="val">${e.attendance||'—'}</span></div>
+      <div class="row"><span class="lbl">ROI Goal</span><span class="val">${escapeHtml(e.roi||'—')}</span></div>
+    </div>
+
+    <fieldset>
+      <legend>Description</legend>
+      <div>${escapeHtml(e.desc||'—')}</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Deliverables</legend>
+      <div style="white-space:pre-wrap">${escapeHtml(e.deliverables||'—')}</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Budget — Total ${fmt$(budget)}</legend>
+      ${budgetRows}
+    </fieldset>
+
+    ${reportSection}
+
+    <fieldset>
+      <legend>Approval & Activity Log</legend>
+      ${logs || '<div style="color:#888;font-size:12px">No activity yet.</div>'}
+    </fieldset>
+
+    ${actions}
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+
+/* ---------- Actions ---------- */
+async function decide(id, approved) {
+  const e = events.find(x=>x.id===id); if (!e) return;
+  const note = (document.getElementById('vpNote')?.value || '').trim();
+  e.status = approved ? 'approved' : 'denied';
+  e.log = e.log || [];
+  e.log.push({ action: approved ? 'Approved' : 'Denied', by: 'VP / Michael French', note, at: Date.now() });
+  await saveEvents();
+  closeDetail();
+  toast(approved ? 'Approved' : 'Denied');
+  render();
+}
+async function markExecuting(id) {
+  const e = events.find(x=>x.id===id); if (!e) return;
+  e.status = 'executing';
+  e.log.push({ action: 'Marked In Progress', by: 'Coordinator', note: '', at: Date.now() });
+  await saveEvents(); closeDetail(); toast('Now executing'); render();
+}
+async function completeEvent(id) {
+  const e = events.find(x=>x.id===id); if (!e) return;
+  e.actualSpend = +document.getElementById('r_spend').value || 0;
+  e.actualAttendance = +document.getElementById('r_att').value || 0;
+  e.outcomes = document.getElementById('r_outcomes').value;
+  e.notes = document.getElementById('r_notes').value;
+  e.status = 'completed';
+  e.completedAt = Date.now();
+  e.log.push({ action: 'Completed with report', by: 'Coordinator', note: '', at: Date.now() });
+  await saveEvents(); closeDetail(); toast('Event completed'); render();
+}
+async function deleteEvent(id) {
+  if (!confirm('Delete this record permanently?')) return;
+  events = events.filter(x=>x.id!==id);
+  await saveEvents(); closeDetail(); toast('Deleted'); render();
+}
+function resubmit(id) {
+  const e = events.find(x=>x.id===id); if (!e) return;
+  fillForm(e);
+  closeDetail();
+  document.getElementById('formModal').classList.add('open');
+}
+
+/* ---------- Form ---------- */
+function fillForm(e) {
+  document.getElementById('formTitle').textContent = e ? 'Edit Submission' : 'New Event Submission';
+  const v = (id, val) => document.getElementById(id).value = val ?? '';
+  v('f_id', e?.id || '');
+  v('f_name', e?.name);
+  v('f_type', e?.type || 'Community Event');
+  v('f_partner', e?.partner);
+  v('f_date', e?.date);
+  v('f_location', e?.location);
+  v('f_contact', e?.contact);
+  v('f_contactInfo', e?.contactInfo);
+  v('f_desc', e?.desc);
+  v('f_deliverables', e?.deliverables);
+  v('f_b_sponsor', e?.budget?.sponsor || 0);
+  v('f_b_marketing', e?.budget?.marketing || 0);
+  v('f_b_swag', e?.budget?.swag || 0);
+  v('f_b_staff', e?.budget?.staff || 0);
+  v('f_b_equipment', e?.budget?.equipment || 0);
+  v('f_b_other', e?.budget?.other || 0);
+  v('f_attendance', e?.attendance);
+  v('f_roi', e?.roi);
+}
+
+document.getElementById('newBtn').onclick = () => {
+  fillForm(null);
+  document.getElementById('formModal').classList.add('open');
+};
+document.getElementById('cancelForm').onclick = () => document.getElementById('formModal').classList.remove('open');
+
+document.getElementById('eventForm').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const editId = document.getElementById('f_id').value;
+  const g = (fieldId) => document.getElementById(fieldId).value;
+  const data = {
+    id: editId || uid(),
+    name: g('f_name').trim(),
+    type: g('f_type'),
+    partner: g('f_partner').trim(),
+    date: g('f_date'),
+    location: g('f_location').trim(),
+    contact: g('f_contact').trim(),
+    contactInfo: g('f_contactInfo').trim(),
+    desc: g('f_desc').trim(),
+    deliverables: g('f_deliverables').trim(),
+    budget: {
+      sponsor: +g('f_b_sponsor')||0,
+      marketing: +g('f_b_marketing')||0,
+      swag: +g('f_b_swag')||0,
+      staff: +g('f_b_staff')||0,
+      equipment: +g('f_b_equipment')||0,
+      other: +g('f_b_other')||0,
+    },
+    attendance: +g('f_attendance')||0,
+    roi: g('f_roi').trim(),
+    status: 'pending',
+    createdAt: Date.now(),
+    log: [],
+  };
+
+  const existing = events.find(x=>x.id===editId);
+  if (existing) {
+    Object.assign(existing, data, { status: 'pending' });
+    existing.log.push({ action: 'Resubmitted for approval', by: 'Coordinator', note: '', at: Date.now() });
+  } else {
+    data.log.push({ action: 'Submitted for approval', by: 'Coordinator', note: '', at: Date.now() });
+    events.push(data);
+  }
+  await saveEvents();
+  document.getElementById('formModal').classList.remove('open');
+  toast(existing ? 'Resubmitted' : 'Submitted for approval');
+  render();
+};
+
+/* ---------- Role switching ---------- */
+document.getElementById('roleSwitcher').addEventListener('click', (e)=>{
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#roleSwitcher button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  role = b.dataset.role;
+  activeFilter = role === 'coordinator' ? 'all' : role === 'vp' ? 'pending' : 'completed';
+  render();
+});
+
+/* close modal on overlay click */
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+/* ---------- Utilities ---------- */
+function escapeHtml(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function labelize(k) {
+  return ({sponsor:'Sponsorship Fee', marketing:'Marketing/Print', swag:'Swag/Giveaways', staff:'Staff/Travel', equipment:'Equipment/Booth', other:'Other'})[k] || k;
+}
+
+/* ---------- CSV Import Data ---------- */
+const CSV_IMPORT_DATA = [
+  {
+    "id": "e_csv001",
+    "name": "Touch O Truck (TEST)",
+    "type": "Community Event",
+    "partner": "",
+    "date": "2026-02-20",
+    "location": "Seneca Middle School",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 300,
+    "roi": "Brand Awareness",
+    "status": "approved",
+    "createdAt": 1776270692418,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270692418
+      }
+    ]
+  },
+  {
+    "id": "e_csv002",
+    "name": "Frankenmuth Dog Bowl",
+    "type": "Sponsorship",
+    "partner": "Bethany Childs Director of Events, Bchilds@bavarianinn.com; #800-600-0105 Ext. 4",
+    "date": "2026-05-22",
+    "location": "925 S. Main St., D 2 Frankenmuth, MI 48734",
+    "contact": "Bethany Childs Director of Events, Bchilds@bavarianinn.com; #800-600-0105 Ext. 4",
+    "contactInfo": "",
+    "desc": "Continue sponsorship for Frankenmuth Dog Bowl? UPDATE: we also provide a free roll off and advertise their event on our billboard - they are looking for the same this year.",
+    "deliverables": "Activation/Booth needed\n",
+    "budget": {
+      "sponsor": 500,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1000,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270682419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270682419
+      }
+    ]
+  },
+  {
+    "id": "e_csv003",
+    "name": "Annual Fundraiser for Previti Supervisor April 27, 2025, at Sapori's",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-04-27",
+    "location": "Washington Township office",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "l hope you can attend my Annual Fundraiser (Attached is the flyer)\n\nPlease reach out if I can be of service!\n\nThank you for your past and continued support!",
+    "deliverables": "Staffing required",
+    "budget": {
+      "sponsor": 50,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 50,
+    "roi": "Brand Awareness",
+    "status": "approved",
+    "createdAt": 1776270672419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270672419
+      }
+    ]
+  },
+  {
+    "id": "e_csv004",
+    "name": "Midwest Invitational Rodeo",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-06-12",
+    "location": "Genesee County Fairgrounds",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Request for Priority Sponsorship",
+    "deliverables": "Activation/Booth needed\n",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 7500,
+    "roi": "Brand Awareness",
+    "status": "denied",
+    "createdAt": 1776270662419,
+    "log": [
+      {
+        "action": "Denied",
+        "by": "VP / Michael French",
+        "note": "Did last year and not needed for the expense and exposure",
+        "at": 1776270662419
+      }
+    ]
+  },
+  {
+    "id": "e_csv005",
+    "name": "DDA Summer Concert Series - Eastpointe",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-06-06",
+    "location": "23200 Gratiot Ave",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "6 Concerts June-September. Asking for sponsorship",
+    "deliverables": "",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "denied",
+    "createdAt": 1776270652419,
+    "log": [
+      {
+        "action": "Denied",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270652419
+      }
+    ]
+  },
+  {
+    "id": "e_csv006",
+    "name": "Motor City Makeover 2026",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-05-01",
+    "location": "2 Woodward Avenue, Suite 1126, Detroit, MI 48226.",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Attached is the 2026 Sponsorship Opportunities package, which outlines partnership levels, engagement options, and volunteer opportunities. \nTonie Stovall\nSpecial Projects Manager & Volunteer Coordinator\nCity of Detroit-Mayor’s Office\nDepartment of Neighborhoods\nCell: 313.236.8521\nEmail: tonie.stovall@detroitmi.gov",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 50,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270642419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270642419
+      }
+    ]
+  },
+  {
+    "id": "e_csv007",
+    "name": "2026 MTA Expo",
+    "type": "Trade Show",
+    "partner": "Ashley Maher - Senior Development Manager #517-321-6467; email: ashley@michigantownships.org",
+    "date": "2026-04-21",
+    "location": "Grand Traverse Resort and Spa",
+    "contact": "Ashley Maher - Senior Development Manager #517-321-6467; email: ashley@michigantownships.org",
+    "contactInfo": "",
+    "desc": "Exhibit Date: 4/21/2026 - 4/22/2026\nBooth Number: 707\nBooth Price: $1,050.00\nBooth Size: 10.00 x 10.00\n2026 MTA Expo Confirmation\nApril 21 & 22\nGrand Traverse Resort, Indoor Tennis Courts\nThank you for registering for the Michigan Townships Association’s Expo, held in conjunction with our Annual Educational Conference. Below you will find information vital to your participation in the MTA Expo. Please read thoroughly and carefully, and make sure each person who will represent your company at the Expo receives a copy of the rules and guidelines. To locate your booth number, please visit the online floor plan, then click “Halls & Floorplans.”\nExhibitor Move-in: Monday, April 20, 1 to 4 p.m. AND Tuesday, April 21, 8 to 10 a.m. Complimentary coffee available during Tuesday set-up hours.\nExpo Open: Tuesday, April 21, 10:15 a.m. to 2:45 p.m. AND MTA Evening in the Expo Reception, 4 to 5:30 p.m. AND Wednesday, April 22, 9:45 a.m. to 1:15 p.m.\nExhibitor Move-out: Wednesday, April 22, 1:30 to 3",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1050,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 200,
+    "roi": "Brand Awareness",
+    "status": "approved",
+    "createdAt": 1776270632419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270632419
+      }
+    ]
+  },
+  {
+    "id": "e_csv008",
+    "name": "Easter Egg Hunt - Donation Request",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-03-28",
+    "location": "11120 Hunt St",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Hello! \n\nAttached, please find our donation request letter for the upcoming Easter Egg Hunt taking place on March 26th at 12:00pm at Romulus Historical Park. This annual event brings families together for a fun-filled afternoon, and your support helps us make it a memorable experience for the children in our community.\n\nWe sincerely appreciate your consideration and any contribution you are able to provide. Please feel free to contact me if you have any questions or would like additional information.\n\nThank you for your continued support.\n\nKatrina Basinger\nAdministrative Secretary | Community Development\nCity of Romulus\n11111 Wayne Rd\nRomulus, MI 48174\nwww.romulusgov.com",
+    "deliverables": "",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 500,
+    "roi": "Brand Awareness",
+    "status": "denied",
+    "createdAt": 1776270622419,
+    "log": [
+      {
+        "action": "Denied",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270622419
+      }
+    ]
+  },
+  {
+    "id": "e_csv009",
+    "name": "WB Parks for Touch-a-Truck",
+    "type": "Community Event",
+    "partner": "",
+    "date": "2026-04-24",
+    "location": "6801 Drake Rd",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Hello,\n\nWB Parks is excited to host the 2026 Touch-A-Truck event and would love to invite you to participate!\nTouch-A-Truck is a family-friendly community event that gives children and families the opportunity to explore vehicles up close, meet the professionals who operate them and learn more about the important services you provide.\nYou can learn more about the event here: https://www.wbparks.org/event/tat/\n\nEvent Details: \nDate: Friday, April  24, 2026.\nTime: 4:00 pm-7:00 pm\nLocation: Drake Sports Park | 6801 Drake Rd, West Bloomfield Township, MI 48322\n\nPlease RSVP for Touch-a-Truck  no later than March 13, 2026. \n\nAdditional event details, including truck confirmation, arrival times and logistics, will be shared upon confirmation.\n\nPlease feel free to pass along this email to other businesses/organizations that would be interested in participating in the event. \n\nThank you,\nCrystal L. Smith (she/her)\nRecreation Programmer\nVolunteer Coordinator\n––––\nWEST BLOOMFIELD PARKS + RECREATI",
+    "deliverables": "Staffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 200,
+    "roi": "Brand Awareness",
+    "status": "approved",
+    "createdAt": 1776270612419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270612419
+      }
+    ]
+  },
+  {
+    "id": "e_csv010",
+    "name": "2026 Food Truck Rally and Egg Hunt Sponsorship",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-03-16",
+    "location": "801 Ajax Dr",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Good Afternoon,\nMy name is Colin Cote' and I am Recreation Specialist with the City of Madison Heights and I was just reaching out to see if you and your business is interested in helping support one or both of our upcoming community events by becoming a sponsor of our 2026 Fling Into Spring Food Truck Rally on May 16th or as a sponsor for our 2026 Egg Hunt on March 28th! Our Food Truck Rally and Egg Hunt events bring together great food, local vendors and families from across the city for a day filled with laughs and smiles right in the heart of Madison Heights.\nAs a sponsor, your organization will receive valuable visibility and direct community engagement through event signage, your own table at the event to promote your products/services and social media recognition. It’s a great opportunity to showcase your support for local recreation while connecting your brand with a positive, family-friendly experience. Join us in making these events a success while highlighting your commitmen",
+    "deliverables": "",
+    "budget": {
+      "sponsor": 150,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 100,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270602419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270602419
+      }
+    ]
+  },
+  {
+    "id": "e_csv011",
+    "name": "DABO State of the Race",
+    "type": "Sponsorship",
+    "partner": "",
+    "date": "2026-04-18",
+    "location": "Music Hall Center for the Performing Arts",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "Good Afternoon,\nMy name is Colin Cote' and I am Recreation Specialist with the City of Madison Heights and I was just reaching out to see if you and your business is interested in helping support one or both of our upcoming community events by becoming a sponsor of our 2026 Fling Into Spring Food Truck Rally on May 16th or as a sponsor for our 2026 Egg Hunt on March 28th! Our Food Truck Rally and Egg Hunt events bring together great food, local vendors and families from across the city for a day filled with laughs and smiles right in the heart of Madison Heights.\nAs a sponsor, your organization will receive valuable visibility and direct community engagement through event signage, your own table at the event to promote your products/services and social media recognition. It’s a great opportunity to showcase your support for local recreation while connecting your brand with a positive, family-friendly experience. Join us in making these events a success while highlighting your commitmen",
+    "deliverables": "",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "NO",
+    "status": "pending",
+    "createdAt": 1776270592419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270592419
+      }
+    ]
+  },
+  {
+    "id": "e_csv012",
+    "name": "2026 Livonia State of City",
+    "type": "Sponsorship",
+    "partner": "Laura Tahmouch - tahmouch@livoniawestland.org",
+    "date": "2026-03-25",
+    "location": "Vistatech Center 18600 Haggerty Road Livonia, MI 48152",
+    "contact": "Laura Tahmouch - tahmouch@livoniawestland.org",
+    "contactInfo": "",
+    "desc": "Good morning,  \n\nJoin us as we host Mayor Brosnan for this popular, annual event that gathers the business community with city leaders: Livonia State of the City Address. \n \nDate/Time\nWednesday, March 25, 2026\n3:00 PM Doors Open \n3:30-4:30 PM Presentation\n4:30-6:00 PM Networking & Refreshments\n \nFees/Admission\nIn Person: $20/Person or $160/8 Reserved Seats (includes refreshments and light snacks). Register Registration Closes March 20, if not sold out sooner \n\nLIVE Stream: Free\nLocation \nIN PERSON:\nVistatech Center\n18600 Haggerty Road\nLivonia, MI 48152\n\nLIVE STREAM:\nwww.facebook.com/livoniacommunity\nwww.youtube.com/livoniatv",
+    "deliverables": "Staffing required",
+    "budget": {
+      "sponsor": 20,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "approved",
+    "createdAt": 1776270582419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270582419
+      }
+    ]
+  },
+  {
+    "id": "e_csv013",
+    "name": "Mid West Invitational Rodeo - Genessee Fair Grounds",
+    "type": "Trade Show",
+    "partner": "Nicole Scott, Owner & CEO - rodeo@midwest-invitational.com; 630-809-8719",
+    "date": "2026-06-12",
+    "location": "Genessee Fair Grounds",
+    "contact": "Nicole Scott, Owner & CEO - rodeo@midwest-invitational.com; 630-809-8719",
+    "contactInfo": "",
+    "desc": "I want to know what we did last year at this rodeo. From the information that I received it is all marketing. I'm not too sure what value WE would get out of this event unless it was a \"Zero Waste\" event and we were supplying the event boxes and wanted to divert material from the landfill, but that is not what they are asking.  https://midwest-invitational.com/sponsorship. \n\nWe'd love to have you back!",
+    "deliverables": "Staffing required",
+    "budget": {
+      "sponsor": 15000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 7,
+    "roi": "Brand Sentiment",
+    "status": "denied",
+    "createdAt": 1776270572419,
+    "log": [
+      {
+        "action": "Denied",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270572419
+      }
+    ]
+  },
+  {
+    "id": "e_csv014",
+    "name": "State of the Township - Canton Chamber of Commerce",
+    "type": "Community Event",
+    "partner": "Sheronda Gloster - sheronda.gloster@cantonmi.gov. Sheronda is main contact that sends out informatio",
+    "date": "2026-03-12",
+    "location": "Village Theater at Cherry Hill",
+    "contact": "Sheronda Gloster - sheronda.gloster@cantonmi.gov. Sheronda is main contact that sends out informatio",
+    "contactInfo": "",
+    "desc": "Possible leads. It was sent by the sustainability committee. So I could go to the event if you believe there should be a presence. It is a State of the Township event, so Paul might be the best one to be there. Please let me know if you would like me to go.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Leads",
+    "status": "approved",
+    "createdAt": 1776270562419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270562419
+      }
+    ]
+  },
+  {
+    "id": "e_csv015",
+    "name": "DMAA Trade Show",
+    "type": "Trade Show",
+    "partner": "Kelly Vandenbossche; kelly@dmaa.net: 248-594-9803",
+    "date": "2026-03-05",
+    "location": "Suburban Collection Showplace",
+    "contact": "Kelly Vandenbossche; kelly@dmaa.net: 248-594-9803",
+    "contactInfo": "",
+    "desc": "Hunter Czymbor and I believe Janeen OToole are the two attendees to get leads at this event. The booth has already been paid for. The time is from 7 AM to 3 PM.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 750,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 500,
+    "roi": "Leads",
+    "status": "approved",
+    "createdAt": 1776270552419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270552419
+      }
+    ]
+  },
+  {
+    "id": "e_csv016",
+    "name": "MIRA Gala - 108th Annual Gala",
+    "type": "Community Event",
+    "partner": "Kayla Cobetto Director of Events: kcobetto@midwestretailers.org; Office: 248-671-9600; Cell: 734-624",
+    "date": "2026-03-07",
+    "location": "Shenandoah Country Club",
+    "contact": "Kayla Cobetto Director of Events: kcobetto@midwestretailers.org; Office: 248-671-9600; Cell: 734-624",
+    "contactInfo": "",
+    "desc": "The gala tickets have already been paid for. Guest that Matt stated would be in attendance: \n\nMr. Matt Allen (Director of Public Relations & Governmental Affairs)\n\nMiss Tatiana Grant (guest)\nThe information was sent to Kayla, if we are sending someone else in Matt's place we may need to contact Kayla with the new names and get the ticket information from her sent to the new attendees.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 800,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Already paid for, so networking",
+    "status": "approved",
+    "createdAt": 1776270542419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270542419
+      }
+    ]
+  },
+  {
+    "id": "e_csv017",
+    "name": "State of the Township - Shelby Township",
+    "type": "Municipal Mtg.",
+    "partner": "Andrea Kruse",
+    "date": "2026-04-10",
+    "location": "The Palazzo Grande",
+    "contact": "Andrea Kruse",
+    "contactInfo": "",
+    "desc": "Registration is nonrefundable. The link to register is on the Macomb County Chamber website we will need the member log in to register for the event. the email address is events@macombcountychamber.com - Erika DeLange is the Director of Member Engagement and that is her email address. Heather Schmuckel is Membercare@macombcountychamber.com",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 35,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "approved",
+    "createdAt": 1776270532419,
+    "log": [
+      {
+        "action": "Approved",
+        "by": "VP / Michael French",
+        "note": "",
+        "at": 1776270532419
+      }
+    ]
+  },
+  {
+    "id": "e_csv018",
+    "name": "St. Clair County Touch-A-Truck & Tractor",
+    "type": "Community Event",
+    "partner": "LCD",
+    "date": "2026-03-21",
+    "location": "",
+    "contact": "LCD",
+    "contactInfo": "",
+    "desc": "Hosted by St. Clair County Farm Bureau 1341 11 ST.. Marysville, MI 48040 #810-387-0097; stclair.michfb.com\n\nIt states that it starts at 10 am but the flyer states that sensory friendly needs starts at 9 am, so the truck would need to be there around 8 am for set up.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": null,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "denied",
+    "createdAt": 1776270522419,
+    "log": [
+      {
+        "action": "Denied",
+        "by": "VP / Michael French",
+        "note": "Closed county ",
+        "at": 1776270522419
+      }
+    ]
+  },
+  {
+    "id": "e_csv019",
+    "name": "Run Drugs Out of Town",
+    "type": "Community Event",
+    "partner": "This was a Todd/Matt from last year.",
+    "date": "2026-06-27",
+    "location": "Macomb Community College",
+    "contact": "This was a Todd/Matt from last year.",
+    "contactInfo": "",
+    "desc": "The sponsorship levels are online and the lowest cost would be an information table  & table and chairs would be provided. When you level up in sponsorship you get ads -small signs on the route, can have people run, 30 second sponsor commercial, etc.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270512419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270512419
+      }
+    ]
+  },
+  {
+    "id": "e_csv020",
+    "name": "Test Event",
+    "type": "Community Event",
+    "partner": "Zach",
+    "date": "2026-03-06",
+    "location": "45000 River Ridge Dr",
+    "contact": "Zach",
+    "contactInfo": "",
+    "desc": "Testing",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 100,
+    "roi": "Leads",
+    "status": "pending",
+    "createdAt": 1776270502419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270502419
+      }
+    ]
+  },
+  {
+    "id": "e_csv021",
+    "name": "Hamtramck Spring Clean UP",
+    "type": "Community Event",
+    "partner": "Isabel Allaway, Community & Economic Development Manager #313-8000-5233 x316; Email: iallaway@hamtra",
+    "date": "2026-05-01",
+    "location": "2969 Yemans St",
+    "contact": "Isabel Allaway, Community & Economic Development Manager #313-8000-5233 x316; Email: iallaway@hamtra",
+    "contactInfo": "",
+    "desc": "Requested a 20 yard dumpster for Spring Clean up that is taking place the first Saturday of May (2nd). The dumpster would need to be dropped off prior to the weekend and picked up by Tuesday, May 5th. Directions included in the attachment.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 20,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "",
+    "status": "pending",
+    "createdAt": 1776270492419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270492419
+      }
+    ]
+  },
+  {
+    "id": "e_csv022",
+    "name": "Detroit Awards Ceremony - their Earth Day Celebration",
+    "type": "Community Event",
+    "partner": "Detroit Green Team Task Force - Natalie Jakub - natalie@greenlivingscience.org #313-623-7265",
+    "date": "2026-04-18",
+    "location": "Detroit People's Food Co-op - 8234 Woodward Ave., Detroit",
+    "contact": "Detroit Green Team Task Force - Natalie Jakub - natalie@greenlivingscience.org #313-623-7265",
+    "contactInfo": "",
+    "desc": "I did inform the organization that we would be unable to donate due to some restructuring, they understood and they sent me an invite today for the celebration.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 100,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270482419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270482419
+      }
+    ]
+  },
+  {
+    "id": "e_csv023",
+    "name": "Genesee County Earth Day Event",
+    "type": "Trade Show",
+    "partner": "Autumn Trojanowski, Public Program & Event Coordinator; jtrojanowski@gcparks.org: #810-789-8567",
+    "date": "2026-04-25",
+    "location": "",
+    "contact": "Autumn Trojanowski, Public Program & Event Coordinator; jtrojanowski@gcparks.org: #810-789-8567",
+    "contactInfo": "",
+    "desc": "This is the county's Earth Day Event where people from across the county come to this center. There will be various organizations that are involved in wildlife, water conservation, recycling (me), etc. that will be talking to people on how they can help the environment. They will provide me with a 6 ft. table. Anything that I could pass out or a QR code where they can gain access to the acceptable list for Genesee County area would be great. I will have my recycling demo with me and a few prizes.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 200,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270472419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270472419
+      }
+    ]
+  },
+  {
+    "id": "e_csv024",
+    "name": "Woodward Dream Cruise - Sponsoship",
+    "type": "Sponsorship",
+    "partner": "Martin Pawlusiak: Email: m.pawlusiak@craigmartinsem.com: #248-672-6118",
+    "date": "2026-08-15",
+    "location": "Woodward Dream Cruise - Ferndale; Pleasant Ridge; Huntington Woods; Berkley; Royal Oak; Birmingham; Bloomfield Hills; Pontiac",
+    "contact": "Martin Pawlusiak: Email: m.pawlusiak@craigmartinsem.com: #248-672-6118",
+    "contactInfo": "",
+    "desc": "Martin sent a package of material for possible sponsorships but did not state a price, just where the marketing would go. WDC tailors all sponsorship packages to meet a company's marketing goals and objectives: Media - WXYZ & WOMC; Social; Product/interactive displays; Retail vendors; Promotional giveaways; Cruise in shoes 5K run; Official WDC merchandise (company name on back); Hospitality (private corporate parties); WDC, Inc is a 501 c-3 not for profit organization that helps each city that is tied to the cruise.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 2026,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270462419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270462419
+      }
+    ]
+  },
+  {
+    "id": "e_csv025",
+    "name": "1st Annual Best of Downriver Awards - vendor & sponsorship opportunities",
+    "type": "Community Event",
+    "partner": "Laura Fennell: laura@downriverbusinessassociation.ccsend.com",
+    "date": "2026-05-27",
+    "location": "The Grecian Center",
+    "contact": "Laura Fennell: laura@downriverbusinessassociation.ccsend.com",
+    "contactInfo": "",
+    "desc": "More of a sponsorship/vendor opportunity. I would defer to the muni reps to see if this would be worth it.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 600,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270452419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270452419
+      }
+    ]
+  },
+  {
+    "id": "e_csv026",
+    "name": "E-Waste - Sterling Heights",
+    "type": "Community Event",
+    "partner": "City of Sterling Heights",
+    "date": "2026-04-11",
+    "location": "Sterling Heights DPW",
+    "contact": "City of Sterling Heights",
+    "contactInfo": "",
+    "desc": "Vendor for E-waste is GLE, so they will need to be contacted. If we provide the roll-offs or any staffing: Tammy, Braxton and muni rep for community.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270442419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270442419
+      }
+    ]
+  },
+  {
+    "id": "e_csv027",
+    "name": "Shred Event - Sterling Heights",
+    "type": "Community Event",
+    "partner": "City of Sterling Heights",
+    "date": "2026-04-25",
+    "location": "Sterling Heights (possible DPW)",
+    "contact": "City of Sterling Heights",
+    "contactInfo": "",
+    "desc": "Contracted for a Shred event so our vendor Shred-IT would need to be contacted along with any container or staffing needs on our end. Tammy, Braxton and muni rep.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270432419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270432419
+      }
+    ]
+  },
+  {
+    "id": "e_csv028",
+    "name": "HHW Event - Sterling Heights",
+    "type": "Community Event",
+    "partner": "City of Sterling Heights",
+    "date": "2026-04-18",
+    "location": "Sterling Heights DPW",
+    "contact": "City of Sterling Heights",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG and any staffing or container needs on our end for event. Tammy, Braxton & muni rep. need notification",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270422419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270422419
+      }
+    ]
+  },
+  {
+    "id": "e_csv029",
+    "name": "Grosse Pointe Woods E-waste Event",
+    "type": "Community Event",
+    "partner": "Grosse Pointe Woods",
+    "date": "2026-04-18",
+    "location": "",
+    "contact": "Grosse Pointe Woods",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG about event and any thing needed on our end such as containers or staffing. Tammy, Braxton and muni rep.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270412419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270412419
+      }
+    ]
+  },
+  {
+    "id": "e_csv030",
+    "name": "Grosse Pointe Woods E-waste Event",
+    "type": "Community Event",
+    "partner": "Grosse Pointe Woods",
+    "date": "2026-10-17",
+    "location": "Grosse Pointe Woods DPW?",
+    "contact": "Grosse Pointe Woods",
+    "contactInfo": "",
+    "desc": "Will need to notify vendor ERG and any containers or staffing needed on our end. Tammy, Braxton and muni rep",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270402419,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270402419
+      }
+    ]
+  },
+  {
+    "id": "e_csv031",
+    "name": "Grosse Pointe Woods HHW Event",
+    "type": "Community Event",
+    "partner": "Grosse Pointe Woods",
+    "date": "2026-04-18",
+    "location": "Grosse Pointe Woods Department of Public Works",
+    "contact": "Grosse Pointe Woods",
+    "contactInfo": "",
+    "desc": "Will need to notify ERG, but they will be there also for the e-waste, so they will need to know that they are collecting BOTH that day. PW end - containers and staffing if needed. Tammy, Braxton and muni rep need to know.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270392420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270392420
+      }
+    ]
+  },
+  {
+    "id": "e_csv032",
+    "name": "Shelby Township - E waste",
+    "type": "Community Event",
+    "partner": "Shelby Township",
+    "date": "2026-04-25",
+    "location": "Shelby Township DPW",
+    "contact": "Shelby Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor GLE and any containers and staffing needed from our end. Tammy, Braxton & muni rep.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "none",
+    "status": "pending",
+    "createdAt": 1776270382420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270382420
+      }
+    ]
+  },
+  {
+    "id": "e_csv033",
+    "name": "Shelby Township HHW",
+    "type": "Community Event",
+    "partner": "Shelby Township",
+    "date": "2026-04-25",
+    "location": "Shelby Township Department of Public Works",
+    "contact": "Shelby Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG and any containers and staffing needed on our end. Tammy, Braxton and muni rep.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270372420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270372420
+      }
+    ]
+  },
+  {
+    "id": "e_csv034",
+    "name": "White Lake HHW Event",
+    "type": "Community Event",
+    "partner": "White Lake Township",
+    "date": "2026-04-25",
+    "location": "White Lake Township DPW",
+    "contact": "White Lake Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG and any containers or staffing needs from our end. Tammy, Braxton and muni rep.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270362420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270362420
+      }
+    ]
+  },
+  {
+    "id": "e_csv035",
+    "name": "St. Clair Shores E-waste event",
+    "type": "Community Event",
+    "partner": "St. Clair Shores",
+    "date": "2026-05-16",
+    "location": "St. Clair Shores DPW",
+    "contact": "St. Clair Shores",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG and supply any containers and staffing needs from our end. Tammy, Braxton and muni rep to also be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270352420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270352420
+      }
+    ]
+  },
+  {
+    "id": "e_csv036",
+    "name": "St. Clair Shores E-waste event",
+    "type": "Community Event",
+    "partner": "St. Clair Shores",
+    "date": "2026-09-19",
+    "location": "St. Clair Shores DPW",
+    "contact": "St. Clair Shores",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor ERG and supply containers and staffing needs on our end. Tammy, Braxton and muni rep to also be contacted",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270342420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270342420
+      }
+    ]
+  },
+  {
+    "id": "e_csv037",
+    "name": "St. Clair Shores HHW Event",
+    "type": "Community Event",
+    "partner": "St. Clair Shores",
+    "date": "2026-05-16",
+    "location": "St. Clair Shores DPW",
+    "contact": "St. Clair Shores",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers or staffing needs from our end. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270332420,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270332420
+      }
+    ]
+  },
+  {
+    "id": "e_csv038",
+    "name": "St. Clair Shores HHW",
+    "type": "Community Event",
+    "partner": "St. Clair Shores",
+    "date": "2026-09-19",
+    "location": "St. Clair Shores DPW",
+    "contact": "St. Clair Shores",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and any containers and staffing needed on our end. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270322423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270322423
+      }
+    ]
+  },
+  {
+    "id": "e_csv039",
+    "name": "Clinton Township E-waste",
+    "type": "Community Event",
+    "partner": "Clinton Township",
+    "date": "2026-09-19",
+    "location": "Clinton Township DPW",
+    "contact": "Clinton Township",
+    "contactInfo": "",
+    "desc": "will need to contact vendor - GLE and any containers or staffing needed from our end. Tammy, Braxton and muni rep need to be notified also.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270312423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270312423
+      }
+    ]
+  },
+  {
+    "id": "e_csv040",
+    "name": "Macomb Township - E-waste",
+    "type": "Community Event",
+    "partner": "Macomb Township",
+    "date": "2026-08-15",
+    "location": "Macomb Township DPW",
+    "contact": "Macomb Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - GLE and supply any containers or staffing on our end. Tammy, Braxton and muni rep also need to be notified",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270302423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270302423
+      }
+    ]
+  },
+  {
+    "id": "e_csv041",
+    "name": "Macomb Township Shred Day",
+    "type": "Community Event",
+    "partner": "Macomb Township.",
+    "date": "2026-08-15",
+    "location": "Macomb Township DPW",
+    "contact": "Macomb Township.",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - Shred-It and supply any containers or staffing for the event. Tammy, Braxton and muni rep. also need to be contacted",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270292423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270292423
+      }
+    ]
+  },
+  {
+    "id": "e_csv042",
+    "name": "Macomb Township HHW",
+    "type": "Community Event",
+    "partner": "Macomb Township",
+    "date": "2026-05-02",
+    "location": "Macomb Township DPW",
+    "contact": "Macomb Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers or staffing needs for the event. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270282423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270282423
+      }
+    ]
+  },
+  {
+    "id": "e_csv043",
+    "name": "Washington Township e-waste",
+    "type": "Community Event",
+    "partner": "Washington Township",
+    "date": "2026-05-09",
+    "location": "",
+    "contact": "Washington Township",
+    "contactInfo": "",
+    "desc": "Wil need to contact vendor - Hi-Tech Recycling and supply any containers and staffing for the event. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270272423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270272423
+      }
+    ]
+  },
+  {
+    "id": "e_csv044",
+    "name": "Washington Township E-waste",
+    "type": "Community Event",
+    "partner": "Washington Township",
+    "date": "2026-09-19",
+    "location": "",
+    "contact": "Washington Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - Hi-Tech Recycling and supply any containers and staffing needed for event. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270262423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270262423
+      }
+    ]
+  },
+  {
+    "id": "e_csv045",
+    "name": "Washington Township Shred",
+    "type": "Community Event",
+    "partner": "Washington Township",
+    "date": "2026-05-09",
+    "location": "",
+    "contact": "Washington Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - I'm assuming it is Shred-It (it was not listed in the excel file but that is the only one that I have for these events). We will also need to supply any containers or staffing needed for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270252423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270252423
+      }
+    ]
+  },
+  {
+    "id": "e_csv046",
+    "name": "Grosse Pointe HHW",
+    "type": "Community Event",
+    "partner": "Grosse Pointe Woods",
+    "date": "2026-10-17",
+    "location": "Grosse Pointe Woods Department of Public Works",
+    "contact": "Grosse Pointe Woods",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers or staffing needs for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270242423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270242423
+      }
+    ]
+  },
+  {
+    "id": "e_csv047",
+    "name": "Washington Township Shred",
+    "type": "Community Event",
+    "partner": "Washington Township",
+    "date": "2026-09-19",
+    "location": "Washington Township DPW",
+    "contact": "Washington Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - I'm assuming that it is Shred-It since that has what has been listed for the other communities. Nothing was listed on the excel spreadsheet. Need to supply containers and any staffing needed for the event on our end. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270232423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270232423
+      }
+    ]
+  },
+  {
+    "id": "e_csv048",
+    "name": "Washington Township - HHW",
+    "type": "Community Event",
+    "partner": "Washington Township",
+    "date": "2026-08-08",
+    "location": "Washington Township DPW",
+    "contact": "Washington Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers or staffing for the event on our end. Tammy, Braxton & muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270222423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270222423
+      }
+    ]
+  },
+  {
+    "id": "e_csv049",
+    "name": "Commerce Township HHW",
+    "type": "Community Event",
+    "partner": "Commerce Township",
+    "date": "2026-09-26",
+    "location": "Commerce Township DPW",
+    "contact": "Commerce Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers and staffing for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270212423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270212423
+      }
+    ]
+  },
+  {
+    "id": "e_csv050",
+    "name": "Grosse Pointes HHW",
+    "type": "Community Event",
+    "partner": "Grosse Pointes",
+    "date": "2026-04-11",
+    "location": "Grosse Pointes DPW",
+    "contact": "Grosse Pointes",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply containers and staffing needs from our end for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270202423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270202423
+      }
+    ]
+  },
+  {
+    "id": "e_csv051",
+    "name": "Grosse Pointes HHW",
+    "type": "Community Event",
+    "partner": "Grosse Pointes",
+    "date": "2026-10-10",
+    "location": "",
+    "contact": "Grosse Pointes",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers and staffing needed for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270192423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270192423
+      }
+    ]
+  },
+  {
+    "id": "e_csv052",
+    "name": "Chesterfield Township HHW",
+    "type": "Community Event",
+    "partner": "Chesterfield Township",
+    "date": "2026-06-13",
+    "location": "Chesterfield Township DPW",
+    "contact": "Chesterfield Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers and staffing needed for the event. Tammy, Braxton and muni rep will also need to be contacted.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270182423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270182423
+      }
+    ]
+  },
+  {
+    "id": "e_csv053",
+    "name": "Bloomfield Township E-waste",
+    "type": "Community Event",
+    "partner": "Bloomfield Township",
+    "date": "2026-05-02",
+    "location": "Bloomfield Township DPW",
+    "contact": "Bloomfield Township",
+    "contactInfo": "",
+    "desc": "Wil need to contact vendor - GLE and supply any containers and staffing needed for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270172423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270172423
+      }
+    ]
+  },
+  {
+    "id": "e_csv054",
+    "name": "Bloomfield Township Shred",
+    "type": "Community Event",
+    "partner": "Bloomfield Township",
+    "date": "2026-05-02",
+    "location": "Bloomfield Township DPW",
+    "contact": "Bloomfield Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - Shred-It and supply any containers and staffing needed for the event. Tammy, Braxton and muni rep also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270162423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270162423
+      }
+    ]
+  },
+  {
+    "id": "e_csv055",
+    "name": "Bloomfield Township HHW",
+    "type": "Community Event",
+    "partner": "Bloomfield Township",
+    "date": "2026-10-03",
+    "location": "Bloomfield Township DPW",
+    "contact": "Bloomfield Township",
+    "contactInfo": "",
+    "desc": "Will need to contact vendor - ERG and supply any containers and staffing for the event. Tammy, Braxton and muni rep will also need to be notified.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270152423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270152423
+      }
+    ]
+  },
+  {
+    "id": "e_csv056",
+    "name": "State of the City of Detroit",
+    "type": "Municipal Mtg.",
+    "partner": "It came from RSVPify - invititations@rsvpify.org to Matt Allen - but in the email for questions cont",
+    "date": "2026-03-30",
+    "location": "",
+    "contact": "It came from RSVPify - invititations@rsvpify.org to Matt Allen - but in the email for questions cont",
+    "contactInfo": "",
+    "desc": "It states that the tickets are non-transferable, but they want to have a relationship with us and I am surprised that they sent Matt Allen an invite to begin with since they have not had a positive experience with him. Let me know and I can reach out to see, under the circumstances, we can get another rep in his place.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 20,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270142423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270142423
+      }
+    ]
+  },
+  {
+    "id": "e_csv057",
+    "name": "Festival of the Hills - Rochester Hills",
+    "type": "Sponsorship",
+    "partner": "Erin Sudrovech - Chief of Staff, Office of Mayor - email: sudroveche@rochesterhills.org: #248-841-25",
+    "date": "2026-06-24",
+    "location": "Borden Park",
+    "contact": "Erin Sudrovech - Chief of Staff, Office of Mayor - email: sudroveche@rochesterhills.org: #248-841-25",
+    "contactInfo": "",
+    "desc": "Priority donated last year - $25,000 and Erin stated we could donate the same amount and receive all of the benefits of the $30,000 level. Most of the advantage to sponsorship is marketing on their platforms. Question is did we get a return on investment from last year? I have gone to this event in the past & there is a lot of people and they do place the ads all over the Festival and there are A LOT of people who come down. Most of them are just coming for the fireworks. The lowest level is $2,500 Hills Helper - logo on city website & media channels, logo displayed on-site at event, recognition on the big screen. See attachment for all the other packages and their benefits.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 2500,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 60,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270132423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270132423
+      }
+    ]
+  },
+  {
+    "id": "e_csv058",
+    "name": "Children for Hair Loss Golf Outing",
+    "type": "Sponsorship",
+    "partner": "Laura Fennell - email laura@downriverbusinessassociation.com",
+    "date": "2026-06-13",
+    "location": "Sandy Creek Golf Course",
+    "contact": "Laura Fennell - email laura@downriverbusinessassociation.com",
+    "contactInfo": "",
+    "desc": "The golf outing is a fundraiser for children for hair loss. You have options - actually golf - $135 per golfer or $540 for a team of four. Lunch and dinner are included with you golf purchase. Sponsorships $100 is just to be kind (no marketing); Packages: $200 for Hole - name and logo; $500 for Betting Hole - sign on a popular hole; $ 750 for Hole in One - sign at three holes; $1,500 for Beverage Cart Sponsor - sign on the cart that drives around; $2,500 for a sign under dinner tent (huge sign); $5,000 Event Sponsor with HUGE sign all day. Registration was sent in email and you can do it online - see attachment",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270122423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270122423
+      }
+    ]
+  },
+  {
+    "id": "e_csv059",
+    "name": "Detroit State of the City Address",
+    "type": "Municipal Mtg.",
+    "partner": "Contact for questions is sotc@detroitmi.gov",
+    "date": "2026-03-31",
+    "location": "Samuel C. Mumford High School",
+    "contact": "Contact for questions is sotc@detroitmi.gov",
+    "contactInfo": "",
+    "desc": "The invitation is by request only and it was sent to Matt Allen. The email states that it is non-transferable, but I believe under the circumstances they will let this one be transferred. I do need to know an individual that would go in Matt's place so I can get the ball rolling. Need to RSVP before March 20th.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270112423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270112423
+      }
+    ]
+  },
+  {
+    "id": "e_csv060",
+    "name": "Alzheimer's Fundraiser Benefit",
+    "type": "Sponsorship",
+    "partner": "Downriver Business Association - contact for event is Rhonda Nowitzke # 734-731-0406",
+    "date": "2026-06-13",
+    "location": "202 W. Front Street, Monroe, MI",
+    "contact": "Downriver Business Association - contact for event is Rhonda Nowitzke # 734-731-0406",
+    "contactInfo": "",
+    "desc": "The request came through Downriver Business Association but I believe the main sponsor is Coldwell Banker Haynes. All sponsorships & donations are tax deductible. One can VENMO: @RhondaNowitzke.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 50,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270102423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270102423
+      }
+    ]
+  },
+  {
+    "id": "e_csv061",
+    "name": "Speed Networking Night",
+    "type": "Community Event",
+    "partner": "Downriver Business Assoication - Laura Fennell: laura@downriverbusinessassociation.ccsend.com",
+    "date": "2026-03-18",
+    "location": "The Biddle Hall",
+    "contact": "Downriver Business Assoication - Laura Fennell: laura@downriverbusinessassociation.ccsend.com",
+    "contactInfo": "",
+    "desc": "If we are still members and looking for business in the downriver area, might consider it. I would ask the reps in the area if this is worth going to.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Leads",
+    "status": "pending",
+    "createdAt": 1776270092423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270092423
+      }
+    ]
+  },
+  {
+    "id": "e_csv062",
+    "name": "State of the Region",
+    "type": "Municipal Mtg.",
+    "partner": "Detroit Regional Chamber-questions to Pilar Doakes: pdoakes@detroitchamber.com or # 313-596-0344",
+    "date": "2026-03-25",
+    "location": "Elevate at One Campus Martius",
+    "contact": "Detroit Regional Chamber-questions to Pilar Doakes: pdoakes@detroitchamber.com or # 313-596-0344",
+    "contactInfo": "",
+    "desc": "It is their annual State of the Region convenes business, civic and community leaders to examine the forces shaping Southeast Michigan's economic future. Chamber President and Chief Executive Officer Sandy K. Baruah will present findings followed by insights from Dennis W. Archer Jr., Yasmeen Jasey & Trevor Lauer. There is a link in the email to Register. If you are interested, please let me know.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 90,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270082423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270082423
+      }
+    ]
+  },
+  {
+    "id": "e_csv063",
+    "name": "Celebrating Rev. Horace Sheffield",
+    "type": "Community Event",
+    "partner": "",
+    "date": "2026-03-25",
+    "location": "",
+    "contact": "",
+    "contactInfo": "",
+    "desc": "I'm just including this so you know the \"requests\" that Matt Allen receives.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Sentiment",
+    "status": "pending",
+    "createdAt": 1776270072423,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270072423
+      }
+    ]
+  },
+  {
+    "id": "e_csv064",
+    "name": "Mackinac Policy Conference -  A Toast to Michigan Chamber PAC Reception",
+    "type": "Community Event",
+    "partner": "Adam Majestic-members@detroitchamber.com; for event: Pilar Doakes: pdoakes@detroitchamber.com # 313-",
+    "date": "2026-05-28",
+    "location": "Grand Hotel",
+    "contact": "Adam Majestic-members@detroitchamber.com; for event: Pilar Doakes: pdoakes@detroitchamber.com # 313-",
+    "contactInfo": "",
+    "desc": "It is a separate registration from the conference. Chance to hear from legislative leaders. Space is limited and the link to register is in the email through a \"Secure Ticket Now\" button. It is stated as a \"contribution\" not a sponsorship.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 250,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "",
+    "status": "pending",
+    "createdAt": 1776270062424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270062424
+      }
+    ]
+  },
+  {
+    "id": "e_csv065",
+    "name": "Sterling Fest",
+    "type": "Sponsorship",
+    "partner": "Melanie Davis, Community Relations Director, mdavis@sterlingheights.gov; # 586-446-2471 (0).",
+    "date": "2026-07-23",
+    "location": "Dodge Park",
+    "contact": "Melanie Davis, Community Relations Director, mdavis@sterlingheights.gov; # 586-446-2471 (0).",
+    "contactInfo": "",
+    "desc": "The attendance is large, we also had a vendor spot all three days but I don't think we need all three days for vending or staying at the event for the entire day. At some point people only there for the entertainment. Matt Allen requested to reserve the same sponsorship level - the Suds 'n' Sounds Stage - which I didn't see on the flyer, so that would be a conversation.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1500,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 150,
+    "roi": "No usually answering questions, solving problems, a few residential leads",
+    "status": "pending",
+    "createdAt": 1776270052424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270052424
+      }
+    ]
+  },
+  {
+    "id": "e_csv066",
+    "name": "Champions of Change - Southeast Michigan Chamber",
+    "type": "Community Event",
+    "partner": "Southeast Michigan Chamber",
+    "date": "2026-03-26",
+    "location": "Don Christo's Cigar Room",
+    "contact": "Southeast Michigan Chamber",
+    "contactInfo": "",
+    "desc": "It is one of two networking events that the chamber is having this month. For the price you will get 1 drink ticket, 1 cigar and appetizers from Don Christo's. Since it is in Shelby Twp. I want to say the attendees will be mostly from Macomb County. Funds raised will support children through Neway Works Program. Register online.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 50,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "unknown",
+    "status": "pending",
+    "createdAt": 1776270042424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270042424
+      }
+    ]
+  },
+  {
+    "id": "e_csv067",
+    "name": "Ribbon Cutting: Genex Window & Door Factory",
+    "type": "Community Event",
+    "partner": "Southeast Michigan Chamber",
+    "date": "2026-03-27",
+    "location": "31131 Mound Rd",
+    "contact": "Southeast Michigan Chamber",
+    "contactInfo": "",
+    "desc": "This is another networking event during the day. Free with adult beverages, food trucks and sub chamber members will be present/invited. All in Macomb County. Registration is online. So if you want to go there is a link",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "unknown",
+    "status": "pending",
+    "createdAt": 1776270032424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270032424
+      }
+    ]
+  },
+  {
+    "id": "e_csv068",
+    "name": "Eastside Community Chamber Membership Directory - Marketing",
+    "type": "Community Event",
+    "partner": "Eastside Chamber - Linda 586-904-8003 email: director@eastsidecommunitychamber.org",
+    "date": "2026-04-14",
+    "location": "",
+    "contact": "Eastside Chamber - Linda 586-904-8003 email: director@eastsidecommunitychamber.org",
+    "contactInfo": "",
+    "desc": "It is a marketing request for their membership directory - see attachment for details and pricing. I put April 14th for the date, but the deadline to submit paperwork and money is April 15th.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1800,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "maybe",
+    "status": "pending",
+    "createdAt": 1776270022424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270022424
+      }
+    ]
+  },
+  {
+    "id": "e_csv069",
+    "name": "Donation of 30 yard for DPW Director, Don - niece passed away & they are emptying the home",
+    "type": "Community Event",
+    "partner": "Don - DPW director of Westland, Paul Ruthenberg contacted me to forward the request",
+    "date": "2026-03-20",
+    "location": "9868 Crane Rd",
+    "contact": "Don - DPW director of Westland, Paul Ruthenberg contacted me to forward the request",
+    "contactInfo": "",
+    "desc": "Don is a former DPW Director of Livonia (now with Westland) and his niece recently passed away. They have to empty her house and he has requested a donation for a 30 yard roll off. Paul Ruthenberg is who Don contacted for the donation.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776270012424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270012424
+      }
+    ]
+  },
+  {
+    "id": "e_csv070",
+    "name": "Tons O' Trucks - Macomb Township",
+    "type": "Community Event",
+    "partner": "-L-acey Ward - wardl@macomb-mi.gov; #586-873-5012",
+    "date": "2026-06-13",
+    "location": "47200 Heydenreich Rd",
+    "contact": "-L-acey Ward - wardl@macomb-mi.gov; #586-873-5012",
+    "contactInfo": "",
+    "desc": "Saturday, June 13th, 2026 - Event is at Seneca Middle School - address above, parking for anyone who attends from the company is at Dakota High School (off 21 Mile. Approx. 2 miles EAST of Romeo Plk). I need to fill out a form and submit it to Macomb Twp Parks & Recreation Attn: Lacey Ward. Set up begins at 8 am, please be set-up by 9:30 am. Vehicles will not be able to leave until the end of the event which will be 1 pm.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 4,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776270002424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776270002424
+      }
+    ]
+  },
+  {
+    "id": "e_csv071",
+    "name": "Cinco De Mayo Parade - Detroit",
+    "type": "Community Event",
+    "partner": "Mexican Patriotic Committee Admin@mpcdetroit.org. # 313-451-0059",
+    "date": "2026-05-03",
+    "location": "",
+    "contact": "Mexican Patriotic Committee Admin@mpcdetroit.org. # 313-451-0059",
+    "contactInfo": "",
+    "desc": "I know that the contract for the city is up in 3 yrs. (be prepared they are looking for curbside organics/food waste collection in new contract). I will provide attachment with the forms that need to be filled out. There are several drop off locations listed and where the check will need to be mailed to. The forms will also need to be filled out by Braxton because they are asking for vehicle information  - drivers name, copy of Driver's License, vehicle plate, etc. Due date for application and payment is Friday, April 24th. There is a surcharge after April 25th - which is a Saturday. Request a sponsorship package by emailing mpcdetroitevents@gmail.com",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 130,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269992424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269992424
+      }
+    ]
+  },
+  {
+    "id": "e_csv072",
+    "name": "Football Sponsorship for season for Hamtramck Football Team",
+    "type": "Sponsorship",
+    "partner": "Chris Email: chrisf.elitesports@gmail.com # 682-343-5488",
+    "date": "2026-06-01",
+    "location": "",
+    "contact": "Chris Email: chrisf.elitesports@gmail.com # 682-343-5488",
+    "contactInfo": "",
+    "desc": "Benefits of being a Sponsor: \nAll sponsors will be EXCLUSIVE to their industry\nYou will create brand awareness.\nYour company's support will help us get spirit items made at no cost to the school.\nStudents, Faculty, & Parents will get these great keepsake items and will see your information week after week, all season long\nCost includes All graphic artwork, proofing, sponsor copies (of shirts), and printing for the whole season!\nYour company will also be announced at half time during every home game as the preferred vendor in your industry, which is an awesome Community Endorsement!\nYou will build goodwill within the community.\nSponsorships are 100% Tax Deductible.\n\nThis contact was forwarded to me by LCD - Luke Dmytro - he took the call.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269982424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269982424
+      }
+    ]
+  },
+  {
+    "id": "e_csv073",
+    "name": "Michigan Challenge Balloonfest - Howell",
+    "type": "Sponsorship",
+    "partner": "Dianne Samples: Director of Programs & Engagement, Howell Chamber of Commerce: dsamples@howell.org; ",
+    "date": "2026-06-25",
+    "location": "Howell High School",
+    "contact": "Dianne Samples: Director of Programs & Engagement, Howell Chamber of Commerce: dsamples@howell.org; ",
+    "contactInfo": "",
+    "desc": "Raymond originally reached out & I inquired for more details which were provided by Dianne Samples who is the event coordinator. I will attach the email of what they are looking for and the sponsorship opportunities (which she stated that she can work with the company outside of the packages on the flyer). They are seeking support of two 30 yard dumpsters or one 40 yard with the back door accessibility walk in, along with pick up, hauling, and disposal service for the festival weekend. The balloon fest is at the high school but it seems like the festival spills out into the downtown Howell area - carnival, music, food trucks, etc. They will have volunteers gather up the waste, just need a large container to place it in. Brett is the Municipal Relations Rep for the area and is aware of the request. Upon Approval, maps of drop off area will be provided. Other contacts on email: Raymond Kraft - rkraft@cityofhowell.org & Lizz Curnalia - lcurnalia@howell.org Diane Samples also sent document",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 80,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269972424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269972424
+      }
+    ]
+  },
+  {
+    "id": "e_csv074",
+    "name": "Spirit Fest",
+    "type": "Community Event",
+    "partner": "Martin Zbosnik - mzbosnik@dearbornheightsmi.gov. Paul Ruthenberg put it through for approval.",
+    "date": "2026-06-10",
+    "location": "Canfield Community Center",
+    "contact": "Martin Zbosnik - mzbosnik@dearbornheightsmi.gov. Paul Ruthenberg put it through for approval.",
+    "contactInfo": "",
+    "desc": "Martin Zbosnik requested a roll off last year that was never delivered. He requested one through Paul R. for this year's Fest. I believe it is a donation as far as the roll off and service - hauling and disposing the waste. Already approved by Sam C., request submitted to Roll-offs who stated they will work on it.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 30,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269962424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269962424
+      }
+    ]
+  },
+  {
+    "id": "e_csv075",
+    "name": "Liberty Fest",
+    "type": "Community Event",
+    "partner": "Supervisor Anne-Marie Graham-Hudak: anne-maire.graham-hudak@cantonmi.gov. #734-394-5185",
+    "date": "2026-06-18",
+    "location": "Heritage Park - 1150 S. Canton Center Rd., Canton, MI ",
+    "contact": "Supervisor Anne-Marie Graham-Hudak: anne-maire.graham-hudak@cantonmi.gov. #734-394-5185",
+    "contactInfo": "",
+    "desc": "Canton is working on diverting food waste at this event. They are working with Make Food Not Waste and the focus will be around the amphitheater with the food vendors there. They would also like to work on the recycling aspect for pop and water bottles and requested 30 event boxes for the event. They have not requested sponsorship (yet???) The dumpster they are going to get from another vendor who will deal with food waste since they stated Priority would not. They will need boxes before June 18th - will provide drop off and date at later time. Just starting planning process as the Sustainability Committee",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 30,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 100,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269952424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269952424
+      }
+    ]
+  },
+  {
+    "id": "e_csv076",
+    "name": "McCordsville Touch A Truck - Indiana",
+    "type": "Community Event",
+    "partner": "Ashley Greene, Parks & Rec; agreene@mccordsville.in.gov: #317-607-9962",
+    "date": "2026-07-25",
+    "location": "5811 McCordsville, In",
+    "contact": "Ashley Greene, Parks & Rec; agreene@mccordsville.in.gov: #317-607-9962",
+    "contactInfo": "",
+    "desc": "Ashley Greene reached out to us for a Touch a Truck event that the community parks and recreation is offering. This is their first event and they are building a new community center (it is just an FYI to me for possible educational program). The truck will need to be in place no later than 9:30 am. From 10 to 11 am it will be sensitive friendly - no horns! From 11 am to 12 pm the children can play with the horns. It runs until noon but you may have to wait to leave. Direct contact day of is Ashely Greene - 317-607-9962",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 50,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269942424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269942424
+      }
+    ]
+  },
+  {
+    "id": "e_csv077",
+    "name": "Sterling Heights Memorial Day Parade",
+    "type": "Community Event",
+    "partner": "Melanie Davis: mdavis@sterlingheights.gov",
+    "date": "2026-05-25",
+    "location": "",
+    "contact": "Melanie Davis: mdavis@sterlingheights.gov",
+    "contactInfo": "",
+    "desc": "Memorial Day activities begin promptly at 9 a.m. in the Civic Center Courtyard (located between City Hall and the Police Department) as hundreds gather for a solemn tribute to all veterans who died in the line of duty.\n \nThe 47th Annual Memorial Day Parade begins promptly at 10 a.m.  The parade will stage and begin in Dodge Park and proceed south on Dodge Park Road to Gene L. Klida Utica Academy for International Studies located at the Northeast corner of Dodge Park & Metropolitan Parkway. \n\nGroups participating in the parade should be assembled in the staging area by 8:30 a.m. - you can have one rep from your group check in at the registration area in Dodge Park and instruct other members of your group to go directly to your assigned staging area.\n\nIf you're able to have a PW truck and/or fleet vehicle / float with some walkers / banner, etc., you can apply by using the attached form. It's a great community promotional opportunity, and it's free!\n\nWe can have whatever vehicle that we ",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269932424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269932424
+      }
+    ]
+  },
+  {
+    "id": "e_csv078",
+    "name": "Test Event",
+    "type": "Sponsorship",
+    "partner": "Zach",
+    "date": "2026-04-02",
+    "location": "Priority Waste",
+    "contact": "Zach",
+    "contactInfo": "",
+    "desc": "Test",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "Brand Awareness",
+    "status": "pending",
+    "createdAt": 1776269922424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269922424
+      }
+    ]
+  },
+  {
+    "id": "e_csv079",
+    "name": "LA SED's Annual Recognition Luncheon",
+    "type": "Sponsorship",
+    "partner": "Contact is Ashley Mendez - amendez@lasedinc.org; #313-554-2025",
+    "date": "2026-05-07",
+    "location": "MGM Grand Detroit",
+    "contact": "Contact is Ashley Mendez - amendez@lasedinc.org; #313-554-2025",
+    "contactInfo": "",
+    "desc": "The request was made by Jane Garcia, Chairperson of LA SED Luncheon Committee and Mary Carmen Munoz, Executive Director but the contact is another person. I will include the packet I received that explains who they are (they advocate and are a resource for underserved community and help more than 5,000 individuals, providing the tools and support needed to promote self- sufficiency, helping families and individuals pursue their goals & build futures. Sponsorships deadline is April 10th and advertising deadline (with logo) is April 15th. Forms are to be returned either by fax 313-554-2242, email amendez@lasedinc.org or calling Ashely Mendez at 313-554-2025",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 15000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269912424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269912424
+      }
+    ]
+  },
+  {
+    "id": "e_csv080",
+    "name": "5th Annual Charity Hockey Game",
+    "type": "Sponsorship",
+    "partner": "Brandon McCullough - email: ltuhockey@hotmail.com # 248-756-4842",
+    "date": "2026-05-02",
+    "location": "Eddie Edgar Ice Arena",
+    "contact": "Brandon McCullough - email: ltuhockey@hotmail.com # 248-756-4842",
+    "contactInfo": "",
+    "desc": "Already approved by Sam. Priority will receive recognition for being a sponsor and 100% of proceeds go to Breaking Barriers for Kids & Families.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269902424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269902424
+      }
+    ]
+  },
+  {
+    "id": "e_csv081",
+    "name": "34th Annual Bob Bennett Memorial Classic",
+    "type": "Sponsorship",
+    "partner": "Charlie Mahoney - email: mahoneyc@prodigy.net #248-320-6478",
+    "date": "2026-06-05",
+    "location": "Whispering Willows Golf Course",
+    "contact": "Charlie Mahoney - email: mahoneyc@prodigy.net #248-320-6478",
+    "contactInfo": "",
+    "desc": "Already approved by Sam. 34th annual event for Livonia Orchestra. Recognition will be given at the event and in booklet. Form needs to be filled out and check to organization.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 600,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269892424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269892424
+      }
+    ]
+  },
+  {
+    "id": "e_csv082",
+    "name": "Superior Day",
+    "type": "Sponsorship",
+    "partner": "Linda Lewis, Treasurer of Superior Twp. llewis@superior-twp.org; # 734-482-6099",
+    "date": "2026-06-13",
+    "location": "",
+    "contact": "Linda Lewis, Treasurer of Superior Twp. llewis@superior-twp.org; # 734-482-6099",
+    "contactInfo": "",
+    "desc": "Already approved by Sam. The event is for the residents of the township. Question: are we suppose to provide a vendor tent/table or event boxes???",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 1000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269882424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269882424
+      }
+    ]
+  },
+  {
+    "id": "e_csv083",
+    "name": "Hamtramck Parks Conservancy - Sponsorship - Banner at baseball field",
+    "type": "Sponsorship",
+    "partner": "Mike Wilson Email: coachmike@hotmail.com; # 248-505-6603",
+    "date": "2026-04-04",
+    "location": "Vetreans Park 3201 Dan Street, Hamtramck",
+    "contact": "Mike Wilson Email: coachmike@hotmail.com; # 248-505-6603",
+    "contactInfo": "",
+    "desc": "Exposure to the community through a banner that will be placed on the fence. The banner will be on display from May to October. Minimum donation is $500 and if we did it last year we can get the annual for $400. We missed the deadline, but something tells me they will still make it happen.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 500,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269872424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269872424
+      }
+    ]
+  },
+  {
+    "id": "e_csv084",
+    "name": "Lower Schools Summer Camp - Career Week - Educational with Truck stopping by",
+    "type": "Community Event",
+    "partner": "Madison Loken - lssumercamp@ndpma.org.",
+    "date": "2026-06-18",
+    "location": "1425 Giddings Rd",
+    "contact": "Madison Loken - lssumercamp@ndpma.org.",
+    "contactInfo": "",
+    "desc": "Sam gave the approval for me to go since there was not a cost associated with me giving a presentation. I do need a truck to drive by, so Braxton and I believe it would be the Auburn Hills yard for a truck to stop by. If they could give me a time between 10 am and 3 pm, I can schedule my portion around the truck stopping by. Only needs to be max. 15 minutes.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 15,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269862424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269862424
+      }
+    ]
+  },
+  {
+    "id": "e_csv085",
+    "name": "Grosse Pointe Park Employee Appreciation Picnic",
+    "type": "Sponsorship",
+    "partner": "Nick Sizeland, City Manager: email sizelandn@grossepointepark.org # 313-822-6200 Ext. 361",
+    "date": "2026-08-12",
+    "location": "Windmill Pointe Park",
+    "contact": "Nick Sizeland, City Manager: email sizelandn@grossepointepark.org # 313-822-6200 Ext. 361",
+    "contactInfo": "",
+    "desc": "Decision needs to be made by May 29th to Bridgette Bowdler, City Clerk - email: bowdlerb@grossepointepark.org. # 313-822-6200 Ext. 267. Attachments were sent about the different levels of sponsorship and what is included as far as marketing for the company. At every level people will know who the sponsors are.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 200,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 90,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269852424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269852424
+      }
+    ]
+  },
+  {
+    "id": "e_csv086",
+    "name": "Woodhaven Uncle Sam Jam Festival",
+    "type": "Sponsorship",
+    "partner": "Kevin Cassidy Email: kevin.funfest@gmail.com # 586-419-0333",
+    "date": "2026-07-09",
+    "location": "23977 Hall Rd",
+    "contact": "Kevin Cassidy Email: kevin.funfest@gmail.com # 586-419-0333",
+    "contactInfo": "",
+    "desc": "Email was sent to Sam from Kevin Cassidy - explained that the festival attracts 50,000 people in attendance during the 4 days and there is Fireworks, Food, Music and Carnival - from what I can tell it is free, but I'm not sure if the food and carnival are free? If there are any questions about the various levels and marketing opportunities - feel free to reach out to Kevin See attachment for details.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 5000,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 50,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269842424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269842424
+      }
+    ]
+  },
+  {
+    "id": "e_csv087",
+    "name": "4th of July Celebration - Corunna",
+    "type": "Sponsorship",
+    "partner": "Leigh Walker Email: corunnami@gmail.com # 989-743-3650",
+    "date": "2026-07-04",
+    "location": "Mc Curdy Park, Corunna, MI",
+    "contact": "Leigh Walker Email: corunnami@gmail.com # 989-743-3650",
+    "contactInfo": "",
+    "desc": "We were sponsors last year, they need to know by May 19th - please see attachments. The email states we can be co-sponsors for $100.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 100,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269832424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269832424
+      }
+    ]
+  },
+  {
+    "id": "e_csv088",
+    "name": "Vinny's Village - Fundraiser for Vince Polick - battling cancer",
+    "type": "Sponsorship",
+    "partner": "Brett Quitiquit - Municipal Relations Rep.",
+    "date": "2026-04-24",
+    "location": "4724 Dixie Hwy",
+    "contact": "Brett Quitiquit - Municipal Relations Rep.",
+    "contactInfo": "",
+    "desc": "Brett asked me to add this to the event tracker - it is coming up soon and Brett was wondering if we had any Tiger Tickets we can give them for their silent auction. I will include all the paperwork in the attachments including the W9 form. This event is coming up soon - April 24th so a decision is best made sooner than later",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 30,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "n/a",
+    "status": "pending",
+    "createdAt": 1776269822424,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269822424
+      }
+    ]
+  },
+  {
+    "id": "e_csv089",
+    "name": "Indiana Apartment Association - Midwest Multifamily Conference",
+    "type": "Community Event",
+    "partner": "Andrea Kruse",
+    "date": "2026-10-15",
+    "location": "Indianapolis Convention Center",
+    "contact": "Andrea Kruse",
+    "contactInfo": "",
+    "desc": "Indiana Apartment Association Trade Show and Conference - booth selection will be attached. Prices above are for registration prior to June 12th. As of June 13th the price is as follows: For Members Regular booth $1,675 and Premier $ 1,775. For Non-members: Regular booth $2,245 and Premier $2,345.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 6,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 3,
+    "roi": "YES",
+    "status": "pending",
+    "createdAt": 1776269812425,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269812425
+      }
+    ]
+  },
+  {
+    "id": "e_csv090",
+    "name": "Northville 4th Annual Touch-a-Truck",
+    "type": "Community Event",
+    "partner": "Caryn Barton, Head of Youth Services: cbartone@northvillelibrary.org: #248-349-3020 X 212",
+    "date": "2026-06-06",
+    "location": "Northville High School",
+    "contact": "Caryn Barton, Head of Youth Services: cbartone@northvillelibrary.org: #248-349-3020 X 212",
+    "contactInfo": "",
+    "desc": "Good for community relations. The event is sensory friendly - so make sure there is NO air in the horn (I know that the drivers can take the air out of the blow horn just in case a child reaches for the cord to pull.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 1,
+    "roi": "n/a",
+    "status": "pending",
+    "createdAt": 1776269802425,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269802425
+      }
+    ]
+  },
+  {
+    "id": "e_csv091",
+    "name": "Touch a Truck Canton",
+    "type": "Community Event",
+    "partner": "Emma Di Cesare (Kramer), Resident Service Advocate, 734-394-5198; emma.dicesare@cantonmi.gov",
+    "date": "2026-05-02",
+    "location": "41640 Ford Rd",
+    "contact": "Emma Di Cesare (Kramer), Resident Service Advocate, 734-394-5198; emma.dicesare@cantonmi.gov",
+    "contactInfo": "",
+    "desc": "Vehicles in place by 9 AM, families start to arrive at 10 AM. We can bring a table to hand items out. Contact at event: Evan Sweet, Events & Enrichment Specialist: 734-394-5498 Email: evan.sweet@cantonmi.gov",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 0,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 800,
+    "roi": "N/A",
+    "status": "pending",
+    "createdAt": 1776269792425,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269792425
+      }
+    ]
+  },
+  {
+    "id": "e_csv092",
+    "name": "Roll off donation to VFW in Shelby Twp., MI",
+    "type": "Community Event",
+    "partner": "Carol Dalpe, Senior Vice Commander - VFW Post 4659: # 586-214-0303",
+    "date": "2026-05-09",
+    "location": "55200 River Stone Dr",
+    "contact": "Carol Dalpe, Senior Vice Commander - VFW Post 4659: # 586-214-0303",
+    "contactInfo": "",
+    "desc": "The VFW Post 4659 is a non-profit organization that is doing a day of service cleaning a small cemetery in Shelby Twp. Most of the waste will be yard waste (I informed them that metal/plastic can't be mixed in with yard waste) Size wise 10 yard roll off. I'm not too sure if we can put a dumpster such as a 4 yard or 8 yard in there. Carol will send pictures & I will update. Drop off & Pick up on Saturday, May 9th. Will also provide paperwork for donation.",
+    "deliverables": "Activation/Booth needed\nStaffing required",
+    "budget": {
+      "sponsor": 10,
+      "marketing": 0,
+      "swag": 0,
+      "staff": 0,
+      "equipment": 0,
+      "other": 0
+    },
+    "attendance": 0,
+    "roi": "n/a",
+    "status": "pending",
+    "createdAt": 1776269782425,
+    "log": [
+      {
+        "action": "Submitted for approval",
+        "by": "Coordinator",
+        "note": "",
+        "at": 1776269782425
+      }
+    ]
+  }
+];
+
+/* ---------- Import CSV Data ---------- */
+async function importCSVData() {
+  if (!confirm('This will add 92 events from the CSV intake form. Continue?')) return;
+  
+  // Merge with existing, avoiding duplicates by ID
+  const existingIds = new Set(events.map(e => e.id));
+  const newEvents = CSV_IMPORT_DATA.filter(e => !existingIds.has(e.id));
+  events = [...events, ...newEvents];
+  
+  await saveEvents();
+  toast(`Imported ${newEvents.length} events`);
+  render();
+}
+
+/* ---------- Clear All Data ---------- */
+async function clearAllData() {
+  if (!confirm('This will delete ALL events. This cannot be undone. Continue?')) return;
+  events = [];
+  await saveEvents();
+  toast('All data cleared');
+  render();
+}
+
+/* ---------- Boot ---------- */
+(async () => {
+  await loadEvents();
+  
+  // Auto-import CSV data if no events exist
+  if (events.length === 0 && CSV_IMPORT_DATA.length > 0) {
+    events = CSV_IMPORT_DATA;
+    await saveEvents();
+  }
+  
+  render();
+})();
+</script>
+</body>
+</html>
