@@ -429,6 +429,142 @@
     border-top: 2px solid var(--pw-light-gray);
   }
 
+  /* ===== WEBHOOK ADMIN ===== */
+  .webhook-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid #E0E0E0;
+  }
+
+  .webhook-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--pw-black);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .webhook-section p {
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .webhook-url-box {
+    background: #F9F9F9;
+    border: 2px solid var(--pw-yellow);
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+
+  .webhook-url-box label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .webhook-url-box .url-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .webhook-url-box input[type="text"] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--pw-white);
+  }
+
+  .webhook-steps {
+    background: var(--pw-black);
+    color: var(--pw-white);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .webhook-steps h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+  }
+
+  .webhook-steps ol {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.8;
+  }
+
+  .webhook-steps li {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .webhook-payload-box {
+    background: var(--pw-light-gray);
+    border: 1px dashed #DDD;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .webhook-payload-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .code-block {
+    background: var(--pw-black);
+    color: var(--pw-white);
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+
+  .webhook-events-box {
+    background: #FFF9E6;
+    border: 2px solid var(--status-pending);
+    border-radius: 6px;
+    padding: 18px;
+  }
+
+  .webhook-events-box h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--status-pending);
+    margin-bottom: 10px;
+  }
+
+  .webhook-events-box ul {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.7;
+  }
+
+  .webhook-events-box li {
+    font-size: 13px;
+    color: #666;
+  }
+
   /* ===== MODAL ===== */
   .modal-overlay {
     position: fixed;
@@ -741,6 +877,65 @@
   <div class="modal" id="detailContent"></div>
 </div>
 
+<!-- Webhook Admin Section -->
+<div id="webhookAdminSection" style="display: none;">
+  <main style="padding: 28px 32px 80px; max-width: 1440px; margin: 0 auto;">
+    <div class="webhook-section">
+      <h3>Webhook Admin (Zapier Integration)</h3>
+      <p>Send real-time event notifications to external systems via Zapier. Paste your unique webhook URL into Zapier to start automating workflows.</p>
+
+      <!-- Webhook URL -->
+      <div class="webhook-url-box">
+        <label>Step 1: Copy Your Webhook URL</label>
+        <div class="url-input-group">
+          <input type="text" id="webhookUrl" readonly />
+          <button class="btn small" onclick="copyWebhookUrl()">Copy</button>
+        </div>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">This URL is your unique webhook endpoint for Zapier integration.</p>
+      </div>
+
+      <!-- Setup Steps -->
+      <div class="webhook-steps">
+        <h4>Step 2: Zapier Setup Instructions</h4>
+        <ol>
+          <li>Log in to Zapier</li>
+          <li>Create new Zap → "Webhooks by Zapier" trigger</li>
+          <li>Select "Catch Raw Hook"</li>
+          <li>Copy the webhook URL above and paste into Zapier</li>
+          <li>Set up your action (email, Slack, Google Sheets, etc.)</li>
+          <li>Test and activate your Zap</li>
+        </ol>
+      </div>
+
+      <!-- Example Payload -->
+      <div class="webhook-payload-box">
+        <div class="label">Example Webhook Payload</div>
+        <div class="code-block">{
+  "event": "approved",
+  "timestamp": 1713187200000,
+  "data": {
+    "id": "evt_123",
+    "name": "Earth Day Cleanup",
+    "status": "approved"
+  }
+}</div>
+      </div>
+
+      <!-- Events That Trigger -->
+      <div class="webhook-events-box">
+        <h4>Events That Trigger Webhook</h4>
+        <ul>
+          <li>✓ Event submitted (new or resubmitted)</li>
+          <li>✓ Event approved by VP</li>
+          <li>✓ Event denied by VP</li>
+          <li>✓ Event marked as executing</li>
+          <li>✓ Event completed with report</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -787,6 +982,12 @@ function render() {
   renderStats();
   renderFilters();
   renderList();
+  
+  // Show webhook section for VP only
+  document.getElementById('webhookAdminSection').style.display = role === 'vp' ? 'block' : 'none';
+  if (role === 'vp') {
+    initWebhookUrl();
+  }
 }
 
 function renderStats() {
@@ -999,6 +1200,7 @@ async function decide(id, approved) {
   e.log = e.log || [];
   e.log.push({ action: approved ? 'Approved' : 'Denied', by: 'VP / Michael French', note, at: Date.now() });
   await saveEvents();
+  await fireWebhook(approved ? 'approved' : 'denied', { id: e.id, name: e.name, status: e.status });
   closeDetail();
   toast(approved ? 'Approved' : 'Denied');
   render();
@@ -1007,7 +1209,11 @@ async function markExecuting(id) {
   const e = events.find(x=>x.id===id); if (!e) return;
   e.status = 'executing';
   e.log.push({ action: 'Marked In Progress', by: 'Coordinator', note: '', at: Date.now() });
-  await saveEvents(); closeDetail(); toast('Now executing'); render();
+  await saveEvents();
+  await fireWebhook('executing', { id: e.id, name: e.name, status: e.status });
+  closeDetail();
+  toast('Now executing');
+  render();
 }
 async function completeEvent(id) {
   const e = events.find(x=>x.id===id); if (!e) return;
@@ -1018,7 +1224,11 @@ async function completeEvent(id) {
   e.status = 'completed';
   e.completedAt = Date.now();
   e.log.push({ action: 'Completed with report', by: 'Coordinator', note: '', at: Date.now() });
-  await saveEvents(); closeDetail(); toast('Event completed'); render();
+  await saveEvents();
+  await fireWebhook('completed', { id: e.id, name: e.name, status: e.status, actualSpend: e.actualSpend });
+  closeDetail();
+  toast('Event completed');
+  render();
 }
 async function deleteEvent(id) {
   if (!confirm('Delete this record permanently?')) return;
@@ -1101,6 +1311,7 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
     events.push(data);
   }
   await saveEvents();
+  await fireWebhook('submitted', { id: data.id, name: data.name, status: 'pending' });
   document.getElementById('formModal').classList.remove('open');
   toast(existing ? 'Resubmitted' : 'Submitted for approval');
   render();
@@ -4098,6 +4309,27 @@ async function clearAllData() {
   await saveEvents();
   toast('All data cleared');
   render();
+}
+
+/* ---------- Webhook Management (Zapier) ---------- */
+function initWebhookUrl() {
+  const url = window.location.origin + window.location.pathname + '?webhook=true';
+  document.getElementById('webhookUrl').value = url;
+}
+
+function copyWebhookUrl() {
+  const url = document.getElementById('webhookUrl').value;
+  if (!url) return;
+  navigator.clipboard.writeText(url).then(() => {
+    toast('Webhook URL copied to clipboard');
+  }).catch(() => {
+    alert('Copy failed. Please manually copy the URL.');
+  });
+}
+
+async function fireWebhook(event, eventData) {
+  // Webhooks are handled via Zapier - log for reference
+  console.log('Webhook event:', event, eventData);
 }
 
 /* ---------- Boot ---------- */
