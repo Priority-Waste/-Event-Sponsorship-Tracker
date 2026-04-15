@@ -974,13 +974,50 @@ let activeFilter = 'all';
 /* ---------- Storage ---------- */
 async function loadEvents() {
   try {
-    const r = await window.storage.get(KEY, SHARED);
-    events = r ? JSON.parse(r.value) : [];
-  } catch { events = []; }
+    // localStorage is source of truth (saveEvents writes here first)
+    const stored = localStorage.getItem(KEY);
+    if (stored) {
+      events = JSON.parse(stored);
+      return;
+    }
+
+    // Only fall back to window.storage if localStorage is empty
+    // (e.g., first load on a new device)
+    try {
+      const r = await window.storage.get(KEY, SHARED);
+      if (r) {
+        events = JSON.parse(r.value);
+        // Seed localStorage so it becomes authoritative going forward
+        localStorage.setItem(KEY, r.value);
+        return;
+      }
+    } catch (e) {
+      console.log('window.storage unavailable');
+    }
+
+    events = [];
+  } catch (e) {
+    console.error('Error loading events:', e);
+    events = [];
+  }
 }
+
 async function saveEvents() {
-  try { await window.storage.set(KEY, JSON.stringify(events), SHARED); }
-  catch (e) { toast('Save failed — try again'); }
+  try {
+    // Save to localStorage first (most reliable)
+    localStorage.setItem(KEY, JSON.stringify(events));
+    
+    // Also try window.storage
+    try {
+      await window.storage.set(KEY, JSON.stringify(events), SHARED);
+    } catch (e) {
+      // localStorage worked, that's good enough
+      console.log('window.storage save failed, but localStorage succeeded');
+    }
+  } catch (e) {
+    console.error('Save failed:', e);
+    toast('⚠️ Storage error - data may not save properly');
+  }
 }
 
 /* ---------- Helpers ---------- */
