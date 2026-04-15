@@ -963,61 +963,93 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- Firebase SDK (compat build, works as plain script tags) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script>
+/* ---------- Firebase Init ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyCZwL7yHMa5CZVd52UFk35EB5UT_xO1rZo",
+  authDomain: "priority-waste-events.firebaseapp.com",
+  projectId: "priority-waste-events",
+  storageBucket: "priority-waste-events.firebasestorage.app",
+  messagingSenderId: "317952204447",
+  appId: "1:317952204447:web:7249656750e94f41d0ccaa"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+// Enable offline persistence so the app still works without internet
+db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+  console.log('Firestore persistence unavailable:', err.code);
+});
+const EVENTS_DOC = db.collection('app').doc('events');
+
 /* ---------- State ---------- */
-const SHARED = true;
-const KEY = 'pw_events_v1';
+const KEY = 'pw_events_v1'; // localStorage cache key
+const SHARED = true; // used by Zapier webhook config storage (window.storage)
 let events = [];
 let role = 'coordinator';
 let activeFilter = 'all';
+let _suppressNextRemote = false; // avoid echo from our own writes
+let _saveDebounce = null;
 
-/* ---------- Storage ---------- */
+/* ---------- Storage (Firestore + localStorage cache) ---------- */
 async function loadEvents() {
+  // 1) Show cached data immediately so UI isn't blank if offline/slow
   try {
-    // localStorage is source of truth (saveEvents writes here first)
     const stored = localStorage.getItem(KEY);
-    if (stored) {
-      events = JSON.parse(stored);
-      return;
-    }
-
-    // Only fall back to window.storage if localStorage is empty
-    // (e.g., first load on a new device)
-    try {
-      const r = await window.storage.get(KEY, SHARED);
-      if (r) {
-        events = JSON.parse(r.value);
-        // Seed localStorage so it becomes authoritative going forward
-        localStorage.setItem(KEY, r.value);
-        return;
-      }
-    } catch (e) {
-      console.log('window.storage unavailable');
-    }
-
-    events = [];
+    if (stored) events = JSON.parse(stored);
   } catch (e) {
-    console.error('Error loading events:', e);
-    events = [];
+    console.log('localStorage cache read failed:', e);
+  }
+
+  // 2) Fetch latest from Firestore (one-shot, before subscribing)
+  try {
+    const snap = await EVENTS_DOC.get();
+    if (snap.exists && Array.isArray(snap.data().events)) {
+      events = snap.data().events;
+      localStorage.setItem(KEY, JSON.stringify(events));
+    }
+  } catch (e) {
+    console.log('Firestore initial load failed (using cache):', e);
   }
 }
 
-async function saveEvents() {
-  try {
-    // Save to localStorage first (most reliable)
+// Real-time subscription: when any device writes, all other devices update
+function subscribeEvents() {
+  EVENTS_DOC.onSnapshot(snap => {
+    if (_suppressNextRemote) { _suppressNextRemote = false; return; }
+    if (!snap.exists) return;
+    const data = snap.data();
+    if (!Array.isArray(data.events)) return;
+    events = data.events;
     localStorage.setItem(KEY, JSON.stringify(events));
-    
-    // Also try window.storage
-    try {
-      await window.storage.set(KEY, JSON.stringify(events), SHARED);
-    } catch (e) {
-      // localStorage worked, that's good enough
-      console.log('window.storage save failed, but localStorage succeeded');
-    }
-  } catch (e) {
-    console.error('Save failed:', e);
-    toast('⚠️ Storage error - data may not save properly');
-  }
+    if (typeof render === 'function') render();
+  }, err => {
+    console.log('Firestore subscription error:', err);
+  });
+}
+
+async function saveEvents() {
+  // Always update localStorage immediately (instant, offline-safe)
+  try { localStorage.setItem(KEY, JSON.stringify(events)); }
+  catch (e) { console.log('localStorage write failed:', e); }
+
+  // Debounce Firestore writes slightly to coalesce rapid edits
+  if (_saveDebounce) clearTimeout(_saveDebounce);
+  return new Promise(resolve => {
+    _saveDebounce = setTimeout(async () => {
+      try {
+        _suppressNextRemote = true;
+        await EVENTS_DOC.set({ events, updatedAt: Date.now() });
+      } catch (e) {
+        _suppressNextRemote = false;
+        console.error('Firestore save failed:', e);
+        toast('⚠️ Cloud save failed - changes saved locally only');
+      }
+      resolve();
+    }, 150);
+  });
 }
 
 /* ---------- Helpers ---------- */
@@ -4375,23 +4407,23 @@ async function clearAllData() {
 
 /* ---------- Webhook Management (Zapier) ---------- */
 const ZAPIER_WEBHOOK_KEY = 'pw_zapier_webhook_v1';
+const WEBHOOK_DOC = db.collection('app').doc('zapier_webhook');
 
 async function loadZapierWebhook() {
   try {
-    // Try localStorage first (most reliable)
+    // Show cached value immediately
     const stored = localStorage.getItem(ZAPIER_WEBHOOK_KEY);
     if (stored) {
       const webhook = JSON.parse(stored);
       document.getElementById('zapierWebhookUrl').value = webhook.url || '';
       updateWebhookStatus();
-      return;
     }
-    
-    // Fallback to window.storage if available
-    const r = await window.storage?.get(ZAPIER_WEBHOOK_KEY, SHARED);
-    if (r) {
-      const webhook = JSON.parse(r.value);
+    // Then pull latest from Firestore (shared across team)
+    const snap = await WEBHOOK_DOC.get();
+    if (snap.exists && snap.data().url) {
+      const webhook = snap.data();
       document.getElementById('zapierWebhookUrl').value = webhook.url || '';
+      localStorage.setItem(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook));
       updateWebhookStatus();
     }
   } catch (e) {
@@ -4419,17 +4451,12 @@ async function saveZapierWebhook() {
   };
   
   try {
-    // Save to localStorage first (most reliable)
     localStorage.setItem(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook));
-    
-    // Also try window.storage if available
     try {
-      await window.storage?.set(ZAPIER_WEBHOOK_KEY, JSON.stringify(webhook), SHARED);
+      await WEBHOOK_DOC.set(webhook);
     } catch (e) {
-      // window.storage failed but localStorage succeeded
-      console.log('window.storage save failed, using localStorage');
+      console.log('Firestore webhook save failed:', e);
     }
-    
     toast('✓ Zapier webhook saved');
     updateWebhookStatus();
   } catch (e) {
@@ -4555,6 +4582,9 @@ async function fireWebhook(event, eventData) {
   }
   
   render();
+  
+  // Subscribe to real-time updates from other devices
+  subscribeEvents();
 })();
 </script>
 </body>
