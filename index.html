@@ -4442,17 +4442,18 @@ async function testZapierWebhook() {
   try {
     const response = await fetch(url, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     
-    if (response.ok) {
-      toast('Test webhook sent ✓ Check Zapier Activity');
-    } else {
-      toast('Webhook returned error: ' + response.status);
-    }
+    // With no-cors mode, we can't check response.ok
+    // But if fetch succeeded without throwing, the request was sent
+    toast('✓ Test webhook sent (check Zapier Activity in 10 seconds)');
+    console.log('Webhook sent successfully');
   } catch (err) {
-    toast('Network error: ' + err.message);
+    console.error('Full error:', err);
+    toast('❌ Network error: ' + err.message + ' - Check URL is correct');
   }
 }
 
@@ -4490,12 +4491,17 @@ async function fireWebhook(event, eventData) {
       data: eventData
     };
     
-    // Send to Zapier (non-blocking)
+    // Send to Zapier (non-blocking) with no-cors mode
     fetch(webhook.url, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(err => console.log('Webhook delivery error:', err));
+    }).then(() => {
+      console.log('Webhook event sent:', event);
+    }).catch(err => {
+      console.log('Webhook delivery error:', err);
+    });
   } catch (e) {
     console.log('Webhook config error:', e);
   }
