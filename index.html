@@ -106,6 +106,56 @@
     color: rgba(255, 255, 255, 0.5);
   }
   
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .submitter-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    padding: 6px 12px 6px 8px;
+    color: var(--pw-white);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .submitter-chip:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: var(--pw-yellow);
+  }
+
+  .submitter-chip .avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--pw-yellow);
+    color: var(--pw-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .submitter-chip .who-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 2px;
+  }
+
   .role-switcher {
     display: flex;
     background: rgba(255, 255, 255, 0.08);
@@ -395,29 +445,42 @@
     border-radius: 1px;
   }
   
-  .card .row {
+  .card .row,
+  .modal .row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
+    gap: 16px;
     padding: 8px 0;
     border-bottom: 1px solid var(--pw-light-gray);
   }
-  
+
   .card .row:last-of-type {
     border-bottom: none;
   }
-  
-  .card .row .lbl {
+
+  .card .row .lbl,
+  .modal .row .lbl {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #888;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
-  
-  .card .row .val {
+
+  .card .row .val,
+  .modal .row .val {
     font-weight: 600;
     color: var(--pw-black);
+    text-align: right;
+    word-break: break-word;
+  }
+
+  /* Inside the detail modal's form-grid, rows should span full width */
+  .modal .form-grid .row {
+    grid-column: 1 / -1;
   }
   
   .card .actions {
@@ -704,6 +767,74 @@
     color: #888;
   }
 
+  /* ===== PAYMENT PILLS ===== */
+  .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  .pill.payment-not_requested { background: #FEE2E2; color: #B91C1C; }
+  .pill.payment-requested     { background: #FEF3C7; color: #92400E; }
+  .pill.payment-paid          { background: #DCFCE7; color: #166534; }
+  .pill.payment-na            { background: #E5E7EB; color: #4B5563; }
+
+  /* ===== ATTACHMENTS ===== */
+  .attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .attachment-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--pw-white);
+    border: 1px solid #DDD;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .att-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #DDD;
+  }
+  .att-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    background: var(--pw-yellow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .att-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .att-meta a {
+    color: var(--pw-black);
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .att-meta a:hover { color: var(--pw-yellow-hover); text-decoration: underline; }
+  .att-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #888;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
   /* ===== APPROVAL LOG ===== */
   .approval-log {
     background: var(--pw-light-gray);
@@ -773,10 +904,17 @@
       <div class="brand-sub">Priority Waste · Garbage. Made Simple.</div>
     </div>
   </div>
-  <div class="role-switcher" id="roleSwitcher">
-    <button data-role="coordinator" class="active">Coordinator</button>
-    <button data-role="vp">VP Approval</button>
-    <button data-role="reports">Reports</button>
+  <div class="header-right">
+    <button class="submitter-chip" id="submitterChip" title="Click to change your name">
+      <span class="avatar" id="submitterAvatar">?</span>
+      <span class="who-label">Submitting as</span>
+      <span id="submitterName">Set name</span>
+    </button>
+    <div class="role-switcher" id="roleSwitcher">
+      <button data-role="coordinator" class="active">Coordinator</button>
+      <button data-role="vp">VP Approval</button>
+      <button data-role="reports">Reports</button>
+    </div>
   </div>
 </header>
 
@@ -823,6 +961,14 @@
           <input id="f_date" type="date" required />
         </div>
         <div>
+          <label>Event Time</label>
+          <input id="f_time" type="time" placeholder="Start time" />
+        </div>
+        <div>
+          <label>Duration</label>
+          <input id="f_duration" placeholder="e.g. 2 hours, 9am–3pm" />
+        </div>
+        <div>
           <label>Location</label>
           <input id="f_location" placeholder="Address or venue" />
         </div>
@@ -860,9 +1006,32 @@
           <input id="f_attendance" type="number" min="0" placeholder="0" />
         </div>
         <div>
+          <label>PW Staff / Employees Needed</label>
+          <input id="f_staffCount" type="number" min="0" placeholder="e.g. 4" />
+        </div>
+        <div>
           <label>Expected ROI / Goal</label>
           <input id="f_roi" placeholder="e.g. 3 contract leads" />
         </div>
+        <div>
+          <label>Has Payment Been Requested?</label>
+          <select id="f_payment">
+            <option value="not_requested">Not Requested</option>
+            <option value="requested">Requested</option>
+            <option value="paid">Paid</option>
+            <option value="na">N/A</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>Attachments (optional)</legend>
+          <input type="file" id="f_attachInput" multiple style="display:none" />
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+            <button type="button" class="btn ghost small" onclick="document.getElementById('f_attachInput').click()">+ Add file(s)</button>
+            <span style="font-size:11px;color:#888">Images & PDFs welcome. Each file kept under ~700 KB.</span>
+          </div>
+          <div id="pendingAttachList" class="attachments-list"></div>
+        </fieldset>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn ghost" id="cancelForm">Cancel</button>
@@ -986,12 +1155,56 @@ const EVENTS_DOC = db.collection('app').doc('events');
 
 /* ---------- State ---------- */
 const KEY = 'pw_events_v1'; // localStorage cache key
+const SUBMITTER_KEY = 'pw_submitter_name'; // who is currently using the app
 const SHARED = true; // used by Zapier webhook config storage (window.storage)
 let events = [];
 let role = 'coordinator';
 let activeFilter = 'all';
 let _suppressNextRemote = false; // avoid echo from our own writes
 let _saveDebounce = null;
+
+/* ---------- Submitter (who is filing the request) ---------- */
+function getSubmitter() {
+  try { return (localStorage.getItem(SUBMITTER_KEY) || '').trim(); }
+  catch (e) { return ''; }
+}
+function setSubmitter(name) {
+  try { localStorage.setItem(SUBMITTER_KEY, (name || '').trim()); }
+  catch (e) {}
+  renderSubmitterChip();
+}
+function logBy() {
+  // Used as the "by" field on every coordinator log entry.
+  const name = getSubmitter();
+  return name ? name : 'Coordinator';
+}
+function renderSubmitterChip() {
+  const name = getSubmitter();
+  const nameEl = document.getElementById('submitterName');
+  const avatarEl = document.getElementById('submitterAvatar');
+  if (!nameEl || !avatarEl) return;
+  if (name) {
+    nameEl.textContent = name;
+    const initials = name.split(/\s+/).map(s => s[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || '?';
+    avatarEl.textContent = initials;
+  } else {
+    nameEl.textContent = 'Set name';
+    avatarEl.textContent = '?';
+  }
+}
+function promptSubmitter(force) {
+  const current = getSubmitter();
+  if (!force && current) return;
+  const entered = window.prompt(
+    'Who is entering this request?\n\n(Your name will be stamped on every event you submit so it shows up in the Approval & Activity Log.)',
+    current || ''
+  );
+  if (entered === null) return; // user hit Cancel — leave as-is
+  const trimmed = entered.trim();
+  if (!trimmed) return;
+  setSubmitter(trimmed);
+  toast('Submitting as ' + trimmed);
+}
 
 /* ---------- Storage (Firestore + localStorage cache) ---------- */
 async function loadEvents() {
@@ -1057,6 +1270,109 @@ const uid = () => 'e_' + Math.random().toString(36).slice(2, 9);
 const fmt$ = n => '$' + (Number(n)||0).toLocaleString();
 const fmtDate = d => d ? new Date(d + 'T00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
 const totalBudget = e => Object.values(e.budget||{}).reduce((a,b)=>a+(+b||0),0);
+const isArchived = e => e.status === 'completed' || (e.date && new Date(e.date + 'T23:59') < new Date());
+function labelizePayment(p) {
+  return ({
+    not_requested: 'Not Requested',
+    requested: 'Requested',
+    paid: 'Paid',
+    na: 'N/A'
+  })[p || 'not_requested'] || 'Not Requested';
+}
+
+/* ---------- Attachments (intake form) ---------- */
+let _pendingAttachments = [];
+const ATTACH_MAX_BYTES = 700 * 1024; // ~700KB per file to stay safe under 1MB doc cap
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+async function ingestFiles(files) {
+  const arr = Array.from(files || []);
+  const out = [];
+  for (const f of arr) {
+    if (f.size > ATTACH_MAX_BYTES) {
+      toast(`"${f.name}" is too large (>700 KB). Skipped.`);
+      continue;
+    }
+    try {
+      const dataUrl = await readFileAsDataURL(f);
+      out.push({ name: f.name, type: f.type, size: f.size, dataUrl, addedAt: Date.now() });
+    } catch (err) {
+      console.log('Attachment read failed:', err);
+    }
+  }
+  return out;
+}
+function renderPendingAttachments() {
+  const list = document.getElementById('pendingAttachList');
+  if (!list) return;
+  if (!_pendingAttachments.length) { list.innerHTML = '<div style="color:#888;font-size:12px">No files queued.</div>'; return; }
+  list.innerHTML = _pendingAttachments.map((a, i) => `
+    <div class="attachment-row">
+      ${(a.type||'').startsWith('image/') ? `<img class="att-thumb" src="${a.dataUrl}" />` : `<div class="att-icon">📎</div>`}
+      <div class="att-meta">
+        <div style="font-weight:600">${escapeHtml(a.name)}</div>
+        <div class="att-sub">${escapeHtml(a.type||'file')} · ${(a.size/1024).toFixed(0)} KB</div>
+      </div>
+      <button class="btn ghost small" type="button" onclick="removePendingAttachment(${i})">Remove</button>
+    </div>
+  `).join('');
+}
+function removePendingAttachment(i) {
+  _pendingAttachments.splice(i, 1);
+  renderPendingAttachments();
+}
+async function handleFormFilesPicked(files) {
+  const added = await ingestFiles(files);
+  _pendingAttachments = _pendingAttachments.concat(added);
+  renderPendingAttachments();
+}
+async function handleDetailAttachments(eventId, files) {
+  const added = await ingestFiles(files);
+  if (!added.length) return;
+  const ev = events.find(x => x.id === eventId);
+  if (!ev) return;
+  ev.attachments = (ev.attachments || []).concat(added);
+  ev.log = ev.log || [];
+  ev.log.push({ action: `Attached ${added.length} file(s)`, by: logBy(), note: added.map(a=>a.name).join(', '), at: Date.now() });
+  await saveEvents();
+  await fireWebhook('attachment_added', ev);
+  toast(`Added ${added.length} file(s)`);
+  openDetail(eventId);
+}
+async function removeAttachment(eventId, idx) {
+  const ev = events.find(x => x.id === eventId);
+  if (!ev || !ev.attachments) return;
+  const removed = ev.attachments[idx];
+  if (!confirm(`Remove "${removed?.name || 'file'}"?`)) return;
+  ev.attachments.splice(idx, 1);
+  ev.log = ev.log || [];
+  ev.log.push({ action: 'Removed attachment', by: logBy(), note: removed?.name || '', at: Date.now() });
+  await saveEvents();
+  toast('Removed');
+  openDetail(eventId);
+}
+
+/* ---------- Payment status update ---------- */
+async function updatePayment(id) {
+  const e = events.find(x => x.id === id); if (!e) return;
+  const sel = document.getElementById('paymentStatusSelect');
+  const newVal = sel ? sel.value : 'not_requested';
+  if (newVal === e.payment) { toast('No change'); return; }
+  const oldLabel = labelizePayment(e.payment);
+  e.payment = newVal;
+  e.log = e.log || [];
+  e.log.push({ action: `Payment status: ${oldLabel} → ${labelizePayment(newVal)}`, by: logBy(), note: '', at: Date.now() });
+  await saveEvents();
+  await fireWebhook('payment_updated', e);
+  toast('Payment status updated');
+  openDetail(id);
+}
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -1117,9 +1433,11 @@ function renderStats() {
 function renderFilters() {
   let opts = [];
   if (role === 'coordinator') {
+    const archivedCount = events.filter(isArchived).length;
     opts = [
       ['all','All Mine'], ['pending','Pending'], ['approved','Approved'],
-      ['executing','Executing'], ['denied','Denied'], ['completed','Completed']
+      ['executing','Executing'], ['denied','Denied'],
+      ['archive', `Archive${archivedCount ? ' (' + archivedCount + ')' : ''}`]
     ];
   } else if (role === 'vp') {
     opts = [['pending','Pending'], ['all','All Submissions'], ['approved','Approved'], ['denied','Denied']];
@@ -1137,8 +1455,20 @@ function renderFilters() {
 }
 
 function renderList() {
-  const list = events.filter(e => activeFilter === 'all' ? true : e.status === activeFilter)
-    .sort((a,b)=> new Date(a.date||'9999') - new Date(b.date||'9999'));
+  // Archive logic for coordinator: hide completed + past-dated events from default views
+  let filtered;
+  if (role === 'coordinator') {
+    if (activeFilter === 'archive') {
+      filtered = events.filter(isArchived);
+    } else if (activeFilter === 'all') {
+      filtered = events.filter(e => !isArchived(e));
+    } else {
+      filtered = events.filter(e => e.status === activeFilter && !isArchived(e));
+    }
+  } else {
+    filtered = events.filter(e => activeFilter === 'all' ? true : e.status === activeFilter);
+  }
+  const list = filtered.sort((a,b)=> new Date(a.date||'9999') - new Date(b.date||'9999'));
 
   const c = document.getElementById('content');
   if (!list.length) {
@@ -1190,6 +1520,11 @@ function openDetail(id) {
     </div>`).join('');
 
   let actions = '';
+  // Coordinator can edit any non-completed event (rain dates, typos, etc.)
+  const editBtn = (role === 'coordinator' && e.status !== 'completed')
+    ? `<button class="btn ghost" onclick="editEvent('${e.id}')">Edit Details</button>`
+    : '';
+
   if (role === 'vp' && e.status === 'pending') {
     actions = `
       <div style="margin-top:14px">
@@ -1205,6 +1540,7 @@ function openDetail(id) {
     actions = `
       <div class="modal-actions">
         <button class="btn ghost" onclick="closeDetail()">Close</button>
+        ${editBtn}
         <button class="btn danger" onclick="deleteEvent('${e.id}')">Delete</button>
         <button class="btn" onclick="markExecuting('${e.id}')">Mark In Progress →</button>
       </div>`;
@@ -1221,17 +1557,19 @@ function openDetail(id) {
       </fieldset>
       <div class="modal-actions">
         <button class="btn ghost" onclick="closeDetail()">Close</button>
+        ${editBtn}
         <button class="btn green" onclick="completeEvent('${e.id}')">Mark Completed</button>
       </div>`;
   } else if (role === 'coordinator' && (e.status === 'denied' || e.status === 'pending')) {
     actions = `
       <div class="modal-actions">
         <button class="btn ghost" onclick="closeDetail()">Close</button>
+        ${editBtn}
         <button class="btn danger" onclick="deleteEvent('${e.id}')">Delete</button>
         ${e.status==='denied' ? `<button class="btn" onclick="resubmit('${e.id}')">Edit & Resubmit</button>` : ''}
       </div>`;
   } else {
-    actions = `<div class="modal-actions"><button class="btn ghost" onclick="closeDetail()">Close</button></div>`;
+    actions = `<div class="modal-actions">${editBtn}<button class="btn ghost" onclick="closeDetail()">Close</button></div>`;
   }
 
   const reportSection = e.status === 'completed' ? `
@@ -1244,18 +1582,61 @@ function openDetail(id) {
       <div style="margin-top:10px"><div class="lbl" style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:#888">Notes</div><div>${escapeHtml(e.notes||'—')}</div></div>
     </fieldset>` : '';
 
+  // Attachments rendering
+  const atts = (e.attachments || []);
+  const attHtml = atts.length ? atts.map((a, i) => {
+    const isImg = (a.type || '').startsWith('image/');
+    const sizeKb = a.size ? ` · ${(a.size/1024).toFixed(0)} KB` : '';
+    return `
+      <div class="attachment-row">
+        ${isImg && a.dataUrl ? `<img class="att-thumb" src="${a.dataUrl}" alt="" />` : `<div class="att-icon">📎</div>`}
+        <div class="att-meta">
+          <a href="${a.dataUrl}" download="${escapeHtml(a.name)}" target="_blank" rel="noopener">${escapeHtml(a.name)}</a>
+          <div class="att-sub">${escapeHtml(a.type || 'file')}${sizeKb}</div>
+        </div>
+        ${role === 'coordinator' ? `<button class="btn ghost small" onclick="removeAttachment('${e.id}', ${i})">Remove</button>` : ''}
+      </div>`;
+  }).join('') : '<div style="color:#888;font-size:12px">No files attached.</div>';
+
+  const paymentLabel = labelizePayment(e.payment);
+  const submittedByDisplay = e.submittedBy || (e.log && e.log[0] && e.log[0].by) || '—';
+  const isPast = e.date && new Date(e.date + 'T23:59') < new Date();
+
   document.getElementById('detailContent').innerHTML = `
     <h2>${escapeHtml(e.name)}</h2>
-    <div class="modal-sub">${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span></div>
+    <div class="modal-sub">${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span>${isPast && e.status !== 'completed' ? ' · <span style="color:#EF4444">PAST DATE</span>' : ''}</div>
 
     <div class="form-grid">
       <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
+      <div class="row"><span class="lbl">Time</span><span class="val">${escapeHtml(e.time || '—')}</span></div>
+      <div class="row"><span class="lbl">Duration</span><span class="val">${escapeHtml(e.duration || '—')}</span></div>
       <div class="row"><span class="lbl">Location</span><span class="val">${escapeHtml(e.location||'—')}</span></div>
       <div class="row"><span class="lbl">Contact</span><span class="val">${escapeHtml(e.contact||'—')}</span></div>
       <div class="row"><span class="lbl">Contact Info</span><span class="val">${escapeHtml(e.contactInfo||'—')}</span></div>
       <div class="row"><span class="lbl">Expected Attendance</span><span class="val">${e.attendance||'—'}</span></div>
+      <div class="row"><span class="lbl">PW Staff Needed</span><span class="val">${e.staffCount||'—'}</span></div>
       <div class="row"><span class="lbl">ROI Goal</span><span class="val">${escapeHtml(e.roi||'—')}</span></div>
+      <div class="row"><span class="lbl">Submitted By</span><span class="val">${escapeHtml(submittedByDisplay)}</span></div>
     </div>
+
+    <fieldset>
+      <legend>Payment Status</legend>
+      <div class="row" style="border-bottom:none;padding:4px 0">
+        <span class="lbl">Has Payment Been Requested?</span>
+        <span class="val"><span class="pill payment-${e.payment||'not_requested'}">${paymentLabel}</span></span>
+      </div>
+      ${role === 'coordinator' ? `
+        <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">
+          <select id="paymentStatusSelect" style="flex:1;min-width:180px">
+            <option value="not_requested" ${e.payment==='not_requested'?'selected':''}>Not Requested</option>
+            <option value="requested" ${e.payment==='requested'?'selected':''}>Requested</option>
+            <option value="paid" ${e.payment==='paid'?'selected':''}>Paid</option>
+            <option value="na" ${e.payment==='na'?'selected':''}>N/A</option>
+          </select>
+          <button class="btn small" onclick="updatePayment('${e.id}')">Update</button>
+        </div>
+      ` : ''}
+    </fieldset>
 
     <fieldset>
       <legend>Description</legend>
@@ -1272,6 +1653,18 @@ function openDetail(id) {
       ${budgetRows}
     </fieldset>
 
+    <fieldset>
+      <legend>Attachments</legend>
+      <div class="attachments-list">${attHtml}</div>
+      ${role === 'coordinator' ? `
+        <div style="margin-top:12px">
+          <input type="file" id="addAttachInput" multiple style="display:none" />
+          <button type="button" class="btn ghost small" onclick="document.getElementById('addAttachInput').click()">+ Add file(s)</button>
+          <span style="font-size:11px;color:#888;margin-left:8px">Images & PDFs preferred. Each file kept under ~700 KB to stay within Firestore limits.</span>
+        </div>
+      ` : ''}
+    </fieldset>
+
     ${reportSection}
 
     <fieldset>
@@ -1281,6 +1674,11 @@ function openDetail(id) {
 
     ${actions}
   `;
+  // Wire up attachment uploader (per-event, in detail modal)
+  const attachInput = document.getElementById('addAttachInput');
+  if (attachInput) {
+    attachInput.onchange = (ev) => handleDetailAttachments(e.id, ev.target.files);
+  }
   document.getElementById('detailModal').classList.add('open');
 }
 
@@ -1292,7 +1690,7 @@ async function decide(id, approved) {
   const note = (document.getElementById('vpNote')?.value || '').trim();
   e.status = approved ? 'approved' : 'denied';
   e.log = e.log || [];
-  e.log.push({ action: approved ? 'Approved' : 'Denied', by: 'VP / Michael French', note, at: Date.now() });
+  e.log.push({ action: approved ? 'Approved' : 'Denied', by: 'VP', note, at: Date.now() });
   await saveEvents();
   await fireWebhook(approved ? 'approved' : 'denied', e);
   closeDetail();
@@ -1302,7 +1700,7 @@ async function decide(id, approved) {
 async function markExecuting(id) {
   const e = events.find(x=>x.id===id); if (!e) return;
   e.status = 'executing';
-  e.log.push({ action: 'Marked In Progress', by: 'Coordinator', note: '', at: Date.now() });
+  e.log.push({ action: 'Marked In Progress', by: logBy(), note: '', at: Date.now() });
   await saveEvents();
   await fireWebhook('executing', e);
   closeDetail();
@@ -1317,7 +1715,7 @@ async function completeEvent(id) {
   e.notes = document.getElementById('r_notes').value;
   e.status = 'completed';
   e.completedAt = Date.now();
-  e.log.push({ action: 'Completed with report', by: 'Coordinator', note: '', at: Date.now() });
+  e.log.push({ action: 'Completed with report', by: logBy(), note: '', at: Date.now() });
   await saveEvents();
   await fireWebhook('completed', e);
   closeDetail();
@@ -1335,6 +1733,16 @@ function resubmit(id) {
   closeDetail();
   document.getElementById('formModal').classList.add('open');
 }
+function editEvent(id) {
+  const e = events.find(x=>x.id===id); if (!e) return;
+  fillForm(e);
+  // Tweak the form heading to make clear this is an edit, not a re-submission
+  document.getElementById('formTitle').textContent = 'Edit Event';
+  const submitBtn = document.querySelector('#eventForm button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = (e.status === 'denied') ? 'Resubmit for Approval' : 'Save Changes';
+  closeDetail();
+  document.getElementById('formModal').classList.add('open');
+}
 
 /* ---------- Form ---------- */
 function fillForm(e) {
@@ -1345,6 +1753,8 @@ function fillForm(e) {
   v('f_type', e?.type || 'Community Event');
   v('f_partner', e?.partner);
   v('f_date', e?.date);
+  v('f_time', e?.time);
+  v('f_duration', e?.duration);
   v('f_location', e?.location);
   v('f_contact', e?.contact);
   v('f_contactInfo', e?.contactInfo);
@@ -1357,14 +1767,24 @@ function fillForm(e) {
   v('f_b_equipment', e?.budget?.equipment || 0);
   v('f_b_other', e?.budget?.other || 0);
   v('f_attendance', e?.attendance);
+  v('f_staffCount', e?.staffCount);
   v('f_roi', e?.roi);
+  v('f_payment', e?.payment || 'not_requested');
+  // Reset attachment queue
+  _pendingAttachments = (e?.attachments || []).slice();
+  renderPendingAttachments();
 }
 
 document.getElementById('newBtn').onclick = () => {
   fillForm(null);
+  const submitBtn = document.querySelector('#eventForm button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = 'Submit for Approval';
   document.getElementById('formModal').classList.add('open');
 };
 document.getElementById('cancelForm').onclick = () => document.getElementById('formModal').classList.remove('open');
+
+// Wire up the intake-form file picker
+document.getElementById('f_attachInput').onchange = (ev) => handleFormFilesPicked(ev.target.files);
 
 document.getElementById('eventForm').onsubmit = async (ev) => {
   ev.preventDefault();
@@ -1376,6 +1796,8 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
     type: g('f_type'),
     partner: g('f_partner').trim(),
     date: g('f_date'),
+    time: g('f_time'),
+    duration: g('f_duration').trim(),
     location: g('f_location').trim(),
     contact: g('f_contact').trim(),
     contactInfo: g('f_contactInfo').trim(),
@@ -1390,24 +1812,53 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
       other: +g('f_b_other')||0,
     },
     attendance: +g('f_attendance')||0,
+    staffCount: +g('f_staffCount')||0,
     roi: g('f_roi').trim(),
+    payment: g('f_payment') || 'not_requested',
     status: 'pending',
     createdAt: Date.now(),
+    submittedBy: getSubmitter() || 'Coordinator',
     log: [],
+    attachments: _pendingAttachments.slice(),
   };
 
   const existing = events.find(x=>x.id===editId);
   if (existing) {
-    Object.assign(existing, data, { status: 'pending' });
-    existing.log.push({ action: 'Resubmitted for approval', by: 'Coordinator', note: '', at: Date.now() });
+    // Preserve log + history through edits
+    const prevLog = existing.log || [];
+    const prevStatus = existing.status;
+    const prevAttachments = existing.attachments || [];
+    const wasDenied = prevStatus === 'denied';
+
+    // For non-denied edits we keep the original status (rain-date / typo fixes after approval)
+    const newStatus = wasDenied ? 'pending' : prevStatus;
+
+    Object.assign(existing, data, {
+      status: newStatus,
+      log: prevLog,
+      // form attachments override existing list (they were pre-loaded into _pendingAttachments)
+      attachments: data.attachments && data.attachments.length ? data.attachments : prevAttachments,
+      submittedBy: existing.submittedBy || data.submittedBy,
+    });
+
+    if (wasDenied) {
+      existing.log.push({ action: 'Resubmitted for approval', by: logBy(), note: '', at: Date.now() });
+      await fireWebhook('submitted', existing);
+      toast('Resubmitted');
+    } else {
+      existing.log.push({ action: 'Edited / updated', by: logBy(), note: '', at: Date.now() });
+      await fireWebhook('updated', existing);
+      toast('Updated');
+    }
   } else {
-    data.log.push({ action: 'Submitted for approval', by: 'Coordinator', note: '', at: Date.now() });
+    data.log.push({ action: 'Submitted for approval', by: logBy(), note: '', at: Date.now() });
     events.push(data);
+    await fireWebhook('submitted', data);
+    toast('Submitted for approval');
   }
   await saveEvents();
-  await fireWebhook('submitted', data);
   document.getElementById('formModal').classList.remove('open');
-  toast(existing ? 'Resubmitted' : 'Submitted for approval');
+  _pendingAttachments = [];
   render();
 };
 
@@ -4573,19 +5024,27 @@ async function fireWebhook(event, eventData) {
 
 /* ---------- Boot ---------- */
 (async () => {
+  // Show submitter chip + prompt for name on first run
+  renderSubmitterChip();
+  document.getElementById('submitterChip').onclick = () => promptSubmitter(true);
+
   await loadEvents();
-  
+
   // Auto-import CSV data if no events exist
   if (events.length === 0 && CSV_IMPORT_DATA.length > 0) {
     events = CSV_IMPORT_DATA;
     await saveEvents();
   }
-  
+
   render();
-  
+
   // Subscribe to real-time updates from other devices
   subscribeEvents();
+
+  // Ask new users for their name on first load (after first paint).
+  setTimeout(() => promptSubmitter(false), 350);
 })();
 </script>
+<!-- Event Tracker v2 -->
 </body>
 </html>
