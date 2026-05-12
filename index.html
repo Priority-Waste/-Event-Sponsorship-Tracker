@@ -1554,11 +1554,227 @@
     line-height: 1;
   }
 
+  /* ===== GLOBAL SEARCH ===== */
+  .global-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 0 8px 0 10px;
+    transition: all 0.15s ease;
+    min-width: 240px;
+  }
+  .global-search:focus-within {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--pw-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 194, 14, 0.18);
+  }
+  .global-search .gs-icon { color: rgba(255,255,255,0.5); font-size: 13px; }
+  .global-search input {
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: var(--pw-white);
+    font-size: 13px;
+    padding: 8px 6px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+  }
+  .global-search input::placeholder { color: rgba(255,255,255,0.4); }
+  .global-search .gs-hint { display: flex; gap: 2px; opacity: 0.5; }
+  .global-search .gs-hint .kbd { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+
+  /* Search match highlight */
+  mark.search-hit { background: rgba(255,194,14,0.55); color: var(--pw-black); padding: 0 2px; border-radius: 2px; font-weight: 700; }
+
+  /* ===== FORM CONFLICT WARNING ===== */
+  #formConflictWarning, .conflict-warning {
+    background: linear-gradient(90deg, #fee2e2 0%, #fef2f2 100%);
+    border: 1px solid #ef4444;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #7f1d1d;
+  }
+  .conflict-warning.soft { background: linear-gradient(90deg, #fef3c7 0%, #fffbeb 100%); border-color: #f59e0b; color: #78350f; }
+  .conflict-warning strong { display: block; margin-bottom: 4px; }
+
+  /* ===== MAP FILTERS ===== */
+  .map-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+    background: var(--pw-white);
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 12px;
+  }
+  .map-filters input, .map-filters select {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    width: 100%;
+  }
+  .map-filters label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* ===== TEMPLATES + VENDORS TILES ===== */
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .tile {
+    background: var(--pw-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    padding: 16px 18px;
+    border-left: 4px solid var(--pw-yellow);
+    transition: all 0.15s ease;
+  }
+  .tile:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .tile h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  .tile .tile-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  .tile .tile-row {
+    font-size: 12px;
+    color: #555;
+    margin: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .tile .tile-row strong { color: var(--pw-black); }
+  .tile .tile-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--pw-light-gray);
+  }
+
+  /* ===== LEADS PANEL ===== */
+  .lead-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr auto;
+    gap: 6px;
+    align-items: center;
+    padding: 8px;
+    background: var(--pw-light-gray);
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .lead-row input, .lead-row select {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    width: 100%;
+  }
+  .lead-row.won { background: rgba(34, 197, 94, 0.10); }
+  .lead-row.lost { background: rgba(239, 68, 68, 0.10); opacity: 0.6; }
+  .lead-row .lead-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  .lead-add {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr auto;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  @media (max-width: 640px) {
+    .lead-row, .lead-add { grid-template-columns: 1fr; }
+  }
+
+  /* ===== COMMENTS ===== */
+  .comment {
+    background: var(--pw-light-gray);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .comment-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+    margin-bottom: 4px;
+  }
+  .comment-body { font-size: 13px; white-space: pre-wrap; word-break: break-word; }
+  .comment .mention { background: rgba(255,194,14,0.25); padding: 0 4px; border-radius: 3px; font-weight: 700; color: var(--pw-black); }
+  .comment-compose {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    flex-direction: column;
+  }
+  .comment-compose textarea {
+    width: 100%;
+    min-height: 70px;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--pw-light-gray);
+    align-items: center;
+  }
+  .settings-row .settings-label { font-weight: 600; }
+  .settings-row .settings-help { font-size: 12px; color: #777; margin-top: 2px; }
+  .settings-row input[type=number], .settings-row select {
+    padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;
+    max-width: 240px;
+  }
+  @media (max-width: 640px) {
+    .settings-row { grid-template-columns: 1fr; }
+  }
+
   /* ===== RESPONSIVE ===== */
+  @media (max-width: 920px) {
+    .global-search { min-width: 160px; }
+    .global-search .gs-hint { display: none; }
+  }
   @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
     main { padding: 20px 16px 60px; }
-    header.masthead { padding: 0 16px; height: 64px; }
+    header.masthead { padding: 0 16px; height: auto; min-height: 64px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
     .brand-logo { width: 38px; height: 38px; font-size: 18px; }
     .brand-title { font-size: 18px; }
     .brand-sub { font-size: 9px; }
@@ -1568,7 +1784,8 @@
     .cal-event { font-size: 10px; padding: 2px 4px; }
     #mapContainer { height: 420px; }
     .bar-row { grid-template-columns: 100px 1fr 60px; }
-    .header-right { flex-wrap: wrap; gap: 8px; }
+    .header-right { flex-wrap: wrap; gap: 8px; width: 100%; justify-content: flex-end; }
+    .global-search { order: -1; flex: 1 0 100%; }
   }
 </style>
 <!-- Leaflet (lazy-loaded - only included now, used when map view is active) -->
@@ -1576,6 +1793,8 @@
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- SheetJS for Excel export -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 </head>
 <body>
@@ -1589,6 +1808,11 @@
     </div>
   </div>
   <div class="header-right">
+    <div class="global-search">
+      <span class="gs-icon">🔍</span>
+      <input id="globalSearch" type="search" placeholder="Search events, partners, tasks…" autocomplete="off" spellcheck="false" />
+      <span class="gs-hint"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+    </div>
     <button class="submitter-chip" id="submitterChip" title="Click to change your name">
       <span class="avatar" id="submitterAvatar">?</span>
       <span class="who-label">Submitting as</span>
@@ -1614,6 +1838,8 @@
     <div id="filters"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn ghost small" id="exportAllIcs" title="Download all approved/executing events as one .ics file">📅 Bulk .ics</button>
+      <button class="btn ghost small" id="exportXlsxBtn" title="Export current view to Excel">📊 Excel</button>
+      <button class="btn ghost small" id="exportCsvBtn" title="Export current view to CSV">📋 CSV</button>
       <button class="btn" id="newBtn">+ New Event</button>
     </div>
   </div>
@@ -1628,6 +1854,18 @@
     <div class="modal-sub">Coordinator Intake Form</div>
     <form id="eventForm">
       <input type="hidden" id="f_id" />
+      <div id="formConflictWarning" style="display:none"></div>
+      <!-- Template picker -->
+      <fieldset id="templatePickerWrap" style="background:rgba(255,194,14,0.06);border:1px dashed var(--pw-yellow);margin-bottom:14px">
+        <legend>⚡ Start from a template (optional)</legend>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="f_templatePick" style="flex:1;min-width:240px;padding:10px 12px;border:1px solid #ddd;border-radius:4px">
+            <option value="">— Choose a template to pre-fill —</option>
+          </select>
+          <button type="button" class="btn small" id="applyTemplateBtn">Apply</button>
+          <button type="button" class="btn ghost small" onclick="setView('templates');closeForm();">Manage templates →</button>
+        </div>
+      </fieldset>
       <div class="form-grid">
         <div class="full">
           <label>Event / Sponsorship Name</label>
@@ -1678,6 +1916,9 @@
         <div class="full">
           <label>Deliverables (one per line)</label>
           <textarea id="f_deliverables" placeholder="Branded tent&#10;500 swag bags&#10;Logo on event banner"></textarea>
+          <div id="vendorHints" style="margin-top:6px;font-size:11px;color:#666;display:none">
+            💡 <strong>Vendor matches:</strong> <span id="vendorHintList"></span>
+          </div>
         </div>
 
         <fieldset>
@@ -1712,6 +1953,28 @@
             <option value="paid">Paid</option>
             <option value="na">N/A</option>
           </select>
+        </div>
+        <div class="full">
+          <fieldset style="background:#f9fafb">
+            <legend>🔁 Recurrence</legend>
+            <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer">
+              <input type="checkbox" id="f_recurring" style="width:18px;height:18px;accent-color:var(--pw-yellow);cursor:pointer" />
+              <span>Repeat yearly — auto-create next year's draft 60 days before the next occurrence</span>
+            </label>
+            <p style="margin-top:6px;font-size:11px;color:#777">When enabled, the tracker will clone this event for next year (tasks &amp; staff copied, status reset to pending) so you don't have to retype it annually.</p>
+          </fieldset>
+        </div>
+        <div class="full">
+          <fieldset style="background:#f9fafb">
+            <legend>💾 Save as Template</legend>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+                <input type="checkbox" id="f_saveAsTemplate" style="width:16px;height:16px;accent-color:var(--pw-yellow)" />
+                Also save these fields as a reusable template
+              </label>
+              <input type="text" id="f_templateName" placeholder="Template name (e.g. 'Touch a Truck — standard')" style="flex:1;min-width:220px;padding:8px 10px;border:1px solid #ddd;border-radius:4px;font-size:12px;display:none" />
+            </div>
+          </fieldset>
         </div>
 
         <fieldset>
@@ -1843,14 +2106,29 @@ db.enablePersistence({ synchronizeTabs: true }).catch(err => {
   console.log('Firestore persistence unavailable:', err.code);
 });
 const EVENTS_DOC = db.collection('app').doc('events');
+const TEMPLATES_DOC = db.collection('app').doc('templates');
+const VENDORS_DOC = db.collection('app').doc('vendors');
+const SETTINGS_DOC = db.collection('app').doc('settings');
 
 /* ---------- State ---------- */
 const KEY = 'pw_events_v1'; // localStorage cache key
+const TEMPLATES_KEY = 'pw_templates_v1';
+const VENDORS_KEY = 'pw_vendors_v1';
+const SETTINGS_KEY = 'pw_settings_v1';
 const SUBMITTER_KEY = 'pw_submitter_name'; // who is currently using the app
 const SHARED = true; // used by Zapier webhook config storage (window.storage)
 let events = [];
+let templates = [];
+let vendors = [];
+let appSettings = {
+  autoApproveUnder: 0,        // auto-approve threshold (0 = disabled)
+  requireSecondApprovalOver: 0, // dual sign-off threshold
+  typeCaps: {},               // per-type budget cap (warning only)
+  recurringLookahead: 60,     // days before next year to auto-create draft
+};
 let role = 'coordinator';
 let activeFilter = 'all';
+let globalSearchQuery = '';
 let _suppressNextRemote = false; // avoid echo from our own writes
 let _saveDebounce = null;
 
@@ -1953,6 +2231,91 @@ async function saveEvents() {
       }
       resolve();
     }, 150);
+  });
+}
+
+/* ---------- Templates / Vendors / Settings storage ---------- */
+async function loadTemplates() {
+  try { templates = JSON.parse(localStorage.getItem(TEMPLATES_KEY) || '[]'); }
+  catch (e) { templates = []; }
+  try {
+    const snap = await TEMPLATES_DOC.get();
+    if (snap.exists && Array.isArray(snap.data().templates)) {
+      templates = snap.data().templates;
+      localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+    }
+  } catch (e) { console.log('Templates load failed:', e); }
+}
+async function saveTemplates() {
+  try { localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates)); } catch (e) {}
+  try { await TEMPLATES_DOC.set({ templates, updatedAt: Date.now() }); }
+  catch (e) { console.log('Template Firestore save failed:', e); }
+}
+function subscribeTemplates() {
+  TEMPLATES_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const d = snap.data();
+    if (Array.isArray(d.templates)) {
+      templates = d.templates;
+      try { localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates)); } catch (e) {}
+      // If templates view is active, re-render
+      if (activeView === 'templates' && typeof render === 'function') render();
+    }
+  });
+}
+
+async function loadVendors() {
+  try { vendors = JSON.parse(localStorage.getItem(VENDORS_KEY) || '[]'); }
+  catch (e) { vendors = []; }
+  try {
+    const snap = await VENDORS_DOC.get();
+    if (snap.exists && Array.isArray(snap.data().vendors)) {
+      vendors = snap.data().vendors;
+      localStorage.setItem(VENDORS_KEY, JSON.stringify(vendors));
+    }
+  } catch (e) { console.log('Vendors load failed:', e); }
+}
+async function saveVendors() {
+  try { localStorage.setItem(VENDORS_KEY, JSON.stringify(vendors)); } catch (e) {}
+  try { await VENDORS_DOC.set({ vendors, updatedAt: Date.now() }); }
+  catch (e) { console.log('Vendors Firestore save failed:', e); }
+}
+function subscribeVendors() {
+  VENDORS_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const d = snap.data();
+    if (Array.isArray(d.vendors)) {
+      vendors = d.vendors;
+      try { localStorage.setItem(VENDORS_KEY, JSON.stringify(vendors)); } catch (e) {}
+      if (activeView === 'vendors' && typeof render === 'function') render();
+    }
+  });
+}
+
+async function loadSettings() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(SETTINGS_KEY) || 'null');
+    if (cached && typeof cached === 'object') appSettings = Object.assign(appSettings, cached);
+  } catch (e) {}
+  try {
+    const snap = await SETTINGS_DOC.get();
+    if (snap.exists) {
+      appSettings = Object.assign(appSettings, snap.data() || {});
+      try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings)); } catch (e) {}
+    }
+  } catch (e) { console.log('Settings load failed:', e); }
+}
+async function saveSettings() {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings)); } catch (e) {}
+  try { await SETTINGS_DOC.set(Object.assign({ updatedAt: Date.now() }, appSettings)); }
+  catch (e) { console.log('Settings Firestore save failed:', e); }
+}
+function subscribeSettings() {
+  SETTINGS_DOC.onSnapshot(snap => {
+    if (!snap.exists) return;
+    appSettings = Object.assign(appSettings, snap.data() || {});
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings)); } catch (e) {}
+    if (activeView === 'settings' && typeof render === 'function') render();
   });
 }
 
@@ -2086,7 +2449,10 @@ const VIEW_DEFS = {
   monthly: { label: 'Monthly Rollup', icon: '☰', renderer: renderMonthlyView, roles: ['reports','vp','coordinator'] },
   print: { label: 'Print Report', icon: '✎', renderer: renderPrintView, roles: ['reports','vp','coordinator'] },
   staff: { label: 'Staff Roster', icon: '☻', renderer: renderStaffView, roles: ['coordinator','vp'] },
+  templates: { label: 'Templates', icon: '⚡', renderer: renderTemplatesView, roles: ['coordinator','vp'] },
+  vendors: { label: 'Vendors', icon: '🛒', renderer: renderVendorsView, roles: ['coordinator','vp'] },
   sync: { label: 'Outlook Sync', icon: '⇆', renderer: renderSyncView, roles: ['coordinator','vp','reports'] },
+  settings: { label: 'Settings', icon: '⚙', renderer: renderSettingsView, roles: ['vp'] },
 };
 
 function setView(v) {
@@ -2208,6 +2574,19 @@ function renderFilters() {
   });
 }
 
+function eventMatchesSearch(e, q) {
+  if (!q) return true;
+  const needle = q.toLowerCase();
+  const haystack = [
+    e.name, e.type, e.partner, e.date, e.location, e.contact, e.contactInfo,
+    e.desc, e.deliverables, e.roi, e.status, e.submittedBy, (e.staff||[]).join(' '),
+    (e.tasks||[]).map(t => `${t.title} ${t.assignee||''}`).join(' '),
+    (e.leads||[]).map(l => `${l.name||''} ${l.company||''}`).join(' '),
+    (e.comments||[]).map(c => c.text || '').join(' ')
+  ].filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(needle);
+}
+
 function renderList() {
   // Archive logic for coordinator: hide completed + past-dated events from default views
   let filtered;
@@ -2222,17 +2601,27 @@ function renderList() {
   } else {
     filtered = events.filter(e => activeFilter === 'all' ? true : e.status === activeFilter);
   }
+  // Apply global search
+  if (globalSearchQuery) filtered = filtered.filter(e => eventMatchesSearch(e, globalSearchQuery));
+
   const list = filtered.sort((a,b)=> new Date(a.date||'9999') - new Date(b.date||'9999'));
 
   const c = document.getElementById('content');
   if (!list.length) {
-    c.innerHTML = `<div class="empty"><p>No events match this view yet.</p></div>`;
+    c.innerHTML = `<div class="empty"><h3>${globalSearchQuery ? 'No matches' : 'Nothing here yet'}</h3><p>${globalSearchQuery ? `No events match "${escapeHtml(globalSearchQuery)}". Clear the search bar or try different keywords.` : 'No events match this view yet.'}</p>${globalSearchQuery ? `<button class="btn" onclick="clearGlobalSearch()">Clear search</button>` : ''}</div>`;
     return;
   }
-  c.innerHTML = `<div class="grid">${list.map(cardHtml).join('')}</div>`;
+  c.innerHTML = `${globalSearchQuery ? `<div style="margin-bottom:14px;font-size:13px;color:#666">Showing <strong>${list.length}</strong> match${list.length===1?'':'es'} for "<strong>${escapeHtml(globalSearchQuery)}</strong>" · <a href="#" onclick="event.preventDefault();clearGlobalSearch()" style="color:var(--pw-yellow-hover);font-weight:700">clear</a></div>` : ''}<div class="grid">${list.map(cardHtml).join('')}</div>`;
   document.querySelectorAll('[data-open]').forEach(b=>{
     b.onclick = ()=> openDetail(b.dataset.open);
   });
+}
+
+function clearGlobalSearch() {
+  globalSearchQuery = '';
+  const inp = document.getElementById('globalSearch');
+  if (inp) inp.value = '';
+  render();
 }
 
 function cardHtml(e) {
@@ -2246,10 +2635,17 @@ function cardHtml(e) {
   return `
     <div class="card">
       <span class="corner-tag ${e.status}">${e.status}</span>
-      <h3>${e.source==='outlook'?'<span title="Imported from Outlook" style="font-size:14px;margin-right:4px;color:#0078D4">⇆</span>':''}${escapeHtml(e.name)}</h3>
+      <h3>
+        ${e.source==='outlook'?'<span title="Imported from Outlook" style="font-size:14px;margin-right:4px;color:#0078D4">⇆</span>':''}
+        ${e.recurring?'<span title="Repeats yearly" style="font-size:14px;margin-right:4px;color:#16a34a">🔁</span>':''}
+        ${e.needsSecondApproval?'<span title="Requires second approval" style="font-size:14px;margin-right:4px;color:#b45309">⚠</span>':''}
+        ${escapeHtml(e.name)}
+      </h3>
       <div class="meta">
         <span>${escapeHtml(e.type)}</span>
         ${e.partner ? `<span>${escapeHtml(e.partner)}</span>` : ''}
+        ${(e.comments||[]).length ? `<span title="Has comments">💬 ${(e.comments||[]).length}</span>` : ''}
+        ${(e.leads||[]).length ? `<span title="Has leads">💼 ${(e.leads||[]).length}</span>` : ''}
         ${cd ? `<span class="countdown-pill ${cd.cls}" style="margin-left:auto">${cd.text}</span>` : ''}
       </div>
       <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
@@ -2323,6 +2719,17 @@ function renderAlerts() {
         text: `<strong>${pending} request${pending>1?'s':''}</strong> awaiting your approval`,
         linkText: 'Review →',
         onClick: () => { setView('list'); activeFilter = 'pending'; render(); }
+      });
+    }
+    // Approved-but-needs-second-approval
+    const needsSecond = events.filter(e => e.status === 'approved' && e.needsSecondApproval).length;
+    if (needsSecond) {
+      alerts.push({
+        urgent: true,
+        icon: '⚠',
+        text: `<strong>${needsSecond} approved event${needsSecond>1?'s':''}</strong> over the dual-sign-off threshold — get a second approver before execution`,
+        linkText: 'Show →',
+        onClick: () => { setView('list'); activeFilter = 'approved'; render(); }
       });
     }
   }
@@ -2634,29 +3041,87 @@ function parseCityFromAddress(addr) {
   return null;
 }
 
+/* Map filter state */
+let _mapFilters = {
+  status: 'all',
+  type: 'all',
+  partner: '',
+  fromDate: '',
+  toDate: '',
+  search: ''
+};
+
+function applyMapFilters(eventList) {
+  let result = eventList;
+  if (_mapFilters.status !== 'all') result = result.filter(e => e.status === _mapFilters.status);
+  if (_mapFilters.type !== 'all') result = result.filter(e => e.type === _mapFilters.type);
+  if (_mapFilters.partner) {
+    const p = _mapFilters.partner.toLowerCase();
+    result = result.filter(e => (e.partner||'').toLowerCase().includes(p));
+  }
+  if (_mapFilters.fromDate) result = result.filter(e => e.date && e.date >= _mapFilters.fromDate);
+  if (_mapFilters.toDate) result = result.filter(e => e.date && e.date <= _mapFilters.toDate);
+  if (_mapFilters.search) result = result.filter(e => eventMatchesSearch(e, _mapFilters.search));
+  if (globalSearchQuery) result = result.filter(e => eventMatchesSearch(e, globalSearchQuery));
+  return result;
+}
+
 function renderMapView() {
-  const geocoded = events.filter(e => e.geo && e.geo.lat && e.geo.lng);
+  const allGeocoded = events.filter(e => e.geo && e.geo.lat && e.geo.lng);
+  const geocoded = applyMapFilters(allGeocoded);
   const missing = events.filter(e => e.location && (!e.geo || !e.geo.lat));
   const totalSpend = geocoded.reduce((s,e) => s + totalBudget(e), 0);
+  const eventTypes = [...new Set(events.map(e => e.type).filter(Boolean))];
 
   document.getElementById('content').innerHTML = `
+    <div class="map-filters">
+      <div>
+        <label>Status</label>
+        <select id="mf_status">
+          <option value="all" ${_mapFilters.status==='all'?'selected':''}>All statuses</option>
+          <option value="pending" ${_mapFilters.status==='pending'?'selected':''}>Pending</option>
+          <option value="approved" ${_mapFilters.status==='approved'?'selected':''}>Approved</option>
+          <option value="executing" ${_mapFilters.status==='executing'?'selected':''}>In Progress</option>
+          <option value="completed" ${_mapFilters.status==='completed'?'selected':''}>Completed</option>
+          <option value="denied" ${_mapFilters.status==='denied'?'selected':''}>Denied</option>
+        </select>
+      </div>
+      <div>
+        <label>Event Type</label>
+        <select id="mf_type">
+          <option value="all" ${_mapFilters.type==='all'?'selected':''}>All types</option>
+          ${eventTypes.map(t => `<option value="${escapeHtml(t)}" ${_mapFilters.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label>Partner contains</label>
+        <input type="text" id="mf_partner" value="${escapeHtml(_mapFilters.partner)}" placeholder="e.g. Warren" />
+      </div>
+      <div>
+        <label>From date</label>
+        <input type="date" id="mf_fromDate" value="${_mapFilters.fromDate}" />
+      </div>
+      <div>
+        <label>To date</label>
+        <input type="date" id="mf_toDate" value="${_mapFilters.toDate}" />
+      </div>
+      <div>
+        <label>Search</label>
+        <input type="search" id="mf_search" value="${escapeHtml(_mapFilters.search)}" placeholder="Anything…" />
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:6px">
+        <button type="button" class="btn ghost small" id="mf_clear" style="width:100%">Clear filters</button>
+      </div>
+    </div>
+
     <div class="map-stats-strip">
-      <div class="map-mini-stat"><strong>${geocoded.length}</strong>&nbsp;mapped events</div>
+      <div class="map-mini-stat"><strong>${geocoded.length}</strong>&nbsp;visible / ${allGeocoded.length} mapped</div>
       <div class="map-mini-stat"><strong>${missing.length}</strong>&nbsp;need geocoding</div>
-      <div class="map-mini-stat"><strong>${fmt$(totalSpend)}</strong>&nbsp;budget mapped</div>
+      <div class="map-mini-stat"><strong>${fmt$(totalSpend)}</strong>&nbsp;budget shown</div>
       ${missing.length ? `<button class="btn small" id="geocodeBtn">📍 Geocode ${missing.length} address${missing.length>1?'es':''}</button>` : ''}
       <button class="btn ghost small" id="refreshGeocodeBtn" title="Re-geocode all addresses">🔄 Re-geocode all</button>
     </div>
-    <div id="mapContainer">
-      <div class="map-legend">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-bottom:6px">Status</div>
-        <div class="ml-row"><span class="ml-dot" style="background:#F59E0B"></span>Pending</div>
-        <div class="ml-row"><span class="ml-dot" style="background:#22C55E"></span>Approved</div>
-        <div class="ml-row"><span class="ml-dot" style="background:#3B82F6"></span>In Progress</div>
-        <div class="ml-row"><span class="ml-dot" style="background:#8B5CF6"></span>Completed</div>
-        <div class="ml-row"><span class="ml-dot" style="background:#EF4444"></span>Denied</div>
-      </div>
-    </div>
+    <div id="mapContainer"></div>
     ${missing.length ? `<div style="margin-top:10px;font-size:12px;color:#666">📍 Some events have addresses that haven't been geocoded yet. Click <strong>Geocode</strong> above — it takes ~1 second per address (OpenStreetMap rate limit).</div>` : ''}
   `;
 
@@ -2664,17 +3129,13 @@ function renderMapView() {
   setTimeout(() => {
     const container = document.getElementById('mapContainer');
     if (!container || typeof L === 'undefined') {
-      container.innerHTML = '<div style="padding:32px;text-align:center;color:#666">Map library failed to load.</div>';
+      if (container) container.innerHTML = '<div style="padding:32px;text-align:center;color:#666">Map library failed to load.</div>';
       return;
     }
-    // Tear down any previous instance
     if (_leafletMap) { _leafletMap.remove(); _leafletMap = null; }
 
-    // Default to Michigan if no geocoded events (most PW events are MI)
     let bounds = null;
-    if (geocoded.length) {
-      bounds = L.latLngBounds(geocoded.map(e => [e.geo.lat, e.geo.lng]));
-    }
+    if (geocoded.length) bounds = L.latLngBounds(geocoded.map(e => [e.geo.lat, e.geo.lng]));
     _leafletMap = L.map('mapContainer', { zoomControl: true }).setView([42.7, -83.2], 9);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -2704,7 +3165,7 @@ function renderMapView() {
     if (bounds && geocoded.length > 1) _leafletMap.fitBounds(bounds, { padding: [40, 40] });
     else if (geocoded.length === 1) _leafletMap.setView([geocoded[0].geo.lat, geocoded[0].geo.lng], 11);
 
-    // Re-add the legend that was wiped by Leaflet
+    // Legend
     const legend = `<div class="map-legend">
       <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-bottom:6px">Status</div>
       <div class="ml-row"><span class="ml-dot" style="background:#F59E0B"></span>Pending</div>
@@ -2716,6 +3177,22 @@ function renderMapView() {
     container.insertAdjacentHTML('beforeend', legend);
   }, 50);
 
+  // Wire filter changes
+  const debouncedRerender = (() => {
+    let t = null;
+    return () => { clearTimeout(t); t = setTimeout(() => render(), 250); };
+  })();
+  document.getElementById('mf_status').onchange = (ev) => { _mapFilters.status = ev.target.value; render(); };
+  document.getElementById('mf_type').onchange = (ev) => { _mapFilters.type = ev.target.value; render(); };
+  document.getElementById('mf_partner').oninput = (ev) => { _mapFilters.partner = ev.target.value; debouncedRerender(); };
+  document.getElementById('mf_fromDate').onchange = (ev) => { _mapFilters.fromDate = ev.target.value; render(); };
+  document.getElementById('mf_toDate').onchange = (ev) => { _mapFilters.toDate = ev.target.value; render(); };
+  document.getElementById('mf_search').oninput = (ev) => { _mapFilters.search = ev.target.value; debouncedRerender(); };
+  document.getElementById('mf_clear').onclick = () => {
+    _mapFilters = { status: 'all', type: 'all', partner: '', fromDate: '', toDate: '', search: '' };
+    render();
+  };
+
   const geoBtn = document.getElementById('geocodeBtn');
   if (geoBtn) {
     geoBtn.onclick = async () => {
@@ -2724,7 +3201,7 @@ function renderMapView() {
       let done = 0;
       for (const e of missing) {
         const res = await geocodeAddress(e.location);
-        if (res) e.geo = { lat: res.lat, lng: res.lng, geocodedAt: Date.now(), source: e.location };
+        if (res) e.geo = { lat: res.lat, lng: res.lng, city: res.city, county: res.county, state: res.state, zip: res.zip, country: res.country, displayName: res.displayName, geocodedAt: Date.now(), source: e.location };
         else e.geo = { lat: null, lng: null, geocodedAt: Date.now(), source: e.location, failed: true };
         done++;
         geoBtn.textContent = `Geocoding ${done}/${missing.length}...`;
@@ -2797,6 +3274,15 @@ function renderRoiView() {
     .sort((a,b) => Math.abs(b.diff) - Math.abs(a.diff))
     .slice(0, 10);
 
+  // Leads aggregation
+  const allLeads = events.flatMap(e => (e.leads||[]).map(l => ({ ...l, eventName: e.name, eventDate: e.date })));
+  const leadsPipeline = allLeads.reduce((s,l) => s + (+l.value||0), 0);
+  const leadsWon = allLeads.filter(l => l.status === 'won').reduce((s,l) => s + (+l.value||0), 0);
+  const leadsCount = allLeads.length;
+  const leadsByStatus = allLeads.reduce((m,l) => { m[l.status||'new'] = (m[l.status||'new']||0) + 1; return m; }, {});
+  // True ROI = (leadsWon - actualSpend) / actualSpend
+  const trueRoiPct = actualSpend ? ((leadsWon - actualSpend) / actualSpend * 100) : 0;
+
   document.getElementById('content').innerHTML = `
     <div class="roi-kpi-grid">
       <div class="roi-kpi"><div class="rk-label">Total Approved Budget</div><div class="rk-value">${fmt$(totalBudgetSum)}</div><div class="rk-delta">${approvedLike.length} approved events</div></div>
@@ -2804,6 +3290,9 @@ function renderRoiView() {
       <div class="roi-kpi ${variance <= 0 ? 'good' : 'bad'}"><div class="rk-label">Budget Variance</div><div class="rk-value">${variance >= 0 ? '+' : ''}${fmt$(variance)}</div><div class="rk-delta">${variance <= 0 ? 'Under budget' : 'Over budget'}</div></div>
       <div class="roi-kpi"><div class="rk-label">Total Attendance</div><div class="rk-value">${totalAttendance.toLocaleString()}</div><div class="rk-delta">Completed events</div></div>
       <div class="roi-kpi"><div class="rk-label">Avg Cost / Attendee</div><div class="rk-value">${cpa ? '$' + cpa.toFixed(2) : '—'}</div><div class="rk-delta">Across completed</div></div>
+      <div class="roi-kpi ${leadsWon > 0 ? 'good' : ''}"><div class="rk-label">Leads Pipeline</div><div class="rk-value">${fmt$(leadsPipeline)}</div><div class="rk-delta">${leadsCount} total leads</div></div>
+      <div class="roi-kpi ${leadsWon > 0 ? 'good' : ''}"><div class="rk-label">Closed Won</div><div class="rk-value">${fmt$(leadsWon)}</div><div class="rk-delta">${leadsByStatus.won||0} won · ${leadsByStatus.lost||0} lost</div></div>
+      <div class="roi-kpi ${trueRoiPct >= 0 ? 'good' : 'bad'}"><div class="rk-label">True ROI%</div><div class="rk-value">${actualSpend && leadsWon ? (trueRoiPct >= 0 ? '+' : '') + trueRoiPct.toFixed(0) + '%' : '—'}</div><div class="rk-delta">(won − spend) / spend</div></div>
     </div>
 
     <div class="report-grid">
@@ -2864,6 +3353,38 @@ function renderRoiView() {
             <tfoot><tr><td>Total</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.budget,0))}</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.spend,0))}</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.diff,0))}</td></tr></tfoot>
           </table>
         ` : '<div style="color:#888">No completed events yet.</div>'}
+      </div>
+
+      <div class="report-card wide">
+        <h3>Lead Pipeline by Event <span class="rc-sub">${leadsCount} leads · ${fmt$(leadsPipeline)} pipeline</span></h3>
+        ${(() => {
+          // Group leads by event, only show events with leads
+          const byEvent = {};
+          allLeads.forEach(l => {
+            const key = l.eventName + '|' + (l.eventDate || '');
+            if (!byEvent[key]) byEvent[key] = { name: l.eventName, date: l.eventDate, leads: [], total: 0, won: 0, byStatus: {} };
+            byEvent[key].leads.push(l);
+            byEvent[key].total += +l.value||0;
+            if (l.status === 'won') byEvent[key].won += +l.value||0;
+            byEvent[key].byStatus[l.status||'new'] = (byEvent[key].byStatus[l.status||'new']||0) + 1;
+          });
+          const rows = Object.values(byEvent).sort((a,b) => b.total - a.total).slice(0, 12);
+          if (!rows.length) return '<div style="color:#888;padding:16px;text-align:center">No leads logged yet. Open any completed event and add leads in the "Leads &amp; Pipeline" section.</div>';
+          return `
+            <table class="report-table">
+              <thead><tr><th>Event</th><th class="num">Leads</th><th class="num">Pipeline</th><th class="num">Won</th><th>Status mix</th></tr></thead>
+              <tbody>${rows.map(r => `
+                <tr>
+                  <td><strong>${escapeHtml(r.name)}</strong><br/><span style="font-size:11px;color:#888">${fmtDate(r.date)}</span></td>
+                  <td class="num">${r.leads.length}</td>
+                  <td class="num">${fmt$(r.total)}</td>
+                  <td class="num" style="color:${r.won?'#16a34a':'#999'};font-weight:${r.won?'700':'400'}">${r.won ? fmt$(r.won) : '—'}</td>
+                  <td style="font-size:11px">${Object.entries(r.byStatus).map(([k,v]) => `${k}: ${v}`).join(' · ')}</td>
+                </tr>
+              `).join('')}</tbody>
+            </table>
+          `;
+        })()}
       </div>
     </div>
   `;
@@ -3172,6 +3693,296 @@ function renderPrintView() {
   document.getElementById('prRefresh').onclick = draw;
 }
 
+/* ---------- Templates View ---------- */
+function renderTemplatesView() {
+  const list = (templates || []).slice().sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  document.getElementById('content').innerHTML = `
+    <div class="report-card wide">
+      <h3>Event Templates <span class="rc-sub">${list.length} saved · shared across all users</span></h3>
+      <p style="color:#666;margin-bottom:14px;font-size:13px">Templates pre-fill the new event form so common, repeating events (annual sponsorships, standard touch-a-truck setups, recurring city activations) don't have to be retyped. Save any event as a template by checking the box when you submit.</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="btn" id="newTemplateBtn">+ Build Template From Scratch</button>
+      </div>
+
+      ${list.length ? `
+        <div class="tile-grid">
+          ${list.map(t => {
+            const totalBud = Object.values(t.budget||{}).reduce((s,v) => s + (+v||0), 0);
+            return `
+            <div class="tile">
+              <h4>${escapeHtml(t.name||'(untitled template)')}</h4>
+              <div class="tile-meta">${escapeHtml(t.type||'')}${t.partner?' · '+escapeHtml(t.partner):''}</div>
+              <div class="tile-row"><span>Budget</span><strong>${fmt$(totalBud)}</strong></div>
+              <div class="tile-row"><span>Attendance</span><strong>${t.attendance || '—'}</strong></div>
+              <div class="tile-row"><span>Tasks</span><strong>${(t.tasks||[]).length}</strong></div>
+              ${t.location ? `<div class="tile-row"><span>Default location</span><strong style="font-size:11px">${escapeHtml((t.location||'').slice(0,30))}${(t.location||'').length>30?'…':''}</strong></div>` : ''}
+              <div class="tile-actions">
+                <button class="btn small" onclick="useTemplateForNewEvent('${t.id}')">⚡ Use</button>
+                <button class="btn ghost small" onclick="editTemplate('${t.id}')">Edit</button>
+                <button class="btn ghost small" style="color:#dc2626" onclick="deleteTemplate('${t.id}')">Delete</button>
+              </div>
+            </div>
+          `;}).join('')}
+        </div>
+      ` : '<div style="background:#fafafa;padding:32px;text-align:center;color:#888;border-radius:6px">No templates saved yet. Submit any event with "Save as template" checked, or click the button above to build one from scratch.</div>'}
+    </div>
+  `;
+  document.getElementById('newTemplateBtn').onclick = () => openTemplateBuilder();
+}
+
+function openTemplateBuilder(existingId) {
+  // Use the same form modal but with template intent
+  const existing = existingId ? templates.find(t => t.id === existingId) : null;
+  fillForm(existing || {});
+  document.getElementById('formTitle').textContent = existing ? 'Edit Template' : 'Build Template';
+  document.getElementById('f_id').value = '__template__' + (existing?.id || '');
+  // Hide template picker (you're editing a template, not using one)
+  document.getElementById('templatePickerWrap').style.display = 'none';
+  // Pre-check save-as-template and pre-fill name
+  document.getElementById('f_saveAsTemplate').checked = true;
+  document.getElementById('f_templateName').style.display = '';
+  document.getElementById('f_templateName').value = existing?.name || '';
+  const submitBtn = document.querySelector('#eventForm button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = existing ? 'Save Template' : 'Create Template';
+  document.getElementById('formModal').classList.add('open');
+}
+
+function editTemplate(id) { openTemplateBuilder(id); }
+
+async function deleteTemplate(id) {
+  const t = templates.find(x => x.id === id);
+  if (!t) return;
+  if (!confirm(`Delete template "${t.name}"? This won't affect events already created from it.`)) return;
+  templates = templates.filter(x => x.id !== id);
+  await saveTemplates();
+  toast('Template deleted');
+  render();
+}
+
+function useTemplateForNewEvent(id) {
+  const t = templates.find(x => x.id === id);
+  if (!t) return;
+  fillForm(null);
+  // Apply template fields (overrides form's empty state)
+  applyTemplateToForm(t);
+  document.getElementById('formModal').classList.add('open');
+  document.getElementById('formTitle').textContent = 'New Event — from "' + t.name + '" template';
+  const submitBtn = document.querySelector('#eventForm button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = 'Submit for Approval';
+}
+
+function applyTemplateToForm(t) {
+  const v = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+  v('f_name', t.name && !t.name.startsWith('Template:') ? t.name : '');
+  v('f_type', t.type);
+  v('f_partner', t.partner);
+  v('f_time', t.time);
+  v('f_duration', t.duration);
+  v('f_location', t.location);
+  v('f_contact', t.contact);
+  v('f_contactInfo', t.contactInfo);
+  v('f_desc', t.desc);
+  v('f_deliverables', t.deliverables);
+  v('f_attendance', t.attendance);
+  v('f_staffCount', t.staffCount);
+  v('f_roi', t.roi);
+  v('f_payment', t.payment);
+  v('f_b_sponsor', t.budget?.sponsor);
+  v('f_b_marketing', t.budget?.marketing);
+  v('f_b_swag', t.budget?.swag);
+  v('f_b_staff', t.budget?.staff);
+  v('f_b_equipment', t.budget?.equipment);
+  v('f_b_other', t.budget?.other);
+  // Store the template's tasks/staff to be copied at submit time
+  _pendingTemplateTasks = (t.tasks || []).slice();
+  _pendingTemplateStaff = (t.staff || []).slice();
+  toast(`Applied template "${t.name}"`);
+}
+
+// Holds task/staff from an applied template so they get copied onto the new event at submit
+let _pendingTemplateTasks = [];
+let _pendingTemplateStaff = [];
+
+/* ---------- Vendors View ---------- */
+function renderVendorsView() {
+  const list = (vendors || []).slice().sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  const categories = [...new Set(list.map(v => v.category).filter(Boolean))];
+  document.getElementById('content').innerHTML = `
+    <div class="report-card wide">
+      <h3>Vendor Directory <span class="rc-sub">${list.length} vendors · shared</span></h3>
+      <p style="color:#666;margin-bottom:14px;font-size:13px">Suppliers used for events — tents, print, swag, AV, food trucks, security, etc. The vendor name field autocompletes on event detail to keep records consistent.</p>
+
+      <fieldset style="border:1px solid #ddd;padding:14px;border-radius:6px;margin-bottom:18px">
+        <legend style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:0 6px">+ Add Vendor</legend>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+          <input type="text" id="vn_name" placeholder="Vendor name" />
+          <input type="text" id="vn_category" placeholder="Category (Print, Tent, Swag…)" list="vendorCategoryList" />
+          <input type="text" id="vn_contact" placeholder="Contact person" />
+          <input type="text" id="vn_contactInfo" placeholder="Email / phone" />
+          <input type="number" id="vn_lastPrice" placeholder="Last price ($)" step="50" min="0" />
+          <input type="text" id="vn_notes" placeholder="Notes" />
+        </div>
+        <datalist id="vendorCategoryList">${categories.map(c => `<option value="${escapeHtml(c)}">`).join('')}</datalist>
+        <div style="margin-top:10px"><button class="btn small" id="addVendorBtn">+ Add Vendor</button></div>
+      </fieldset>
+
+      ${list.length ? `
+        <table class="report-table">
+          <thead><tr><th>Vendor</th><th>Category</th><th>Contact</th><th class="num">Last Price</th><th>Notes</th><th></th></tr></thead>
+          <tbody>${list.map(v => `
+            <tr>
+              <td><strong>${escapeHtml(v.name||'')}</strong></td>
+              <td>${escapeHtml(v.category||'—')}</td>
+              <td>${escapeHtml(v.contact||'—')}${v.contactInfo ? `<br/><span style="font-size:11px;color:#777">${escapeHtml(v.contactInfo)}</span>` : ''}</td>
+              <td class="num">${v.lastPrice ? fmt$(v.lastPrice) : '—'}</td>
+              <td style="font-size:12px">${escapeHtml(v.notes||'')}</td>
+              <td><button class="btn ghost small" style="color:#dc2626" onclick="deleteVendor('${v.id}')">Remove</button></td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      ` : '<div style="background:#fafafa;padding:24px;text-align:center;color:#888;border-radius:6px">No vendors yet. Add one above.</div>'}
+    </div>
+  `;
+  document.getElementById('addVendorBtn').onclick = async () => {
+    const name = document.getElementById('vn_name').value.trim();
+    if (!name) { toast('Enter a vendor name'); return; }
+    vendors.push({
+      id: 'v_' + Math.random().toString(36).slice(2,9),
+      name,
+      category: document.getElementById('vn_category').value.trim(),
+      contact: document.getElementById('vn_contact').value.trim(),
+      contactInfo: document.getElementById('vn_contactInfo').value.trim(),
+      lastPrice: +document.getElementById('vn_lastPrice').value || 0,
+      notes: document.getElementById('vn_notes').value.trim(),
+      addedAt: Date.now(),
+      addedBy: getSubmitter() || 'Coordinator'
+    });
+    await saveVendors();
+    toast('Vendor added');
+    render();
+  };
+}
+async function deleteVendor(id) {
+  const v = vendors.find(x => x.id === id);
+  if (!confirm(`Remove vendor "${v?.name||'(unnamed)'}"?`)) return;
+  vendors = vendors.filter(x => x.id !== id);
+  await saveVendors();
+  toast('Removed');
+  render();
+}
+
+/* ---------- Settings View (VP only) ---------- */
+function renderSettingsView() {
+  document.getElementById('content').innerHTML = `
+    <div class="report-card wide">
+      <h3>App Settings <span class="rc-sub">VP-only controls · shared</span></h3>
+      <p style="color:#666;margin-bottom:18px;font-size:13px">These rules apply to every coordinator's submissions. Setting any value to 0 disables that rule.</p>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Auto-approve events under</div>
+          <div class="settings-help">Submissions with total budget ≤ this amount skip the pending queue and go straight to Approved.</div>
+        </div>
+        <div>
+          <input type="number" id="st_autoApprove" min="0" step="50" value="${appSettings.autoApproveUnder || 0}" /> <span style="color:#666">$</span>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Require dual sign-off over</div>
+          <div class="settings-help">Submissions over this amount get a "needs second approval" badge — used by VP and Finance for high-value spends.</div>
+        </div>
+        <div>
+          <input type="number" id="st_requireSecond" min="0" step="100" value="${appSettings.requireSecondApprovalOver || 0}" /> <span style="color:#666">$</span>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Recurring auto-create lookahead</div>
+          <div class="settings-help">For events flagged "repeat yearly", how many days before the next occurrence to create the draft.</div>
+        </div>
+        <div>
+          <input type="number" id="st_lookahead" min="7" max="365" step="1" value="${appSettings.recurringLookahead || 60}" /> <span style="color:#666">days</span>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Per-type budget caps (advisory)</div>
+          <div class="settings-help">Submissions over the cap get a soft warning. Comma-separated as "Type:amount" (e.g. "Sponsorship:5000, Charity / Donation:500"). Leave blank to disable.</div>
+        </div>
+        <div>
+          <input type="text" id="st_typeCaps" placeholder='Sponsorship:5000, Charity / Donation:500' value="${escapeHtml(Object.entries(appSettings.typeCaps||{}).map(([k,v]) => `${k}:${v}`).join(', '))}" style="max-width:100%;width:100%" />
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
+        <button class="btn" id="saveSettingsBtn">💾 Save Settings</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('saveSettingsBtn').onclick = async () => {
+    appSettings.autoApproveUnder = +document.getElementById('st_autoApprove').value || 0;
+    appSettings.requireSecondApprovalOver = +document.getElementById('st_requireSecond').value || 0;
+    appSettings.recurringLookahead = +document.getElementById('st_lookahead').value || 60;
+    const capsRaw = document.getElementById('st_typeCaps').value.trim();
+    const caps = {};
+    capsRaw.split(',').forEach(pair => {
+      const [k,v] = pair.split(':').map(s => (s||'').trim());
+      if (k && v) caps[k] = +v;
+    });
+    appSettings.typeCaps = caps;
+    await saveSettings();
+    toast('✓ Settings saved');
+  };
+}
+
+/* ---------- Conflict Detection ---------- */
+function findConflictsForEvent(e, excludeId) {
+  const conflicts = { sameDay: [], staffDouble: {} };
+  if (!e.date) return conflicts;
+  events.forEach(other => {
+    if (excludeId && other.id === excludeId) return;
+    if (other.id === e.id) return;
+    if (other.date !== e.date) return;
+    if (other.status === 'denied') return;
+    conflicts.sameDay.push(other);
+    // Staff overlap
+    (e.staff || []).forEach(s => {
+      if ((other.staff || []).includes(s)) {
+        conflicts.staffDouble[s] = conflicts.staffDouble[s] || [];
+        conflicts.staffDouble[s].push(other);
+      }
+    });
+  });
+  return conflicts;
+}
+
+function checkFormConflicts() {
+  const date = document.getElementById('f_date').value;
+  if (!date) {
+    document.getElementById('formConflictWarning').style.display = 'none';
+    return;
+  }
+  const partial = { id: document.getElementById('f_id').value, date, staff: _pendingTemplateStaff };
+  const conflicts = findConflictsForEvent(partial, partial.id);
+  const warning = document.getElementById('formConflictWarning');
+  if (!conflicts.sameDay.length) {
+    warning.style.display = 'none';
+    return;
+  }
+  warning.style.display = 'block';
+  warning.className = conflicts.sameDay.length >= 2 ? 'conflict-warning' : 'conflict-warning soft';
+  warning.innerHTML = `
+    <strong>${conflicts.sameDay.length >= 2 ? '⚠ Heads up — ' : 'ℹ Note — '}${conflicts.sameDay.length} other event${conflicts.sameDay.length>1?'s':''} on this date</strong>
+    ${conflicts.sameDay.slice(0,5).map(o => `<div style="font-size:12px;margin-top:4px">• <strong>${escapeHtml(o.name)}</strong> (${o.status}${o.location?', '+escapeHtml(o.location):''})</div>`).join('')}
+    ${conflicts.sameDay.length > 5 ? `<div style="font-size:11px;margin-top:4px;color:#777">+ ${conflicts.sameDay.length - 5} more…</div>` : ''}
+  `;
+}
+
 /* ---------- Staff Roster View ---------- */
 function renderStaffView() {
   // Build set of all staff names from events + persisted roster
@@ -3405,9 +4216,10 @@ function openDetail(id) {
   ` : '';
 
   document.getElementById('detailContent').innerHTML = `
-    <h2>${escapeHtml(e.name)}</h2>
+    <h2>${e.recurring?'<span title="Repeats yearly" style="margin-right:6px">🔁</span>':''}${e.source==='outlook'?'<span title="Imported from Outlook" style="margin-right:6px;color:#0078D4">⇆</span>':''}${escapeHtml(e.name)}</h2>
     <div class="modal-sub">
       ${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span>${isPast && e.status !== 'completed' ? ' · <span style="color:#EF4444">PAST DATE</span>' : ''}
+      ${e.needsSecondApproval ? ' · <span style="color:#b45309" title="Requires second approval">⚠ NEEDS SECOND APPROVAL</span>' : ''}
       ${countdown(e) ? `<span class="countdown-pill ${countdown(e).cls}" style="margin-left:8px">${countdown(e).text}</span>` : ''}
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;margin-bottom:6px">
@@ -3479,18 +4291,30 @@ function openDetail(id) {
       <legend>Attachments</legend>
       <div class="attachments-list">${attHtml}</div>
       ${role === 'coordinator' ? `
-        <div style="margin-top:12px">
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
           <input type="file" id="addAttachInput" multiple style="display:none" />
+          <input type="file" id="cameraAttachInput" accept="image/*" capture="environment" style="display:none" />
           <button type="button" class="btn ghost small" onclick="document.getElementById('addAttachInput').click()">+ Add file(s)</button>
-          <span style="font-size:11px;color:#888;margin-left:8px">Images & PDFs preferred. Each file kept under ~700 KB to stay within Firestore limits.</span>
+          <button type="button" class="btn ghost small" onclick="document.getElementById('cameraAttachInput').click()">📷 Take Photo</button>
+          <span style="font-size:11px;color:#888">Images & PDFs preferred. Each file kept under ~700 KB.</span>
         </div>
       ` : ''}
+    </fieldset>
+
+    <fieldset>
+      <legend>💼 Leads &amp; Pipeline${(e.leads||[]).length ? ` (${(e.leads||[]).length})` : ''}</legend>
+      ${renderLeadsSection(e)}
     </fieldset>
 
     ${reportSection}
 
     <fieldset>
-      <legend>Approval & Activity Log</legend>
+      <legend>💬 Comments${(e.comments||[]).length ? ` (${(e.comments||[]).length})` : ''}</legend>
+      ${renderCommentsSection(e)}
+    </fieldset>
+
+    <fieldset>
+      <legend>Approval &amp; Activity Log</legend>
       ${logs || '<div style="color:#888;font-size:12px">No activity yet.</div>'}
     </fieldset>
 
@@ -3501,7 +4325,186 @@ function openDetail(id) {
   if (attachInput) {
     attachInput.onchange = (ev) => handleDetailAttachments(e.id, ev.target.files);
   }
+  const camInput = document.getElementById('cameraAttachInput');
+  if (camInput) {
+    camInput.onchange = (ev) => handleDetailAttachments(e.id, ev.target.files);
+  }
+  // Wire up comment compose
+  const commentBtn = document.getElementById('postCommentBtn');
+  if (commentBtn) {
+    commentBtn.onclick = () => postComment(e.id);
+  }
   document.getElementById('detailModal').classList.add('open');
+}
+
+/* ---------- Leads section ---------- */
+function renderLeadsSection(e) {
+  const leads = e.leads || [];
+  const pipeline = leads.reduce((s, l) => s + (+l.value || 0), 0);
+  const closed = leads.filter(l => l.status === 'won').reduce((s, l) => s + (+l.value || 0), 0);
+  const lost = leads.filter(l => l.status === 'lost').length;
+  const stats = leads.length ? `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:12px">
+      <span class="staff-chip" style="background:#dbeafe;border-color:#93c5fd;color:#1e3a8a"><strong style="font-family:'Bebas Neue',sans-serif;font-size:14px">${leads.length}</strong>&nbsp;leads</span>
+      <span class="staff-chip" style="background:#fef3c7;border-color:#fcd34d;color:#92400e"><strong style="font-family:'Bebas Neue',sans-serif;font-size:14px">${fmt$(pipeline)}</strong>&nbsp;pipeline</span>
+      <span class="staff-chip" style="background:#dcfce7;border-color:#86efac;color:#14532d"><strong style="font-family:'Bebas Neue',sans-serif;font-size:14px">${fmt$(closed)}</strong>&nbsp;won</span>
+      ${lost ? `<span class="staff-chip" style="background:#fee2e2;border-color:#fca5a5;color:#7f1d1d"><strong style="font-family:'Bebas Neue',sans-serif;font-size:14px">${lost}</strong>&nbsp;lost</span>` : ''}
+    </div>` : '';
+  const rows = leads.length ? leads.map(l => `
+    <div class="lead-row ${l.status==='won'?'won':''} ${l.status==='lost'?'lost':''}">
+      <input type="text" placeholder="Contact name" value="${escapeHtml(l.name||'')}" onchange="updateLead('${e.id}','${l.id}','name',this.value)" />
+      <input type="text" placeholder="Company" value="${escapeHtml(l.company||'')}" onchange="updateLead('${e.id}','${l.id}','company',this.value)" />
+      <input type="number" placeholder="Value ($)" value="${l.value||''}" onchange="updateLead('${e.id}','${l.id}','value',this.value)" step="100" min="0" />
+      <select onchange="updateLead('${e.id}','${l.id}','status',this.value)" class="lead-status">
+        <option value="new" ${l.status==='new'?'selected':''}>🆕 New</option>
+        <option value="qualified" ${l.status==='qualified'?'selected':''}>👤 Qualified</option>
+        <option value="proposal" ${l.status==='proposal'?'selected':''}>📝 Proposal</option>
+        <option value="won" ${l.status==='won'?'selected':''}>✅ Won</option>
+        <option value="lost" ${l.status==='lost'?'selected':''}>❌ Lost</option>
+      </select>
+      <button class="btn ghost small" style="color:#dc2626;padding:6px 8px" onclick="removeLead('${e.id}','${l.id}')" title="Delete">×</button>
+    </div>
+  `).join('') : '<div style="color:#888;font-size:12px;padding:8px">No leads logged yet. Add a lead below when contacts come in during/after the event.</div>';
+  return `
+    ${stats}
+    ${rows}
+    <div class="lead-add" style="margin-top:10px">
+      <input type="text" id="newLeadName" placeholder="Contact name" />
+      <input type="text" id="newLeadCompany" placeholder="Company" />
+      <input type="number" id="newLeadValue" placeholder="Est. value ($)" step="100" min="0" />
+      <select id="newLeadStatus">
+        <option value="new">🆕 New</option>
+        <option value="qualified">👤 Qualified</option>
+        <option value="proposal">📝 Proposal</option>
+        <option value="won">✅ Won</option>
+        <option value="lost">❌ Lost</option>
+      </select>
+      <button class="btn small" type="button" onclick="addLead('${e.id}')">+ Add Lead</button>
+    </div>
+  `;
+}
+
+async function addLead(eventId) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const name = (document.getElementById('newLeadName')?.value || '').trim();
+  const company = (document.getElementById('newLeadCompany')?.value || '').trim();
+  const value = +(document.getElementById('newLeadValue')?.value || 0);
+  const status = document.getElementById('newLeadStatus')?.value || 'new';
+  if (!name && !company) { toast('Enter a name or company'); return; }
+  e.leads = e.leads || [];
+  e.leads.push({ id: 'l_' + Math.random().toString(36).slice(2,8), name, company, value, status, addedAt: Date.now(), addedBy: logBy() });
+  e.log = e.log || [];
+  e.log.push({ action: `Lead added: ${name || company}`, by: logBy(), note: status + (value?` · ${fmt$(value)}`:''), at: Date.now() });
+  await saveEvents();
+  toast('Lead added');
+  openDetail(eventId);
+}
+async function updateLead(eventId, leadId, field, value) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const lead = (e.leads || []).find(l => l.id === leadId); if (!lead) return;
+  const oldVal = lead[field];
+  lead[field] = field === 'value' ? +value || 0 : value;
+  e.log = e.log || [];
+  e.log.push({ action: `Lead updated: ${field}`, by: logBy(), note: `${oldVal} → ${value}`, at: Date.now() });
+  await saveEvents();
+  // No re-render to avoid losing focus during edits
+}
+async function removeLead(eventId, leadId) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const lead = (e.leads || []).find(l => l.id === leadId);
+  if (!confirm(`Delete lead "${lead?.name || lead?.company || '(unnamed)'}"?`)) return;
+  e.leads = (e.leads || []).filter(l => l.id !== leadId);
+  e.log.push({ action: 'Lead removed', by: logBy(), note: lead?.name || '', at: Date.now() });
+  await saveEvents();
+  openDetail(eventId);
+}
+
+/* ---------- Comments section ---------- */
+function renderCommentsSection(e) {
+  const comments = (e.comments || []).slice().sort((a,b) => a.at - b.at);
+  const rendered = comments.length ? comments.map(c => `
+    <div class="comment">
+      <div class="comment-head">
+        <span><strong style="color:var(--pw-black)">${escapeHtml(c.by||'Unknown')}</strong></span>
+        <span>${new Date(c.at).toLocaleString()}</span>
+      </div>
+      <div class="comment-body">${formatCommentBody(c.text||'')}</div>
+    </div>
+  `).join('') : '<div style="color:#888;font-size:12px;padding:8px">No comments yet. Start a thread below — use <span class="kbd">@name</span> to alert someone (fires a Zapier webhook for email).</div>';
+  return `
+    ${rendered}
+    <div class="comment-compose">
+      <textarea id="commentText" placeholder="Add a comment… try @Tammy or @Braxton to notify them"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:#888">Names match the staff roster. Mentions trigger a 'mention' webhook.</span>
+        <button type="button" class="btn small" id="postCommentBtn">Post Comment</button>
+      </div>
+    </div>
+  `;
+}
+
+function formatCommentBody(text) {
+  const escaped = escapeHtml(text);
+  // Highlight @mentions
+  return escaped.replace(/@([A-Za-z][A-Za-z0-9_\-\.]*(?:\s+[A-Za-z][A-Za-z0-9_\-\.]*){0,2})/g, (m, name) => {
+    return `<span class="mention">@${name.trim()}</span>`;
+  });
+}
+
+function parseMentions(text) {
+  const matches = [];
+  const re = /@([A-Za-z][A-Za-z0-9_\-\.]*(?:\s+[A-Za-z][A-Za-z0-9_\-\.]*){0,2})/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const candidate = m[1].trim();
+    matches.push(candidate);
+  }
+  return [...new Set(matches)];
+}
+
+async function postComment(eventId) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const ta = document.getElementById('commentText');
+  const text = (ta?.value || '').trim();
+  if (!text) { toast('Type something first'); return; }
+  e.comments = e.comments || [];
+  const comment = { id: 'c_' + Math.random().toString(36).slice(2,8), by: logBy(), text, at: Date.now() };
+  e.comments.push(comment);
+
+  // Parse mentions and try to match against roster
+  const roster = [...new Set([...(getRoster() || []), ...events.flatMap(x => x.staff || [])])];
+  const mentions = parseMentions(text);
+  const matched = mentions.map(m => {
+    // Try exact match, then prefix match
+    const direct = roster.find(r => r.toLowerCase() === m.toLowerCase());
+    if (direct) return direct;
+    const prefix = roster.find(r => r.toLowerCase().startsWith(m.toLowerCase()));
+    return prefix || m;
+  });
+
+  e.log = e.log || [];
+  e.log.push({ action: 'Comment posted', by: logBy(), note: text.length > 60 ? text.slice(0,57)+'…' : text, at: Date.now() });
+
+  await saveEvents();
+
+  // Fire a 'mention' webhook for each mention so Zapier can email them
+  for (const name of matched) {
+    await fireWebhook('mention', {
+      ...e,
+      _mention: {
+        mentionedName: name,
+        commentText: text,
+        commentBy: logBy(),
+        eventName: e.name,
+        eventDate: e.date,
+        eventId: e.id
+      }
+    });
+  }
+
+  if (matched.length) toast(`💬 Posted · ${matched.length} mention${matched.length>1?'s':''} sent to Zapier`);
+  else toast('💬 Comment posted');
+  openDetail(eventId);
 }
 
 function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
@@ -3592,10 +4595,66 @@ function fillForm(e) {
   v('f_staffCount', e?.staffCount);
   v('f_roi', e?.roi);
   v('f_payment', e?.payment || 'not_requested');
+  // Recurring + template flags
+  document.getElementById('f_recurring').checked = !!(e && e.recurring);
+  document.getElementById('f_saveAsTemplate').checked = false;
+  document.getElementById('f_templateName').style.display = 'none';
+  document.getElementById('f_templateName').value = '';
+  document.getElementById('formConflictWarning').style.display = 'none';
   // Reset attachment queue
   _pendingAttachments = (e?.attachments || []).slice();
   renderPendingAttachments();
+  // Refresh template picker options
+  populateTemplatePicker();
 }
+
+function populateTemplatePicker() {
+  const sel = document.getElementById('f_templatePick');
+  if (!sel) return;
+  const opts = ['<option value="">— Choose a template to pre-fill —</option>'];
+  templates.slice().sort((a,b) => (a.name||'').localeCompare(b.name||''))
+    .forEach(t => { opts.push(`<option value="${t.id}">${escapeHtml(t.name||'(unnamed)')} (${escapeHtml(t.type||'')})</option>`); });
+  sel.innerHTML = opts.join('');
+}
+
+document.getElementById('applyTemplateBtn').onclick = () => {
+  const id = document.getElementById('f_templatePick').value;
+  if (!id) { toast('Pick a template first'); return; }
+  const t = templates.find(x => x.id === id);
+  if (t) applyTemplateToForm(t);
+};
+
+// Show/hide template name field when checkbox toggled
+document.getElementById('f_saveAsTemplate').addEventListener('change', (ev) => {
+  document.getElementById('f_templateName').style.display = ev.target.checked ? '' : 'none';
+  if (ev.target.checked) {
+    // Pre-fill template name from event name
+    const cur = document.getElementById('f_templateName').value;
+    if (!cur) document.getElementById('f_templateName').value = document.getElementById('f_name').value + ' — template';
+  }
+});
+
+// Conflict check on date change
+document.getElementById('f_date').addEventListener('change', () => checkFormConflicts());
+
+// Vendor autocomplete hints as the user types deliverables
+document.getElementById('f_deliverables').addEventListener('input', (ev) => {
+  const text = ev.target.value.toLowerCase();
+  const hintBox = document.getElementById('vendorHints');
+  const hintList = document.getElementById('vendorHintList');
+  if (!text || !vendors.length) { hintBox.style.display = 'none'; return; }
+  const lastLine = (text.split('\n').pop() || '').trim();
+  if (lastLine.length < 3) { hintBox.style.display = 'none'; return; }
+  const matches = vendors.filter(v => {
+    const all = `${v.name||''} ${v.category||''}`.toLowerCase();
+    return all.includes(lastLine) || lastLine.includes((v.category||'').toLowerCase()) || (v.category||'').toLowerCase().split(/\s+/).some(t => t && lastLine.includes(t));
+  }).slice(0, 4);
+  if (!matches.length) { hintBox.style.display = 'none'; return; }
+  hintList.innerHTML = matches.map(v =>
+    `<span style="background:rgba(255,194,14,0.18);padding:2px 6px;border-radius:3px;margin-right:4px">${escapeHtml(v.name)} <span style="color:#999">${v.lastPrice?'($'+v.lastPrice+')':''}</span></span>`
+  ).join('');
+  hintBox.style.display = '';
+});
 
 document.getElementById('newBtn').onclick = () => {
   fillForm(null);
@@ -3603,7 +4662,7 @@ document.getElementById('newBtn').onclick = () => {
   if (submitBtn) submitBtn.textContent = 'Submit for Approval';
   document.getElementById('formModal').classList.add('open');
 };
-document.getElementById('cancelForm').onclick = () => document.getElementById('formModal').classList.remove('open');
+document.getElementById('cancelForm').onclick = () => closeForm();
 
 // Bulk .ics export button (in the list toolbar)
 {
@@ -3624,6 +4683,125 @@ document.getElementById('cancelForm').onclick = () => document.getElementById('f
   }
 }
 
+/* ---------- Excel + CSV Export ---------- */
+function eventsToTableRows(eventList) {
+  return eventList.map(e => {
+    const totalBud = totalBudget(e);
+    const leadsArr = e.leads || [];
+    const leadsPipeline = leadsArr.reduce((s,l) => s + (+l.value||0), 0);
+    const leadsWon = leadsArr.filter(l => l.status === 'won').reduce((s,l) => s + (+l.value||0), 0);
+    const tasksArr = e.tasks || [];
+    const tasksDone = tasksArr.filter(t => t.done).length;
+    return {
+      'Event Name': e.name || '',
+      'Type': e.type || '',
+      'Status': e.status || '',
+      'Partner / Municipality': e.partner || '',
+      'Date': e.date || '',
+      'Time': e.time || '',
+      'Duration': e.duration || '',
+      'Location': e.location || '',
+      'City (geocoded)': (e.geo && e.geo.city) || '',
+      'State': (e.geo && e.geo.state) || '',
+      'Contact': e.contact || '',
+      'Contact Info': e.contactInfo || '',
+      'Description': e.desc || '',
+      'Expected Attendance': e.attendance || 0,
+      'Actual Attendance': e.actualAttendance || 0,
+      'PW Staff Needed': e.staffCount || 0,
+      'Staff Assigned': (e.staff||[]).join('; '),
+      'Budget — Sponsor': (e.budget && e.budget.sponsor) || 0,
+      'Budget — Marketing': (e.budget && e.budget.marketing) || 0,
+      'Budget — Swag': (e.budget && e.budget.swag) || 0,
+      'Budget — Staff': (e.budget && e.budget.staff) || 0,
+      'Budget — Equipment': (e.budget && e.budget.equipment) || 0,
+      'Budget — Other': (e.budget && e.budget.other) || 0,
+      'Total Budget': totalBud,
+      'Actual Spend': e.actualSpend || 0,
+      'Variance': (e.actualSpend || 0) ? (e.actualSpend - totalBud) : 0,
+      'Cost / Attendee': (e.status === 'completed' && (+e.actualAttendance||+e.attendance)) ? ((+e.actualSpend || totalBud) / (+e.actualAttendance || +e.attendance)).toFixed(2) : '',
+      'ROI Goal': e.roi || '',
+      'Outcomes': e.outcomes || '',
+      'Leads Count': leadsArr.length,
+      'Leads Pipeline ($)': leadsPipeline,
+      'Leads Won ($)': leadsWon,
+      'Tasks Total': tasksArr.length,
+      'Tasks Done': tasksDone,
+      'Tasks Progress (%)': tasksArr.length ? Math.round(tasksDone / tasksArr.length * 100) : '',
+      'Payment Status': labelizePayment(e.payment),
+      'Submitted By': e.submittedBy || '',
+      'Source': e.source || 'tracker',
+      'Recurring': e.recurring ? 'Yes' : 'No',
+      'Created At': new Date(e.createdAt || 0).toISOString(),
+      'Completed At': e.completedAt ? new Date(e.completedAt).toISOString() : ''
+    };
+  });
+}
+
+function getCurrentlyFilteredEvents() {
+  // Mirror renderList's filtering so export matches what's on screen
+  let filtered;
+  if (role === 'coordinator') {
+    if (activeFilter === 'archive') filtered = events.filter(isArchived);
+    else if (activeFilter === 'all') filtered = events.filter(e => !isArchived(e));
+    else filtered = events.filter(e => e.status === activeFilter && !isArchived(e));
+  } else {
+    filtered = events.filter(e => activeFilter === 'all' ? true : e.status === activeFilter);
+  }
+  if (globalSearchQuery) filtered = filtered.filter(e => eventMatchesSearch(e, globalSearchQuery));
+  return filtered.sort((a,b)=> new Date(a.date||'9999') - new Date(b.date||'9999'));
+}
+
+function exportToExcel() {
+  if (typeof XLSX === 'undefined') { toast('Excel library not loaded yet — try again in a moment'); return; }
+  const rows = eventsToTableRows(getCurrentlyFilteredEvents());
+  if (!rows.length) { toast('Nothing to export in this view'); return; }
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(rows);
+  // Set column widths
+  ws['!cols'] = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(12, Math.min(40, k.length + 4)) }));
+  XLSX.utils.book_append_sheet(wb, ws, 'Events');
+
+  // Leads sheet (flatten)
+  const leadRows = [];
+  events.forEach(e => (e.leads || []).forEach(l => leadRows.push({
+    'Event': e.name, 'Event Date': e.date,
+    'Lead Name': l.name || '', 'Company': l.company || '',
+    'Value': +l.value || 0, 'Status': l.status || 'new',
+    'Added At': new Date(l.addedAt||0).toISOString(), 'Added By': l.addedBy || ''
+  })));
+  if (leadRows.length) {
+    const leadWs = XLSX.utils.json_to_sheet(leadRows);
+    leadWs['!cols'] = Object.keys(leadRows[0]).map(k => ({ wch: Math.max(12, k.length + 4) }));
+    XLSX.utils.book_append_sheet(wb, leadWs, 'Leads');
+  }
+
+  XLSX.writeFile(wb, `priority-waste-events-${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('📊 Excel downloaded');
+}
+
+function exportToCsv() {
+  const rows = eventsToTableRows(getCurrentlyFilteredEvents());
+  if (!rows.length) { toast('Nothing to export in this view'); return; }
+  const headers = Object.keys(rows[0]);
+  const csv = [
+    headers.join(','),
+    ...rows.map(r => headers.map(h => {
+      const v = r[h];
+      const s = v == null ? '' : String(v);
+      // Escape: wrap in quotes if comma/quote/newline; double internal quotes
+      return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(','))
+  ].join('\r\n');
+  downloadFile(`priority-waste-events-${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+  toast('📋 CSV downloaded');
+}
+
+const xlsxBtn = document.getElementById('exportXlsxBtn');
+if (xlsxBtn) xlsxBtn.onclick = exportToExcel;
+const csvBtn = document.getElementById('exportCsvBtn');
+if (csvBtn) csvBtn.onclick = exportToCsv;
+
 // Keyboard shortcuts
 document.addEventListener('keydown', (ev) => {
   // Don't trigger if user is typing in an input
@@ -3634,6 +4812,20 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape') {
     // Close any open modal
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    return;
+  }
+  // Cmd/Ctrl+K focuses search
+  if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k') {
+    ev.preventDefault();
+    const inp = document.getElementById('globalSearch');
+    if (inp) { inp.focus(); inp.select(); }
+    return;
+  }
+  // / also focuses search (gmail/github style)
+  if (ev.key === '/') {
+    ev.preventDefault();
+    const inp = document.getElementById('globalSearch');
+    if (inp) { inp.focus(); inp.select(); }
     return;
   }
   // 1-9 to switch views
@@ -3652,8 +4844,15 @@ document.getElementById('f_attachInput').onchange = (ev) => handleFormFilesPicke
 
 document.getElementById('eventForm').onsubmit = async (ev) => {
   ev.preventDefault();
-  const editId = document.getElementById('f_id').value;
+  const rawId = document.getElementById('f_id').value;
   const g = (fieldId) => document.getElementById(fieldId).value;
+  const isTemplate = rawId.startsWith('__template__');
+  const editId = isTemplate ? rawId.replace('__template__','') : rawId;
+  const tasksFromTemplate = _pendingTemplateTasks.slice();
+  const staffFromTemplate = _pendingTemplateStaff.slice();
+  _pendingTemplateTasks = [];
+  _pendingTemplateStaff = [];
+
   const data = {
     id: editId || uid(),
     name: g('f_name').trim(),
@@ -3684,9 +4883,68 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
     submittedBy: getSubmitter() || 'Coordinator',
     log: [],
     attachments: _pendingAttachments.slice(),
+    recurring: document.getElementById('f_recurring').checked || false
   };
 
+  // Save-as-template? Capture before resetting form
+  const saveAsTemplate = document.getElementById('f_saveAsTemplate').checked;
+  const templateName = (document.getElementById('f_templateName').value || '').trim();
+
+  // ===== If this submission is building/editing a template (not creating an event) =====
+  if (isTemplate) {
+    const tplId = editId || ('tpl_' + Math.random().toString(36).slice(2,9));
+    const tplData = Object.assign({}, data, {
+      id: tplId,
+      name: templateName || data.name || '(unnamed template)',
+      tasks: tasksFromTemplate,
+      staff: staffFromTemplate
+    });
+    // Strip transient fields not relevant to a template
+    delete tplData.attachments;
+    delete tplData.log;
+    delete tplData.createdAt;
+    delete tplData.submittedBy;
+    delete tplData.status;
+    delete tplData.recurring;
+    const idx = templates.findIndex(t => t.id === tplId);
+    if (idx >= 0) templates[idx] = tplData;
+    else templates.push(tplData);
+    await saveTemplates();
+    toast(idx >= 0 ? 'Template saved' : 'Template created');
+    closeForm();
+    render();
+    return;
+  }
+
   const existing = events.find(x=>x.id===editId);
+
+  // Apply approval thresholds (only on NEW or status-was-pending events)
+  const totalBud = Object.values(data.budget).reduce((s,v) => s + (+v||0), 0);
+  let autoApproved = false;
+  if (!existing) {
+    if (appSettings.autoApproveUnder && totalBud > 0 && totalBud <= appSettings.autoApproveUnder) {
+      data.status = 'approved';
+      autoApproved = true;
+    }
+    if (appSettings.requireSecondApprovalOver && totalBud > appSettings.requireSecondApprovalOver) {
+      data.needsSecondApproval = true;
+    }
+    // Per-type cap warning
+    if (appSettings.typeCaps && appSettings.typeCaps[data.type] && totalBud > appSettings.typeCaps[data.type]) {
+      const proceed = confirm(`This event's total budget (${fmt$(totalBud)}) exceeds the ${data.type} cap of ${fmt$(appSettings.typeCaps[data.type])}. Submit anyway?`);
+      if (!proceed) return;
+    }
+  }
+
+  // Conflict check: warn if the date already has 2+ approved/executing/pending events
+  if (data.date) {
+    const sameDay = events.filter(x => x.id !== data.id && x.date === data.date && x.status !== 'denied');
+    if (sameDay.length >= 2) {
+      const proceed = confirm(`Heads up — there are already ${sameDay.length} other events on ${fmtDate(data.date)}:\n\n${sameDay.slice(0,5).map(x => '• ' + x.name).join('\n')}${sameDay.length>5?'\n…':''}\n\nSubmit anyway?`);
+      if (!proceed) return;
+    }
+  }
+
   if (existing) {
     // Preserve log + history through edits
     const prevLog = existing.log || [];
@@ -3694,37 +4952,114 @@ document.getElementById('eventForm').onsubmit = async (ev) => {
     const prevAttachments = existing.attachments || [];
     const wasDenied = prevStatus === 'denied';
 
-    // For non-denied edits we keep the original status (rain-date / typo fixes after approval)
     const newStatus = wasDenied ? 'pending' : prevStatus;
+    const fieldChanges = diffEventFields(existing, data);
 
     Object.assign(existing, data, {
       status: newStatus,
       log: prevLog,
-      // form attachments override existing list (they were pre-loaded into _pendingAttachments)
       attachments: data.attachments && data.attachments.length ? data.attachments : prevAttachments,
       submittedBy: existing.submittedBy || data.submittedBy,
+      // Preserve workflow data
+      tasks: existing.tasks || [],
+      staff: existing.staff || [],
+      comments: existing.comments || [],
+      leads: existing.leads || []
     });
+
+    // Audit: record changed fields
+    if (fieldChanges.length) {
+      existing.log = existing.log || [];
+      existing.log.push({
+        action: 'Edited',
+        by: logBy(),
+        note: fieldChanges.map(c => `${c.field}: "${c.from}" → "${c.to}"`).join('; '),
+        at: Date.now(),
+        audit: fieldChanges
+      });
+    }
 
     if (wasDenied) {
       existing.log.push({ action: 'Resubmitted for approval', by: logBy(), note: '', at: Date.now() });
       await fireWebhook('submitted', existing);
       toast('Resubmitted');
+    } else if (!fieldChanges.length) {
+      existing.log.push({ action: 'Saved (no changes)', by: logBy(), note: '', at: Date.now() });
+      toast('Saved');
     } else {
-      existing.log.push({ action: 'Edited / updated', by: logBy(), note: '', at: Date.now() });
       await fireWebhook('updated', existing);
       toast('Updated');
     }
   } else {
+    // New event — copy template tasks/staff if any
+    data.tasks = tasksFromTemplate.map(t => ({
+      id: 't_' + Math.random().toString(36).slice(2,8),
+      title: t.title, assignee: t.assignee || '', due: '', done: false
+    }));
+    data.staff = staffFromTemplate.slice();
+    data.comments = [];
+    data.leads = [];
     data.log.push({ action: 'Submitted for approval', by: logBy(), note: '', at: Date.now() });
+    if (autoApproved) {
+      data.log.push({ action: 'Auto-approved (budget under threshold)', by: 'System', note: `Threshold: ${fmt$(appSettings.autoApproveUnder)}`, at: Date.now() });
+    }
     events.push(data);
-    await fireWebhook('submitted', data);
-    toast('Submitted for approval');
+    await fireWebhook(autoApproved ? 'auto_approved' : 'submitted', data);
+    toast(autoApproved ? '✓ Auto-approved (under threshold)' : 'Submitted for approval');
   }
+
+  // Save-as-template?
+  if (saveAsTemplate && templateName) {
+    const tpl = {
+      id: 'tpl_' + Math.random().toString(36).slice(2,9),
+      name: templateName,
+      type: data.type, partner: data.partner, time: data.time, duration: data.duration,
+      location: data.location, contact: data.contact, contactInfo: data.contactInfo,
+      desc: data.desc, deliverables: data.deliverables, budget: data.budget,
+      attendance: data.attendance, staffCount: data.staffCount, roi: data.roi,
+      payment: data.payment, tasks: (data.tasks || []).map(t => ({ title: t.title, assignee: t.assignee||'' })),
+      staff: (data.staff || []).slice()
+    };
+    templates.push(tpl);
+    await saveTemplates();
+    toast(`💾 Saved as template: "${templateName}"`);
+  }
+
   await saveEvents();
-  document.getElementById('formModal').classList.remove('open');
-  _pendingAttachments = [];
+  closeForm();
   render();
 };
+
+function closeForm() {
+  document.getElementById('formModal').classList.remove('open');
+  _pendingAttachments = [];
+  _pendingTemplateTasks = [];
+  _pendingTemplateStaff = [];
+  // Reset template-specific UI
+  document.getElementById('templatePickerWrap').style.display = '';
+  document.getElementById('f_saveAsTemplate').checked = false;
+  document.getElementById('f_templateName').style.display = 'none';
+  document.getElementById('f_templateName').value = '';
+  document.getElementById('formConflictWarning').style.display = 'none';
+  document.getElementById('f_recurring').checked = false;
+}
+
+/* Compute changed-field diff between an existing event and a new submit */
+function diffEventFields(oldE, newE) {
+  const changes = [];
+  const watchFields = ['name','type','partner','date','time','duration','location','contact','contactInfo','desc','deliverables','attendance','staffCount','roi','payment'];
+  watchFields.forEach(k => {
+    const a = oldE[k] || ''; const b = newE[k] || '';
+    if (String(a) !== String(b)) changes.push({ field: k, from: String(a).slice(0,40), to: String(b).slice(0,40) });
+  });
+  // Budget
+  ['sponsor','marketing','swag','staff','equipment','other'].forEach(k => {
+    const a = +((oldE.budget||{})[k] || 0);
+    const b = +((newE.budget||{})[k] || 0);
+    if (a !== b) changes.push({ field: 'budget.'+k, from: '$'+a, to: '$'+b });
+  });
+  return changes;
+}
 
 /* ---------- Role switching ---------- */
 document.getElementById('roleSwitcher').addEventListener('click', (e)=>{
@@ -7426,13 +8761,91 @@ async function fireWebhook(event, eventData) {
   }
 }
 
+/* ---------- Recurring events: auto-create yearly drafts ---------- */
+async function checkRecurringEvents() {
+  const lookahead = appSettings.recurringLookahead || 60;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const limit = new Date(today); limit.setDate(limit.getDate() + lookahead);
+  let createdCount = 0;
+  // Find recurring events whose date is in the past AND no next-year clone exists yet
+  const recurringEvents = events.filter(e => e.recurring && e.date);
+  for (const e of recurringEvents) {
+    const orig = new Date(e.date + 'T00:00');
+    if (isNaN(orig.getTime())) continue;
+    // Compute next occurrence (always one year later than the latest occurrence in the chain)
+    const chain = events.filter(x =>
+      x.recurringRootId === (e.recurringRootId || e.id) ||
+      (x.id === e.id && (e.recurring))
+    );
+    // Find the latest date in the chain
+    let latest = orig;
+    chain.forEach(x => {
+      if (x.date) {
+        const d = new Date(x.date + 'T00:00');
+        if (!isNaN(d.getTime()) && d > latest) latest = d;
+      }
+    });
+    const next = new Date(latest); next.setFullYear(next.getFullYear() + 1);
+    // Only create if next occurrence is within the lookahead window
+    if (next > limit) continue;
+    if (next < today) continue;
+    // Already exists?
+    const nextIso = `${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,'0')}-${String(next.getDate()).padStart(2,'0')}`;
+    const alreadyExists = events.some(x =>
+      (x.recurringRootId === (e.recurringRootId || e.id) || x.recurringParentId === e.id) &&
+      x.date === nextIso
+    );
+    if (alreadyExists) continue;
+    // Create a fresh draft for next year
+    const clone = {
+      ...JSON.parse(JSON.stringify(e)),
+      id: uid(),
+      date: nextIso,
+      status: 'pending',
+      createdAt: Date.now(),
+      submittedBy: 'System (Recurring)',
+      log: [
+        { action: 'Auto-created from recurring event', by: 'System', note: `Source: ${e.name} (${fmtDate(e.date)})`, at: Date.now() }
+      ],
+      attachments: [],
+      recurringRootId: e.recurringRootId || e.id,
+      recurringParentId: e.id,
+      recurring: true,
+      actualSpend: 0,
+      actualAttendance: 0,
+      outcomes: '',
+      notes: '',
+      completedAt: null,
+      payment: 'not_requested',
+      tasks: (e.tasks || []).map(t => ({
+        id: 't_' + Math.random().toString(36).slice(2,8),
+        title: t.title, assignee: t.assignee || '', due: '', done: false
+      })),
+      staff: (e.staff || []).slice(),
+      comments: [],
+      leads: []
+    };
+    events.push(clone);
+    createdCount++;
+  }
+  if (createdCount > 0) {
+    await saveEvents();
+    toast(`🔁 Auto-created ${createdCount} recurring event draft${createdCount>1?'s':''}`);
+  }
+}
+
 /* ---------- Boot ---------- */
 (async () => {
   // Show submitter chip + prompt for name on first run
   renderSubmitterChip();
   document.getElementById('submitterChip').onclick = () => promptSubmitter(true);
 
-  await loadEvents();
+  await Promise.all([
+    loadEvents(),
+    loadTemplates(),
+    loadVendors(),
+    loadSettings()
+  ]);
 
   // Auto-import CSV data if no events exist
   if (events.length === 0 && CSV_IMPORT_DATA.length > 0) {
@@ -7440,10 +8853,37 @@ async function fireWebhook(event, eventData) {
     await saveEvents();
   }
 
+  // Run recurring auto-create (safe — idempotent)
+  await checkRecurringEvents();
+
   render();
 
   // Subscribe to real-time updates from other devices
   subscribeEvents();
+  subscribeTemplates();
+  subscribeVendors();
+  subscribeSettings();
+
+  // Global search wiring
+  const gs = document.getElementById('globalSearch');
+  if (gs) {
+    let _gsTimer = null;
+    gs.addEventListener('input', (ev) => {
+      clearTimeout(_gsTimer);
+      _gsTimer = setTimeout(() => {
+        globalSearchQuery = ev.target.value.trim();
+        // When you start searching from any non-list view, jump to list for results
+        if (globalSearchQuery && activeView !== 'list' && activeView !== 'map' && activeView !== 'calendar') {
+          setView('list');
+        } else {
+          render();
+        }
+      }, 200);
+    });
+    gs.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') { ev.target.value = ''; globalSearchQuery = ''; ev.target.blur(); render(); }
+    });
+  }
 
   // Ask new users for their name on first load (after first paint).
   setTimeout(() => promptSubmitter(false), 350);
