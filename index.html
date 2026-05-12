@@ -881,6 +881,679 @@
     to { transform: translate(-50%, 0); opacity: 1; }
   }
 
+  /* ===== VIEW TABS (sub-nav under role switcher) ===== */
+  .view-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--pw-white);
+    padding: 6px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 24px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .view-tabs button {
+    background: transparent;
+    border: 0;
+    padding: 10px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pw-dark-gray);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .view-tabs button:hover:not(.active) {
+    background: var(--pw-light-gray);
+    color: var(--pw-black);
+  }
+  .view-tabs button.active {
+    background: var(--pw-black);
+    color: var(--pw-yellow);
+  }
+  .view-tabs .vt-icon {
+    width: 14px; height: 14px; display: inline-block;
+  }
+
+  /* ===== ALERT BANNER ===== */
+  .alert-banner {
+    background: linear-gradient(90deg, #fef3c7 0%, #fffbeb 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .alert-banner.urgent { background: linear-gradient(90deg, #fee2e2 0%, #fef2f2 100%); border-color: #ef4444; }
+  .alert-banner .ab-icon { font-size: 20px; }
+  .alert-banner strong { color: var(--pw-black); margin-right: 6px; }
+  .alert-banner .ab-link { color: #b45309; font-weight: 700; cursor: pointer; text-decoration: underline; }
+
+  /* ===== COUNTDOWN PILL ===== */
+  .countdown-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .countdown-pill.soon { background: #fee2e2; color: #b91c1c; }
+  .countdown-pill.upcoming { background: #fef3c7; color: #b45309; }
+  .countdown-pill.future { background: var(--pw-light-gray); color: #666; }
+  .countdown-pill.past { background: #e5e7eb; color: #6b7280; }
+  .countdown-pill.today { background: #fde68a; color: #92400e; animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { opacity: 0.6; } }
+
+  /* ===== TASK PROGRESS BAR ===== */
+  .task-progress {
+    background: var(--pw-light-gray);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .task-progress-fill {
+    height: 100%;
+    background: var(--pw-yellow);
+    transition: width 0.3s ease;
+  }
+  .task-progress-fill.complete { background: var(--status-approved); }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--pw-light-gray);
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+  .checklist-item.done { background: rgba(34, 197, 94, 0.08); }
+  .checklist-item input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--pw-yellow);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .checklist-item .ci-text {
+    flex: 1;
+    font-size: 13px;
+  }
+  .checklist-item.done .ci-text {
+    text-decoration: line-through;
+    color: #888;
+  }
+  .checklist-item .ci-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #888;
+    margin-top: 2px;
+    display: flex;
+    gap: 8px;
+  }
+  .checklist-item .ci-meta.overdue { color: #b91c1c; font-weight: 700; }
+  .checklist-item .ci-remove {
+    background: transparent;
+    border: 0;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+  .checklist-item .ci-remove:hover { color: #ef4444; }
+  .checklist-add {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .checklist-add input, .checklist-add select {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+  }
+  @media (max-width: 640px) {
+    .checklist-add { grid-template-columns: 1fr; }
+  }
+
+  /* ===== STAFF CHIPS ===== */
+  .staff-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 6px 0;
+  }
+  .staff-chip {
+    background: var(--pw-yellow-soft);
+    color: var(--pw-black);
+    border: 1px solid var(--pw-yellow-medium);
+    border-radius: 999px;
+    padding: 4px 10px 4px 6px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .staff-chip .sc-avatar {
+    width: 18px; height: 18px;
+    background: var(--pw-yellow);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--pw-black);
+  }
+  .staff-chip button {
+    background: transparent;
+    border: 0;
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 0 0 4px;
+    line-height: 1;
+  }
+  .staff-chip button:hover { color: #ef4444; }
+
+  /* ===== CALENDAR GRID ===== */
+  .cal-wrap {
+    background: var(--pw-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--pw-light-gray);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cal-header h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    color: var(--pw-black);
+    margin-right: auto;
+  }
+  .cal-status-filters {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .cal-status-filters button {
+    background: var(--pw-light-gray);
+    border: 1px solid transparent;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    color: #555;
+    font-weight: 600;
+  }
+  .cal-status-filters button.active {
+    background: var(--pw-black);
+    color: var(--pw-yellow);
+  }
+  .cal-nav { display: flex; gap: 6px; align-items: center; }
+  .cal-nav button {
+    background: var(--pw-light-gray);
+    border: 0;
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pw-black);
+  }
+  .cal-nav button:hover { background: var(--pw-yellow-soft); }
+  .cal-nav .cal-today {
+    width: auto; padding: 0 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    background: var(--pw-black);
+    color: var(--pw-yellow);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .cal-weekdays div { padding: 10px 0; border-right: 1px solid rgba(255,255,255,0.05); }
+  .cal-weekdays div:last-child { border-right: none; }
+  .cal-weekdays div.weekend { background: rgba(255,194,14,0.08); }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    background: var(--pw-white);
+    grid-auto-rows: minmax(120px, auto);
+  }
+  .cal-day {
+    background: var(--pw-white);
+    padding: 8px 6px;
+    border-right: 1px solid var(--pw-light-gray);
+    border-bottom: 1px solid var(--pw-light-gray);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+  }
+  .cal-day.weekend { background: #fafafa; }
+  .cal-day.dim { background: #f7f7f7; }
+  .cal-day.dim .cal-date { color: #ccc; }
+  .cal-day.today { background: rgba(255, 194, 14, 0.10); }
+  .cal-day:hover { background: rgba(255, 194, 14, 0.05); }
+  .cal-day .cal-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+    align-self: flex-start;
+    padding: 2px 6px;
+    border-radius: 4px;
+    min-width: 22px;
+    text-align: center;
+  }
+  .cal-day.today .cal-date {
+    color: var(--pw-black);
+    background: var(--pw-yellow);
+    box-shadow: 0 1px 4px rgba(255,194,14,0.5);
+  }
+  .cal-day:nth-child(7n) { border-right: none; }
+  .cal-event {
+    background: var(--pw-yellow-soft);
+    border-left: 3px solid var(--pw-yellow);
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.3;
+    font-weight: 600;
+    transition: all 0.12s ease;
+    min-width: 0;
+  }
+  .cal-event.pending { border-left-color: var(--status-pending); background: rgba(245, 158, 11, 0.14); color: #92400e; }
+  .cal-event.approved { border-left-color: var(--status-approved); background: rgba(34, 197, 94, 0.14); color: #14532d; }
+  .cal-event.executing { border-left-color: var(--status-executing); background: rgba(59, 130, 246, 0.14); color: #1e3a8a; }
+  .cal-event.completed { border-left-color: var(--status-completed); background: rgba(139, 92, 246, 0.14); color: #4c1d95; }
+  .cal-event.denied { border-left-color: var(--status-denied); background: rgba(239, 68, 68, 0.14); color: #7f1d1d; opacity: 0.7; }
+  .cal-event:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    z-index: 2;
+  }
+  .cal-event .cal-event-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    margin-right: 4px;
+    opacity: 0.7;
+  }
+  .cal-more {
+    font-size: 10px;
+    color: #666;
+    font-weight: 700;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+    background: rgba(0,0,0,0.04);
+    margin-top: auto;
+  }
+  .cal-more:hover { background: rgba(255,194,14,0.2); color: var(--pw-black); }
+
+  /* Day popover (for expanded view of "+ N more") */
+  .day-popover {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .day-popover.open { display: flex; }
+  .day-popover-card {
+    background: var(--pw-white);
+    border-radius: 8px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    padding: 22px;
+    box-shadow: var(--shadow-lg);
+  }
+  .day-popover-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    margin-bottom: 14px;
+    border-bottom: 2px solid var(--pw-yellow);
+    padding-bottom: 10px;
+  }
+  .day-popover-list .cal-event { display: block; margin-bottom: 6px; white-space: normal; font-size: 13px; padding: 10px 12px; }
+  .day-popover-list .cal-event div { font-size: 11px; opacity: 0.7; margin-top: 2px; font-weight: 500; }
+
+  /* ===== MAP ===== */
+  #mapContainer {
+    height: 600px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    position: relative;
+  }
+  .map-legend {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px 14px;
+    border-radius: 6px;
+    box-shadow: var(--shadow-md);
+    font-size: 11px;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  .map-legend .ml-row {
+    display: flex; align-items: center; gap: 8px; margin: 2px 0;
+  }
+  .map-legend .ml-dot {
+    width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+  }
+  .map-stats-strip {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .map-mini-stat {
+    background: var(--pw-white);
+    padding: 10px 16px;
+    border-radius: 6px;
+    box-shadow: var(--shadow-card);
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .map-mini-stat strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--pw-black);
+  }
+  .leaflet-popup-content { font-family: 'Inter', sans-serif; font-size: 13px; min-width: 200px; }
+  .leaflet-popup-content h4 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.02em; margin-bottom: 4px; }
+  .leaflet-popup-content .lp-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: #777; }
+  .leaflet-popup-content button { margin-top: 6px; }
+
+  /* ===== REPORTING / ROI ===== */
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  .report-card {
+    background: var(--pw-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    padding: 22px;
+    border-top: 4px solid var(--pw-yellow);
+  }
+  .report-card.wide { grid-column: 1 / -1; }
+  .report-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    color: var(--pw-black);
+    margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .report-card .rc-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    font-weight: 400;
+  }
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .report-table th, .report-table td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--pw-light-gray);
+  }
+  .report-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    background: #fafafa;
+    font-weight: 600;
+  }
+  .report-table tr:hover td { background: rgba(255, 194, 14, 0.04); }
+  .report-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .report-table tfoot td {
+    font-weight: 700;
+    background: var(--pw-light-gray);
+    font-size: 13px;
+    border-top: 2px solid var(--pw-yellow);
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 80px;
+    gap: 10px;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+  .bar-row .br-label { color: var(--pw-dark-gray); font-weight: 600; }
+  .bar-row .br-track { background: var(--pw-light-gray); border-radius: 4px; height: 22px; overflow: hidden; position: relative; }
+  .bar-row .br-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pw-yellow) 0%, var(--pw-yellow-hover) 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .bar-row .br-fill.positive { background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%); }
+  .bar-row .br-fill.negative { background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%); }
+  .bar-row .br-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: right; font-weight: 700; }
+
+  .roi-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .roi-kpi {
+    background: var(--pw-light-gray);
+    padding: 14px;
+    border-radius: 6px;
+    border-left: 3px solid var(--pw-yellow);
+  }
+  .roi-kpi .rk-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .roi-kpi .rk-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--pw-black);
+  }
+  .roi-kpi .rk-delta {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .roi-kpi.good { border-left-color: var(--status-approved); }
+  .roi-kpi.bad { border-left-color: var(--status-denied); }
+
+  /* ===== EXPORT / TOOL BAR ROW ===== */
+  .export-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+    background: var(--pw-white);
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+  }
+  .export-bar .eb-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    margin-right: 6px;
+  }
+
+  /* ===== STAFF ROSTER PANEL ===== */
+  .roster-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  /* ===== PRINT REPORT ===== */
+  .print-report {
+    background: var(--pw-white);
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .print-report h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.02em;
+    color: var(--pw-black);
+    margin-bottom: 4px;
+  }
+  .print-report .pr-sub {
+    color: #666; margin-bottom: 24px; font-size: 14px;
+  }
+  .print-report h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--pw-yellow);
+    padding-bottom: 6px;
+    margin: 28px 0 12px;
+  }
+  .print-controls {
+    display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    background: var(--pw-white); padding: 14px; border-radius: 8px; box-shadow: var(--shadow-card);
+  }
+  .print-controls label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #777; display: block; margin-bottom: 4px; }
+  .print-controls input { padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+
+  @media print {
+    body { background: white; }
+    header.masthead, .view-tabs, .toolbar, .stats, .alert-banner,
+    .export-bar, .print-controls, .role-switcher, #newBtn, #filters,
+    #webhookAdminSection { display: none !important; }
+    main { padding: 0; max-width: 100%; }
+    .print-report { box-shadow: none; padding: 0; max-width: 100%; }
+    .report-card { box-shadow: none; border-top: none; page-break-inside: avoid; }
+    .report-table th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+  }
+
+  /* ===== COVERAGE LIST ===== */
+  .coverage-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--pw-yellow);
+    width: 36px;
+    text-align: center;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty {
+    background: var(--pw-white);
+    border-radius: 8px;
+    padding: 60px 32px;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+  }
+  .empty h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--pw-black);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .empty p { color: #666; margin-bottom: 16px; }
+
+  /* ===== KEYBOARD HINT ===== */
+  .kbd {
+    display: inline-block;
+    background: var(--pw-light-gray);
+    border: 1px solid #ddd;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--pw-dark-gray);
+    line-height: 1;
+  }
+
   /* ===== RESPONSIVE ===== */
   @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
@@ -891,8 +1564,19 @@
     .brand-sub { font-size: 9px; }
     .role-switcher button { padding: 8px 12px; font-size: 10px; }
     .grid { grid-template-columns: 1fr; }
+    .cal-day { min-height: 70px; padding: 4px; }
+    .cal-event { font-size: 10px; padding: 2px 4px; }
+    #mapContainer { height: 420px; }
+    .bar-row { grid-template-columns: 100px 1fr 60px; }
+    .header-right { flex-wrap: wrap; gap: 8px; }
   }
 </style>
+<!-- Leaflet (lazy-loaded - only included now, used when map view is active) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 </head>
 <body>
 
@@ -921,10 +1605,17 @@
 <main>
   <section class="stats" id="stats"></section>
 
-  <div class="toolbar">
+  <div id="alerts"></div>
+
+  <nav class="view-tabs" id="viewTabs" aria-label="View selector"></nav>
+
+  <div class="toolbar" id="listToolbar">
     <h2 id="viewTitle">Event Coordinator Workspace</h2>
     <div id="filters"></div>
-    <button class="btn" id="newBtn">+ New Event</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost small" id="exportAllIcs" title="Download all approved/executing events as one .ics file">📅 Bulk .ics</button>
+      <button class="btn" id="newBtn">+ New Event</button>
+    </div>
   </div>
 
   <div id="content"></div>
@@ -1379,26 +2070,89 @@ function toast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
+/* ---------- View Tab System ---------- */
+const VIEW_KEY = 'pw_active_view';
+let activeView = (() => {
+  try { return localStorage.getItem(VIEW_KEY) || 'list'; }
+  catch (e) { return 'list'; }
+})();
+
+const VIEW_DEFS = {
+  list: { label: 'List', icon: '☷', renderer: renderListView, roles: ['coordinator','vp','reports'] },
+  calendar: { label: 'Calendar', icon: '▦', renderer: renderCalendarView, roles: ['coordinator','vp','reports'] },
+  map: { label: 'Map', icon: '◉', renderer: renderMapView, roles: ['coordinator','vp','reports'] },
+  roi: { label: 'ROI Dashboard', icon: '◊', renderer: renderRoiView, roles: ['reports','vp','coordinator'] },
+  coverage: { label: 'Coverage', icon: '▥', renderer: renderCoverageView, roles: ['reports','vp','coordinator'] },
+  monthly: { label: 'Monthly Rollup', icon: '☰', renderer: renderMonthlyView, roles: ['reports','vp','coordinator'] },
+  print: { label: 'Print Report', icon: '✎', renderer: renderPrintView, roles: ['reports','vp','coordinator'] },
+  staff: { label: 'Staff Roster', icon: '☻', renderer: renderStaffView, roles: ['coordinator','vp'] },
+  sync: { label: 'Outlook Sync', icon: '⇆', renderer: renderSyncView, roles: ['coordinator','vp','reports'] },
+};
+
+function setView(v) {
+  if (!VIEW_DEFS[v]) v = 'list';
+  activeView = v;
+  try { localStorage.setItem(VIEW_KEY, v); } catch (e) {}
+  render();
+}
+
+function renderViewTabs() {
+  const tabs = document.getElementById('viewTabs');
+  const available = Object.entries(VIEW_DEFS).filter(([,def]) => def.roles.includes(role));
+  // If current view isn't available for this role, default to list
+  if (!available.find(([k]) => k === activeView)) {
+    activeView = 'list';
+    try { localStorage.setItem(VIEW_KEY, 'list'); } catch (e) {}
+  }
+  tabs.innerHTML = available.map(([k,def]) =>
+    `<button class="${activeView===k?'active':''}" data-view="${k}" aria-pressed="${activeView===k}"><span class="vt-icon">${def.icon}</span> ${def.label}</button>`
+  ).join('');
+  tabs.querySelectorAll('button').forEach(b => {
+    b.onclick = () => setView(b.dataset.view);
+  });
+}
+
 /* ---------- Render ---------- */
 function render() {
-  document.getElementById('newBtn').style.display = role === 'coordinator' ? '' : 'none';
   const titles = {
     coordinator: 'Event Coordinator Workspace',
     vp: 'VP Approval Queue',
-    reports: 'Reports & Completed'
+    reports: 'Reports & Analytics'
   };
   document.getElementById('viewTitle').textContent = titles[role];
 
   renderStats();
-  renderFilters();
-  renderList();
-  
-  // Show webhook section for VP only
-  document.getElementById('webhookAdminSection').style.display = role === 'vp' ? 'block' : 'none';
-  if (role === 'vp') {
+  renderAlerts();
+  renderViewTabs();
+
+  // List view shows the existing toolbar (filters + new + bulk ics). Other views hide it.
+  const showListToolbar = activeView === 'list';
+  document.getElementById('listToolbar').style.display = showListToolbar ? '' : 'none';
+  if (showListToolbar) {
+    renderFilters();
+  }
+  document.getElementById('newBtn').style.display = role === 'coordinator' ? '' : 'none';
+  document.getElementById('exportAllIcs').style.display = '';
+
+  // Show webhook section for VP only (on list view only, to keep other views clean)
+  document.getElementById('webhookAdminSection').style.display = (role === 'vp' && activeView === 'list') ? 'block' : 'none';
+  if (role === 'vp' && activeView === 'list') {
     loadZapierWebhook();
   }
+
+  // Dispatch to the right view renderer
+  const def = VIEW_DEFS[activeView] || VIEW_DEFS.list;
+  try {
+    def.renderer();
+  } catch (err) {
+    console.error('View render failed:', err);
+    document.getElementById('content').innerHTML =
+      `<div class="empty"><h3>Couldn't render this view</h3><p>${escapeHtml(err.message || String(err))}</p></div>`;
+  }
 }
+
+// Old renderList wrapper for compatibility
+function renderListView() { renderList(); }
 
 function renderStats() {
   const counts = {
@@ -1483,24 +2237,1018 @@ function renderList() {
 
 function cardHtml(e) {
   const budget = totalBudget(e);
+  const cd = countdown(e);
+  const tasks = (e.tasks || []);
+  const doneTasks = tasks.filter(t => t.done).length;
+  const taskPct = tasks.length ? Math.round((doneTasks / tasks.length) * 100) : 0;
+  const showProgress = ['approved','executing'].includes(e.status) && tasks.length > 0;
+  const staffList = (e.staff || []);
   return `
     <div class="card">
       <span class="corner-tag ${e.status}">${e.status}</span>
-      <h3>${escapeHtml(e.name)}</h3>
+      <h3>${e.source==='outlook'?'<span title="Imported from Outlook" style="font-size:14px;margin-right:4px;color:#0078D4">⇆</span>':''}${escapeHtml(e.name)}</h3>
       <div class="meta">
         <span>${escapeHtml(e.type)}</span>
         ${e.partner ? `<span>${escapeHtml(e.partner)}</span>` : ''}
+        ${cd ? `<span class="countdown-pill ${cd.cls}" style="margin-left:auto">${cd.text}</span>` : ''}
       </div>
       <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
       <div class="row"><span class="lbl">Location</span><span class="val">${escapeHtml(e.location||'—')}</span></div>
       <div class="row"><span class="lbl">Budget</span><span class="val">${fmt$(budget)}</span></div>
       ${e.status==='completed' ? `<div class="row"><span class="lbl">Actual</span><span class="val">${fmt$(e.actualSpend||budget)}</span></div>` : ''}
+      ${staffList.length ? `<div class="row"><span class="lbl">Staff</span><span class="val">${staffList.slice(0,3).map(escapeHtml).join(', ')}${staffList.length>3?` +${staffList.length-3}`:''}</span></div>` : ''}
+      ${showProgress ? `
+        <div style="margin-top:6px">
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#777;margin-bottom:4px"><span>Tasks</span><span>${doneTasks}/${tasks.length}</span></div>
+          <div class="task-progress"><div class="task-progress-fill ${taskPct===100?'complete':''}" style="width:${taskPct}%"></div></div>
+        </div>
+      ` : ''}
       <div class="actions">
         <button class="btn ghost small" data-open="${e.id}">View / Manage</button>
+        <button class="btn ghost small" onclick="event.stopPropagation();downloadEventIcs('${e.id}')" title="Download to Outlook calendar">📅 .ics</button>
       </div>
     </div>
   `;
 }
+
+/* ---------- Countdown + Reminders ---------- */
+function countdown(e) {
+  if (!e.date) return null;
+  if (e.status === 'completed' || e.status === 'denied') return null;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const d = new Date(e.date + 'T00:00');
+  const days = Math.round((d - now) / 86400000);
+  if (days < 0) return { cls: 'past', text: `${Math.abs(days)}d past` };
+  if (days === 0) return { cls: 'today', text: 'TODAY' };
+  if (days <= 7) return { cls: 'soon', text: `${days}d to go` };
+  if (days <= 30) return { cls: 'upcoming', text: `${days}d` };
+  return { cls: 'future', text: `${days}d` };
+}
+
+function renderAlerts() {
+  const container = document.getElementById('alerts');
+  if (!container) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const alerts = [];
+
+  // Upcoming events in next 14 days that need attention
+  const upcoming = events.filter(e => {
+    if (!e.date) return false;
+    if (!['approved','executing'].includes(e.status)) return false;
+    const d = new Date(e.date + 'T00:00');
+    const days = Math.round((d - now) / 86400000);
+    return days >= 0 && days <= 14;
+  });
+  if (upcoming.length && role !== 'reports') {
+    const today = upcoming.filter(e => new Date(e.date + 'T00:00').getTime() === now.getTime()).length;
+    const soonText = today > 0
+      ? `<strong>${today} event${today>1?'s':''} TODAY</strong> · ${upcoming.length} in the next 14 days`
+      : `<strong>${upcoming.length} event${upcoming.length>1?'s':''}</strong> in the next 14 days need final prep`;
+    alerts.push({
+      urgent: today > 0,
+      icon: today > 0 ? '🔥' : '⏰',
+      text: soonText,
+      linkText: 'Open Calendar →',
+      onClick: () => setView('calendar')
+    });
+  }
+
+  // Pending approvals (for VP only)
+  if (role === 'vp') {
+    const pending = events.filter(e => e.status === 'pending').length;
+    if (pending) {
+      alerts.push({
+        urgent: pending >= 5,
+        icon: '📋',
+        text: `<strong>${pending} request${pending>1?'s':''}</strong> awaiting your approval`,
+        linkText: 'Review →',
+        onClick: () => { setView('list'); activeFilter = 'pending'; render(); }
+      });
+    }
+  }
+
+  // Overdue payment requests
+  const overduePay = events.filter(e =>
+    ['approved','executing'].includes(e.status) &&
+    e.payment === 'not_requested' &&
+    e.date && (new Date(e.date + 'T00:00') - now) / 86400000 <= 7
+  );
+  if (overduePay.length && role === 'coordinator') {
+    alerts.push({
+      urgent: false,
+      icon: '💳',
+      text: `<strong>${overduePay.length} event${overduePay.length>1?'s':''}</strong> within 7 days have no payment request yet`,
+      linkText: 'Open list →',
+      onClick: () => setView('list')
+    });
+  }
+
+  // Overdue tasks (any approved/executing event with overdue tasks)
+  const evWithOverdue = events.filter(e =>
+    ['approved','executing'].includes(e.status) &&
+    (e.tasks||[]).some(t => !t.done && t.due && new Date(t.due + 'T23:59') < new Date())
+  );
+  if (evWithOverdue.length && role !== 'reports') {
+    alerts.push({
+      urgent: true,
+      icon: '⚠️',
+      text: `<strong>${evWithOverdue.length} event${evWithOverdue.length>1?'s':''}</strong> with overdue tasks`,
+      linkText: 'Open list →',
+      onClick: () => setView('list')
+    });
+  }
+
+  if (!alerts.length) { container.innerHTML = ''; return; }
+
+  container.innerHTML = alerts.map((a, i) => `
+    <div class="alert-banner ${a.urgent ? 'urgent' : ''}">
+      <span class="ab-icon">${a.icon}</span>
+      <div style="flex:1">${a.text}</div>
+      <span class="ab-link" data-alert-idx="${i}">${a.linkText}</span>
+    </div>
+  `).join('');
+  container.querySelectorAll('[data-alert-idx]').forEach(el => {
+    el.onclick = () => alerts[+el.dataset.alertIdx].onClick();
+  });
+}
+
+/* ---------- Helpers used by views ---------- */
+function eventsForRole() {
+  // Returns events visible to current role (similar logic to renderList but unfiltered by activeFilter)
+  if (role === 'coordinator') return events;
+  if (role === 'vp') return events;
+  return events; // reports sees everything
+}
+
+function statusColor(status) {
+  return ({
+    pending: '#F59E0B', approved: '#22C55E', executing: '#3B82F6',
+    completed: '#8B5CF6', denied: '#EF4444'
+  })[status] || '#999';
+}
+
+/* ---------- Calendar View ---------- */
+let _calCursor = null; // {year, month}
+let _calStatusFilter = 'all'; // 'all' | status name | 'mine'
+function renderCalendarView() {
+  if (!_calCursor) {
+    const now = new Date();
+    _calCursor = { year: now.getFullYear(), month: now.getMonth() };
+  }
+  const { year, month } = _calCursor;
+  const monthName = new Date(year, month, 1).toLocaleString('en-US', { month: 'long' });
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Build the 6-row grid starting from Sunday before the 1st
+  const first = new Date(year, month, 1);
+  const startDay = first.getDay(); // 0 = Sun
+  const gridStart = new Date(year, month, 1 - startDay);
+  // Use a local ISO formatter to avoid UTC drift
+  const isoLocal = (d) => {
+    const y = d.getFullYear(), mo = String(d.getMonth()+1).padStart(2,'0'), da = String(d.getDate()).padStart(2,'0');
+    return `${y}-${mo}-${da}`;
+  };
+
+  // Filter events
+  const me = (getSubmitter() || '').toLowerCase();
+  const visibleEvents = events.filter(e => {
+    if (_calStatusFilter === 'all') return true;
+    if (_calStatusFilter === 'mine') return (e.submittedBy || '').toLowerCase() === me || (e.staff || []).some(s => s.toLowerCase() === me);
+    return e.status === _calStatusFilter;
+  });
+
+  // Map date -> events
+  const eventsByDate = {};
+  visibleEvents.forEach(e => {
+    if (!e.date) return;
+    (eventsByDate[e.date] = eventsByDate[e.date] || []).push(e);
+  });
+  // Sort each day's events by time
+  Object.values(eventsByDate).forEach(arr => arr.sort((a,b) => (a.time||'').localeCompare(b.time||'')));
+
+  const cells = [];
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(gridStart);
+    d.setDate(gridStart.getDate() + i);
+    const iso = isoLocal(d);
+    const inMonth = d.getMonth() === month;
+    const isToday = d.getTime() === today.getTime();
+    const dayEvents = eventsByDate[iso] || [];
+    const dayOfWeek = d.getDay();
+    cells.push({ d, iso, inMonth, isToday, dayEvents, weekend: dayOfWeek === 0 || dayOfWeek === 6 });
+  }
+
+  const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // Determine how many events to show per cell based on viewport
+  const isMobile = window.innerWidth < 760;
+  const eventsPerCell = isMobile ? 2 : 3;
+
+  const filterPills = [
+    ['all', `All (${visibleEvents.length})`],
+    ['pending', 'Pending'],
+    ['approved', 'Approved'],
+    ['executing', 'In Progress'],
+    ['completed', 'Completed'],
+    ['mine', 'Mine'],
+  ];
+
+  const html = `
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <h3>${monthName} ${year}</h3>
+        <div class="cal-status-filters">${filterPills.map(([k,v]) =>
+          `<button class="${_calStatusFilter===k?'active':''}" data-cal-filter="${k}">${v}</button>`
+        ).join('')}</div>
+        <div class="cal-nav">
+          <button id="calPrev" title="Previous month" aria-label="Previous month">‹</button>
+          <button id="calToday" class="cal-today">Today</button>
+          <button id="calNext" title="Next month" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="cal-weekdays">${weekdays.map((w, i) => `<div class="${i===0||i===6?'weekend':''}">${w}</div>`).join('')}</div>
+      <div class="cal-grid" id="calGrid">
+        ${cells.map(c => `
+          <div class="cal-day ${!c.inMonth?'dim':''} ${c.isToday?'today':''} ${c.weekend?'weekend':''}" data-iso="${c.iso}">
+            <span class="cal-date">${c.d.getDate()}</span>
+            ${c.dayEvents.slice(0, eventsPerCell).map(e => `
+              <div class="cal-event ${e.status}" data-open="${e.id}" title="${escapeHtml(e.name)} · ${e.status}${e.time?(' · ' + e.time):''}">
+                ${e.time ? `<span class="cal-event-time">${escapeHtml(e.time)}</span>` : ''}${escapeHtml(e.name)}
+              </div>
+            `).join('')}
+            ${c.dayEvents.length > eventsPerCell ? `<div class="cal-more" data-day-expand="${c.iso}">+ ${c.dayEvents.length - eventsPerCell} more</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="day-popover" id="dayPopover">
+      <div class="day-popover-card" id="dayPopoverContent"></div>
+    </div>
+  `;
+  document.getElementById('content').innerHTML = html;
+
+  // Wire up nav
+  document.getElementById('calPrev').onclick = () => { _calCursor.month--; if (_calCursor.month<0){_calCursor.month=11;_calCursor.year--;} render(); };
+  document.getElementById('calNext').onclick = () => { _calCursor.month++; if (_calCursor.month>11){_calCursor.month=0;_calCursor.year++;} render(); };
+  document.getElementById('calToday').onclick = () => { const n=new Date(); _calCursor={year:n.getFullYear(),month:n.getMonth()}; render(); };
+
+  // Wire up status filters
+  document.querySelectorAll('[data-cal-filter]').forEach(b => {
+    b.onclick = () => { _calStatusFilter = b.dataset.calFilter; render(); };
+  });
+
+  // Wire up event click → detail modal
+  document.querySelectorAll('.cal-event[data-open]').forEach(el => {
+    el.onclick = (ev) => { ev.stopPropagation(); openDetail(el.dataset.open); };
+  });
+
+  // Wire up "+ N more" → day popover
+  document.querySelectorAll('[data-day-expand]').forEach(el => {
+    el.onclick = (ev) => { ev.stopPropagation(); openDayPopover(el.dataset.dayExpand, eventsByDate[el.dataset.dayExpand] || []); };
+  });
+
+  // Clicking on a day cell (but not on an event) opens the day popover too — only if there are events
+  document.querySelectorAll('.cal-day[data-iso]').forEach(cell => {
+    cell.onclick = (ev) => {
+      // Only fire if click target is the cell itself (not an event)
+      if (ev.target.closest('.cal-event') || ev.target.closest('[data-day-expand]')) return;
+      const iso = cell.dataset.iso;
+      const dayEvents = eventsByDate[iso] || [];
+      if (dayEvents.length > 0) openDayPopover(iso, dayEvents);
+    };
+  });
+
+  // Close popover
+  document.getElementById('dayPopover').onclick = (ev) => {
+    if (ev.target.id === 'dayPopover') ev.target.classList.remove('open');
+  };
+}
+
+function openDayPopover(iso, dayEvents) {
+  const date = new Date(iso + 'T00:00');
+  const dateLabel = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const html = `
+    <h3>${dateLabel}</h3>
+    <div class="day-popover-list">
+      ${dayEvents.map(e => `
+        <div class="cal-event ${e.status}" data-popover-open="${e.id}">
+          <strong>${escapeHtml(e.name)}</strong>
+          <div>${e.time ? e.time + ' · ' : ''}${escapeHtml(e.type||'')}${e.location ? ' · ' + escapeHtml(e.location) : ''}</div>
+          <div>Budget: ${fmt$(totalBudget(e))}${(e.staff||[]).length ? ' · Staff: ' + (e.staff||[]).join(', ') : ''}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:18px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost" onclick="document.getElementById('dayPopover').classList.remove('open')">Close</button>
+    </div>
+  `;
+  document.getElementById('dayPopoverContent').innerHTML = html;
+  document.getElementById('dayPopover').classList.add('open');
+  document.querySelectorAll('[data-popover-open]').forEach(el => {
+    el.onclick = () => {
+      document.getElementById('dayPopover').classList.remove('open');
+      openDetail(el.dataset.popoverOpen);
+    };
+  });
+}
+
+/* ---------- Map View (Leaflet + Nominatim geocoding) ---------- */
+let _leafletMap = null;
+let _leafletLayer = null;
+
+async function geocodeAddress(address) {
+  if (!address) return null;
+  try {
+    // addressdetails=1 returns structured city/state/etc — needed for Coverage view
+    const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q=' + encodeURIComponent(address);
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' }});
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (Array.isArray(data) && data.length) {
+      const r = data[0];
+      const a = r.address || {};
+      const city = a.city || a.town || a.village || a.hamlet || a.municipality || a.township || a.suburb || a.neighbourhood || a.county || '';
+      return {
+        lat: parseFloat(r.lat),
+        lng: parseFloat(r.lon),
+        city: city,
+        county: a.county || '',
+        state: a.state || a.region || '',
+        zip: a.postcode || '',
+        country: a.country || '',
+        displayName: r.display_name || ''
+      };
+    }
+  } catch (err) {
+    console.log('Geocode failed:', err);
+  }
+  return null;
+}
+
+async function ensureGeocoded(force = false) {
+  const targets = events.filter(e => e.location && (force || !e.geo || !e.geo.lat));
+  if (!targets.length) return 0;
+  let count = 0;
+  for (const e of targets) {
+    const res = await geocodeAddress(e.location);
+    if (res) {
+      e.geo = {
+        lat: res.lat, lng: res.lng,
+        city: res.city, county: res.county, state: res.state, zip: res.zip,
+        country: res.country, displayName: res.displayName,
+        geocodedAt: Date.now(), source: e.location
+      };
+      count++;
+    } else {
+      e.geo = { lat: null, lng: null, geocodedAt: Date.now(), source: e.location, failed: true };
+    }
+    // Rate-limit per Nominatim usage policy (1 req/sec)
+    await new Promise(r => setTimeout(r, 1100));
+  }
+  await saveEvents();
+  return count;
+}
+
+/* Parse a city out of a free-text address when geocoding isn't available */
+function parseCityFromAddress(addr) {
+  if (!addr) return null;
+  // Patterns we see frequently:
+  //   "925 S. Main St., D 2 Frankenmuth, MI 48734"
+  //   "23200 Gratiot Ave"  (no city)
+  //   "Sterling Heights, MI"
+  //   "City of Warren — DPW Yard"
+  const s = addr.trim();
+  // Pattern: ..., CITY, STATE [ZIP]
+  let m = s.match(/,\s*([A-Za-z][A-Za-z\.\s\-]+?)\s*,\s*(?:MI|Michigan|OH|Ohio|IN|Indiana|IL|Illinois|WI|Wisconsin)\b/i);
+  if (m) return m[1].replace(/\.$/,'').trim();
+  // Pattern: City of X
+  m = s.match(/\bcity of\s+([A-Za-z\s\-]+?)(?:[,\—\-—]|$)/i);
+  if (m) return m[1].trim();
+  // Pattern: X Township
+  m = s.match(/\b([A-Za-z\s\-]+?)\s+(?:Township|Twp)\b/i);
+  if (m) return m[1].trim() + ' Township';
+  // Pattern: CITY ZIP
+  m = s.match(/\b([A-Za-z][A-Za-z\s\-]+?)\s+\d{5}\b/);
+  if (m) return m[1].trim();
+  return null;
+}
+
+function renderMapView() {
+  const geocoded = events.filter(e => e.geo && e.geo.lat && e.geo.lng);
+  const missing = events.filter(e => e.location && (!e.geo || !e.geo.lat));
+  const totalSpend = geocoded.reduce((s,e) => s + totalBudget(e), 0);
+
+  document.getElementById('content').innerHTML = `
+    <div class="map-stats-strip">
+      <div class="map-mini-stat"><strong>${geocoded.length}</strong>&nbsp;mapped events</div>
+      <div class="map-mini-stat"><strong>${missing.length}</strong>&nbsp;need geocoding</div>
+      <div class="map-mini-stat"><strong>${fmt$(totalSpend)}</strong>&nbsp;budget mapped</div>
+      ${missing.length ? `<button class="btn small" id="geocodeBtn">📍 Geocode ${missing.length} address${missing.length>1?'es':''}</button>` : ''}
+      <button class="btn ghost small" id="refreshGeocodeBtn" title="Re-geocode all addresses">🔄 Re-geocode all</button>
+    </div>
+    <div id="mapContainer">
+      <div class="map-legend">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-bottom:6px">Status</div>
+        <div class="ml-row"><span class="ml-dot" style="background:#F59E0B"></span>Pending</div>
+        <div class="ml-row"><span class="ml-dot" style="background:#22C55E"></span>Approved</div>
+        <div class="ml-row"><span class="ml-dot" style="background:#3B82F6"></span>In Progress</div>
+        <div class="ml-row"><span class="ml-dot" style="background:#8B5CF6"></span>Completed</div>
+        <div class="ml-row"><span class="ml-dot" style="background:#EF4444"></span>Denied</div>
+      </div>
+    </div>
+    ${missing.length ? `<div style="margin-top:10px;font-size:12px;color:#666">📍 Some events have addresses that haven't been geocoded yet. Click <strong>Geocode</strong> above — it takes ~1 second per address (OpenStreetMap rate limit).</div>` : ''}
+  `;
+
+  // Initialize Leaflet (defer slightly to ensure container is rendered)
+  setTimeout(() => {
+    const container = document.getElementById('mapContainer');
+    if (!container || typeof L === 'undefined') {
+      container.innerHTML = '<div style="padding:32px;text-align:center;color:#666">Map library failed to load.</div>';
+      return;
+    }
+    // Tear down any previous instance
+    if (_leafletMap) { _leafletMap.remove(); _leafletMap = null; }
+
+    // Default to Michigan if no geocoded events (most PW events are MI)
+    let bounds = null;
+    if (geocoded.length) {
+      bounds = L.latLngBounds(geocoded.map(e => [e.geo.lat, e.geo.lng]));
+    }
+    _leafletMap = L.map('mapContainer', { zoomControl: true }).setView([42.7, -83.2], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(_leafletMap);
+
+    geocoded.forEach(e => {
+      const color = statusColor(e.status);
+      const icon = L.divIcon({
+        className: 'pw-pin',
+        html: `<div style="background:${color};width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);position:relative;"><div style="position:absolute;top:5px;left:5px;width:8px;height:8px;background:white;border-radius:50%"></div></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 22]
+      });
+      const marker = L.marker([e.geo.lat, e.geo.lng], { icon }).addTo(_leafletMap);
+      const popupHtml = `
+        <h4>${escapeHtml(e.name)}</h4>
+        <div class="lp-meta">${escapeHtml(e.type)} · ${e.status.toUpperCase()}</div>
+        <div style="margin-top:6px"><strong>Date:</strong> ${fmtDate(e.date)}</div>
+        <div><strong>Location:</strong> ${escapeHtml(e.location)}</div>
+        <div><strong>Budget:</strong> ${fmt$(totalBudget(e))}</div>
+        <button class="btn small" onclick="openDetail('${e.id}')">Open Event</button>
+      `;
+      marker.bindPopup(popupHtml);
+    });
+
+    if (bounds && geocoded.length > 1) _leafletMap.fitBounds(bounds, { padding: [40, 40] });
+    else if (geocoded.length === 1) _leafletMap.setView([geocoded[0].geo.lat, geocoded[0].geo.lng], 11);
+
+    // Re-add the legend that was wiped by Leaflet
+    const legend = `<div class="map-legend">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-bottom:6px">Status</div>
+      <div class="ml-row"><span class="ml-dot" style="background:#F59E0B"></span>Pending</div>
+      <div class="ml-row"><span class="ml-dot" style="background:#22C55E"></span>Approved</div>
+      <div class="ml-row"><span class="ml-dot" style="background:#3B82F6"></span>In Progress</div>
+      <div class="ml-row"><span class="ml-dot" style="background:#8B5CF6"></span>Completed</div>
+      <div class="ml-row"><span class="ml-dot" style="background:#EF4444"></span>Denied</div>
+    </div>`;
+    container.insertAdjacentHTML('beforeend', legend);
+  }, 50);
+
+  const geoBtn = document.getElementById('geocodeBtn');
+  if (geoBtn) {
+    geoBtn.onclick = async () => {
+      geoBtn.disabled = true;
+      geoBtn.textContent = `Geocoding 0/${missing.length}...`;
+      let done = 0;
+      for (const e of missing) {
+        const res = await geocodeAddress(e.location);
+        if (res) e.geo = { lat: res.lat, lng: res.lng, geocodedAt: Date.now(), source: e.location };
+        else e.geo = { lat: null, lng: null, geocodedAt: Date.now(), source: e.location, failed: true };
+        done++;
+        geoBtn.textContent = `Geocoding ${done}/${missing.length}...`;
+        await new Promise(r => setTimeout(r, 1100));
+      }
+      await saveEvents();
+      toast(`Geocoded ${done} address${done>1?'es':''}`);
+      render();
+    };
+  }
+  const refreshBtn = document.getElementById('refreshGeocodeBtn');
+  if (refreshBtn) {
+    refreshBtn.onclick = async () => {
+      if (!confirm('Re-geocode every address? This will take ~1 second per address.')) return;
+      refreshBtn.disabled = true;
+      const count = await ensureGeocoded(true);
+      toast(`Re-geocoded ${count} address${count!==1?'es':''}`);
+      render();
+    };
+  }
+}
+
+/* ---------- ROI Dashboard ---------- */
+function renderRoiView() {
+  const completed = events.filter(e => e.status === 'completed');
+  const approvedLike = events.filter(e => ['approved','executing','completed'].includes(e.status));
+  const totalBudgetSum = approvedLike.reduce((s,e) => s + totalBudget(e), 0);
+  const actualSpend = completed.reduce((s,e) => s + (+e.actualSpend || totalBudget(e)), 0);
+  const totalAttendance = completed.reduce((s,e) => s + (+e.actualAttendance || +e.attendance || 0), 0);
+  const cpa = totalAttendance ? actualSpend / totalAttendance : 0;
+  const variance = completed.reduce((s,e) => s + ((+e.actualSpend || totalBudget(e)) - totalBudget(e)), 0);
+
+  // Budget by category
+  const budgetByCat = { sponsor: 0, marketing: 0, swag: 0, staff: 0, equipment: 0, other: 0 };
+  approvedLike.forEach(e => {
+    Object.entries(e.budget || {}).forEach(([k,v]) => { budgetByCat[k] = (budgetByCat[k]||0) + (+v||0); });
+  });
+  const maxCat = Math.max(1, ...Object.values(budgetByCat));
+
+  // Spend by event type
+  const byType = {};
+  approvedLike.forEach(e => {
+    byType[e.type] = (byType[e.type] || 0) + totalBudget(e);
+  });
+  const maxType = Math.max(1, ...Object.values(byType));
+
+  // Cost per attendee per event (completed only)
+  const cpaRows = completed
+    .filter(e => (+e.actualAttendance || +e.attendance) > 0)
+    .map(e => ({
+      name: e.name, type: e.type,
+      spend: +e.actualSpend || totalBudget(e),
+      att: +e.actualAttendance || +e.attendance,
+      cpa: ((+e.actualSpend || totalBudget(e)) / (+e.actualAttendance || +e.attendance))
+    }))
+    .sort((a,b) => a.cpa - b.cpa);
+
+  // Top partners by spend
+  const byPartner = {};
+  approvedLike.forEach(e => {
+    const key = (e.partner || '(no partner)').trim() || '(no partner)';
+    byPartner[key] = (byPartner[key] || 0) + totalBudget(e);
+  });
+  const partnerRows = Object.entries(byPartner).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+  // Budget variance per event
+  const varianceRows = completed
+    .map(e => ({ name: e.name, budget: totalBudget(e), spend: +e.actualSpend || totalBudget(e) }))
+    .map(r => ({ ...r, diff: r.spend - r.budget }))
+    .sort((a,b) => Math.abs(b.diff) - Math.abs(a.diff))
+    .slice(0, 10);
+
+  document.getElementById('content').innerHTML = `
+    <div class="roi-kpi-grid">
+      <div class="roi-kpi"><div class="rk-label">Total Approved Budget</div><div class="rk-value">${fmt$(totalBudgetSum)}</div><div class="rk-delta">${approvedLike.length} approved events</div></div>
+      <div class="roi-kpi"><div class="rk-label">Actual Spend</div><div class="rk-value">${fmt$(actualSpend)}</div><div class="rk-delta">${completed.length} completed</div></div>
+      <div class="roi-kpi ${variance <= 0 ? 'good' : 'bad'}"><div class="rk-label">Budget Variance</div><div class="rk-value">${variance >= 0 ? '+' : ''}${fmt$(variance)}</div><div class="rk-delta">${variance <= 0 ? 'Under budget' : 'Over budget'}</div></div>
+      <div class="roi-kpi"><div class="rk-label">Total Attendance</div><div class="rk-value">${totalAttendance.toLocaleString()}</div><div class="rk-delta">Completed events</div></div>
+      <div class="roi-kpi"><div class="rk-label">Avg Cost / Attendee</div><div class="rk-value">${cpa ? '$' + cpa.toFixed(2) : '—'}</div><div class="rk-delta">Across completed</div></div>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <h3>Spend by Category <span class="rc-sub">Approved budgets</span></h3>
+        ${Object.entries(budgetByCat).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+          <div class="bar-row">
+            <div class="br-label">${labelize(k)}</div>
+            <div class="br-track"><div class="br-fill" style="width:${(v/maxCat*100).toFixed(1)}%"></div></div>
+            <div class="br-value">${fmt$(v)}</div>
+          </div>
+        `).join('') || '<div style="color:#888">No budget data yet.</div>'}
+      </div>
+
+      <div class="report-card">
+        <h3>Spend by Event Type <span class="rc-sub">Approved + completed</span></h3>
+        ${Object.entries(byType).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+          <div class="bar-row">
+            <div class="br-label">${escapeHtml(k)}</div>
+            <div class="br-track"><div class="br-fill" style="width:${(v/maxType*100).toFixed(1)}%"></div></div>
+            <div class="br-value">${fmt$(v)}</div>
+          </div>
+        `).join('') || '<div style="color:#888">No data yet.</div>'}
+      </div>
+
+      <div class="report-card">
+        <h3>Best Cost-Per-Attendee <span class="rc-sub">Completed events</span></h3>
+        ${cpaRows.length ? `
+          <table class="report-table">
+            <thead><tr><th>Event</th><th class="num">Attend.</th><th class="num">Spend</th><th class="num">$/head</th></tr></thead>
+            <tbody>${cpaRows.slice(0,8).map(r => `
+              <tr><td>${escapeHtml(r.name)}</td><td class="num">${r.att.toLocaleString()}</td><td class="num">${fmt$(r.spend)}</td><td class="num">$${r.cpa.toFixed(2)}</td></tr>
+            `).join('')}</tbody>
+          </table>
+        ` : '<div style="color:#888">Complete an event with attendance data to see ROI here.</div>'}
+      </div>
+
+      <div class="report-card">
+        <h3>Top Partners by Spend <span class="rc-sub">${partnerRows.length} partners</span></h3>
+        ${partnerRows.length ? `
+          <table class="report-table">
+            <thead><tr><th>Partner</th><th class="num">Spend</th></tr></thead>
+            <tbody>${partnerRows.map(([p,v]) => `
+              <tr><td>${escapeHtml(p)}</td><td class="num">${fmt$(v)}</td></tr>
+            `).join('')}</tbody>
+          </table>
+        ` : '<div style="color:#888">No partner data yet.</div>'}
+      </div>
+
+      <div class="report-card wide">
+        <h3>Budget vs Actual (largest variances) <span class="rc-sub">Completed events</span></h3>
+        ${varianceRows.length ? `
+          <table class="report-table">
+            <thead><tr><th>Event</th><th class="num">Budget</th><th class="num">Actual</th><th class="num">Variance</th></tr></thead>
+            <tbody>${varianceRows.map(r => `
+              <tr><td>${escapeHtml(r.name)}</td><td class="num">${fmt$(r.budget)}</td><td class="num">${fmt$(r.spend)}</td><td class="num" style="color:${r.diff>0?'#b91c1c':'#16a34a'};font-weight:700">${r.diff>=0?'+':''}${fmt$(r.diff)}</td></tr>
+            `).join('')}</tbody>
+            <tfoot><tr><td>Total</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.budget,0))}</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.spend,0))}</td><td class="num">${fmt$(varianceRows.reduce((s,r)=>s+r.diff,0))}</td></tr></tfoot>
+          </table>
+        ` : '<div style="color:#888">No completed events yet.</div>'}
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Coverage View (address-based) ---------- */
+function inferCityFromEvent(e) {
+  // 1. Use geocoded city from Nominatim (most accurate)
+  if (e.geo && e.geo.city && e.geo.city.trim()) return e.geo.city.trim();
+  // 2. Parse the entered address string
+  if (e.location) {
+    const parsed = parseCityFromAddress(e.location);
+    if (parsed) return parsed;
+  }
+  // 3. Unspecified — we'll surface this so the user can fix
+  return null;
+}
+
+function inferStateFromEvent(e) {
+  if (e.geo && e.geo.state) return e.geo.state;
+  if (e.location) {
+    const m = e.location.match(/\b(MI|Michigan|OH|Ohio|IN|Indiana|IL|Illinois|WI|Wisconsin)\b/i);
+    if (m) return m[1].length === 2 ? m[1].toUpperCase() : m[1];
+  }
+  return '';
+}
+
+function renderCoverageView() {
+  const byCity = {};
+  const unspecified = [];
+
+  events.forEach(e => {
+    const city = inferCityFromEvent(e);
+    if (!city) { unspecified.push(e); return; }
+    // Normalize key (case-insensitive, trim)
+    const key = city.toLowerCase().replace(/\s+/g, ' ').trim();
+    if (!byCity[key]) {
+      byCity[key] = {
+        displayName: city,
+        state: inferStateFromEvent(e),
+        count: 0, spend: 0, events: [], statuses: {},
+        geocoded: 0
+      };
+    }
+    byCity[key].count++;
+    byCity[key].spend += totalBudget(e);
+    byCity[key].events.push(e);
+    byCity[key].statuses[e.status] = (byCity[key].statuses[e.status] || 0) + 1;
+    if (e.geo && e.geo.lat) byCity[key].geocoded++;
+  });
+
+  const rows = Object.entries(byCity)
+    .map(([key, info]) => ({ key, ...info }))
+    .sort((a,b) => b.spend - a.spend);
+
+  const maxSpend = Math.max(1, ...rows.map(r => r.spend));
+  const totalEvents = events.length - unspecified.length;
+  const totalSpend = rows.reduce((s,r) => s + r.spend, 0);
+  const uniqueCities = rows.length;
+  const totalGeocoded = rows.reduce((s,r) => s + r.geocoded, 0);
+
+  // Group rows by state for an at-a-glance state summary
+  const byState = {};
+  rows.forEach(r => {
+    const st = r.state || '(unknown state)';
+    if (!byState[st]) byState[st] = { cities: 0, count: 0, spend: 0 };
+    byState[st].cities++;
+    byState[st].count += r.count;
+    byState[st].spend += r.spend;
+  });
+
+  document.getElementById('content').innerHTML = `
+    <div class="roi-kpi-grid">
+      <div class="roi-kpi"><div class="rk-label">Cities / Areas</div><div class="rk-value">${uniqueCities}</div><div class="rk-delta">Unique addresses</div></div>
+      <div class="roi-kpi"><div class="rk-label">Mapped Events</div><div class="rk-value">${totalEvents}</div><div class="rk-delta">${totalGeocoded} confirmed via geocode</div></div>
+      <div class="roi-kpi"><div class="rk-label">Total Budget</div><div class="rk-value">${fmt$(totalSpend)}</div><div class="rk-delta">Across mapped cities</div></div>
+      <div class="roi-kpi ${unspecified.length ? 'bad' : 'good'}"><div class="rk-label">Unspecified Address</div><div class="rk-value">${unspecified.length}</div><div class="rk-delta">${unspecified.length ? 'Need a real address' : 'All events have addresses'}</div></div>
+    </div>
+
+    ${Object.keys(byState).length > 1 ? `
+    <div class="report-card wide">
+      <h3>By State / Region</h3>
+      <table class="report-table">
+        <thead><tr><th>Region</th><th class="num">Cities</th><th class="num">Events</th><th class="num">Spend</th></tr></thead>
+        <tbody>${Object.entries(byState).sort((a,b)=>b[1].spend-a[1].spend).map(([st,info]) =>
+          `<tr><td><strong>${escapeHtml(st)}</strong></td><td class="num">${info.cities}</td><td class="num">${info.count}</td><td class="num">${fmt$(info.spend)}</td></tr>`
+        ).join('')}</tbody>
+      </table>
+    </div>
+    ` : ''}
+
+    <div class="report-card wide">
+      <h3>Coverage by City <span class="rc-sub">Grouped strictly by event address</span></h3>
+      <p style="font-size:12px;color:#666;margin-bottom:12px">Cities are inferred from the address you typed; events you've geocoded use Nominatim's confirmed city name. Use the <strong>Map</strong> view to re-geocode any address.</p>
+      <table class="report-table">
+        <thead><tr>
+          <th></th><th>City</th><th>State</th><th class="num">Events</th>
+          <th class="num">Pending</th><th class="num">Approved</th><th class="num">Completed</th>
+          <th class="num">Geocoded</th><th class="num">Budget</th><th>Coverage</th>
+        </tr></thead>
+        <tbody>${rows.map((r, i) => `
+          <tr>
+            <td class="coverage-rank">#${i+1}</td>
+            <td><strong>${escapeHtml(r.displayName)}</strong></td>
+            <td>${escapeHtml(r.state || '—')}</td>
+            <td class="num">${r.count}</td>
+            <td class="num">${r.statuses.pending || 0}</td>
+            <td class="num">${(r.statuses.approved||0) + (r.statuses.executing||0)}</td>
+            <td class="num">${r.statuses.completed || 0}</td>
+            <td class="num">${r.geocoded}/${r.count}</td>
+            <td class="num">${fmt$(r.spend)}</td>
+            <td><div class="br-track" style="height:14px"><div class="br-fill" style="width:${(r.spend/maxSpend*100).toFixed(1)}%"></div></div></td>
+          </tr>
+        `).join('') || '<tr><td colspan="10" style="text-align:center;color:#888;padding:20px">No events with addresses yet.</td></tr>'}</tbody>
+        <tfoot><tr>
+          <td></td><td>Total</td><td></td><td class="num">${totalEvents}</td>
+          <td class="num">${rows.reduce((s,r)=>s+(r.statuses.pending||0),0)}</td>
+          <td class="num">${rows.reduce((s,r)=>s+((r.statuses.approved||0)+(r.statuses.executing||0)),0)}</td>
+          <td class="num">${rows.reduce((s,r)=>s+(r.statuses.completed||0),0)}</td>
+          <td class="num">${totalGeocoded}/${totalEvents}</td>
+          <td class="num">${fmt$(totalSpend)}</td>
+          <td></td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    ${unspecified.length ? `
+    <div class="report-card wide" style="border-top-color:#ef4444">
+      <h3>⚠ Events with no usable address <span class="rc-sub">${unspecified.length} event(s)</span></h3>
+      <p style="font-size:12px;color:#666;margin-bottom:10px">Edit these events and add a proper address (e.g. "123 Main St, Warren, MI 48089") to include them in coverage.</p>
+      <table class="report-table">
+        <thead><tr><th>Event</th><th>Type</th><th>What was entered</th><th class="num">Budget</th><th></th></tr></thead>
+        <tbody>${unspecified.map(e => `
+          <tr>
+            <td><strong>${escapeHtml(e.name)}</strong></td>
+            <td>${escapeHtml(e.type||'—')}</td>
+            <td style="color:#999">${escapeHtml(e.location || '(empty)')}</td>
+            <td class="num">${fmt$(totalBudget(e))}</td>
+            <td><button class="btn ghost small" onclick="openDetail('${e.id}')">Fix →</button></td>
+          </tr>
+        `).join('')}</tbody>
+      </table>
+    </div>
+    ` : ''}
+
+    <div class="report-card wide">
+      <h3>Open Map View</h3>
+      <p style="color:#666;margin-bottom:12px">Switch to <span class="kbd">Map</span> view to see exact event locations color-coded by status, and to geocode any addresses that haven't been confirmed yet.</p>
+      <button class="btn" onclick="setView('map')">📍 Open Map View</button>
+    </div>
+  `;
+}
+
+/* ---------- Monthly Rollup ---------- */
+function renderMonthlyView() {
+  // Group events by year-month
+  const byMonth = {};
+  events.forEach(e => {
+    if (!e.date) return;
+    const ym = e.date.slice(0, 7);
+    if (!byMonth[ym]) byMonth[ym] = { count: 0, budget: 0, spend: 0, attendance: 0, events: [] };
+    byMonth[ym].count++;
+    byMonth[ym].budget += totalBudget(e);
+    if (e.status === 'completed') {
+      byMonth[ym].spend += (+e.actualSpend || totalBudget(e));
+      byMonth[ym].attendance += (+e.actualAttendance || +e.attendance || 0);
+    }
+    byMonth[ym].events.push(e);
+  });
+
+  const months = Object.keys(byMonth).sort();
+  const maxBudget = Math.max(1, ...Object.values(byMonth).map(m => m.budget));
+
+  // Quarterly summary
+  const byQuarter = {};
+  Object.entries(byMonth).forEach(([ym, info]) => {
+    const [y, m] = ym.split('-').map(Number);
+    const q = `${y} Q${Math.floor((m-1)/3) + 1}`;
+    if (!byQuarter[q]) byQuarter[q] = { count: 0, budget: 0, spend: 0, attendance: 0 };
+    byQuarter[q].count += info.count;
+    byQuarter[q].budget += info.budget;
+    byQuarter[q].spend += info.spend;
+    byQuarter[q].attendance += info.attendance;
+  });
+  const quarters = Object.keys(byQuarter).sort();
+
+  document.getElementById('content').innerHTML = `
+    <div class="report-card wide">
+      <h3>Monthly Rollup <span class="rc-sub">${months.length} months of data</span></h3>
+      ${months.length ? `
+        <table class="report-table">
+          <thead><tr><th>Month</th><th class="num">Events</th><th class="num">Approved Budget</th><th class="num">Actual Spend</th><th class="num">Attendance</th><th>Budget</th></tr></thead>
+          <tbody>${months.map(ym => {
+            const info = byMonth[ym];
+            const date = new Date(ym + '-01');
+            const label = date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+            return `
+              <tr>
+                <td><strong>${label}</strong></td>
+                <td class="num">${info.count}</td>
+                <td class="num">${fmt$(info.budget)}</td>
+                <td class="num">${info.spend ? fmt$(info.spend) : '—'}</td>
+                <td class="num">${info.attendance ? info.attendance.toLocaleString() : '—'}</td>
+                <td><div class="br-track" style="height:14px"><div class="br-fill" style="width:${(info.budget/maxBudget*100).toFixed(1)}%"></div></div></td>
+              </tr>
+            `;
+          }).join('')}</tbody>
+        </table>
+      ` : '<div style="color:#888">No date-stamped events yet.</div>'}
+    </div>
+
+    <div class="report-card wide">
+      <h3>Quarterly Summary</h3>
+      ${quarters.length ? `
+        <table class="report-table">
+          <thead><tr><th>Quarter</th><th class="num">Events</th><th class="num">Approved Budget</th><th class="num">Actual Spend</th><th class="num">Attendance</th></tr></thead>
+          <tbody>${quarters.map(q => {
+            const info = byQuarter[q];
+            return `<tr><td><strong>${q}</strong></td><td class="num">${info.count}</td><td class="num">${fmt$(info.budget)}</td><td class="num">${info.spend?fmt$(info.spend):'—'}</td><td class="num">${info.attendance?info.attendance.toLocaleString():'—'}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      ` : ''}
+    </div>
+  `;
+}
+
+/* ---------- Print Report ---------- */
+function renderPrintView() {
+  // Use a default date range: last 90 days to next 90 days
+  const today = new Date();
+  const fmt = d => d.toISOString().slice(0,10);
+  const defaultFrom = fmt(new Date(today.getFullYear(), today.getMonth() - 3, 1));
+  const defaultTo = fmt(new Date(today.getFullYear(), today.getMonth() + 4, 0));
+
+  document.getElementById('content').innerHTML = `
+    <div class="print-controls" id="printControls">
+      <div><label>From</label><input type="date" id="prFrom" value="${defaultFrom}" /></div>
+      <div><label>To</label><input type="date" id="prTo" value="${defaultTo}" /></div>
+      <div><label>Status</label>
+        <select id="prStatus">
+          <option value="all">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="executing">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="denied">Denied</option>
+        </select>
+      </div>
+      <div style="align-self:end"><button class="btn" id="prRefresh">Refresh</button></div>
+      <div style="align-self:end"><button class="btn ghost" onclick="window.print()">🖨 Print / Save PDF</button></div>
+    </div>
+    <div id="printReportArea"></div>
+  `;
+  const draw = () => {
+    const from = document.getElementById('prFrom').value;
+    const to = document.getElementById('prTo').value;
+    const stFilter = document.getElementById('prStatus').value;
+    const filt = events.filter(e => {
+      if (!e.date) return false;
+      if (e.date < from || e.date > to) return false;
+      if (stFilter !== 'all' && e.status !== stFilter) return false;
+      return true;
+    }).sort((a,b) => a.date.localeCompare(b.date));
+    const budget = filt.reduce((s,e) => s + totalBudget(e), 0);
+    const spend = filt.filter(e=>e.status==='completed').reduce((s,e) => s + (+e.actualSpend || totalBudget(e)), 0);
+    const attendance = filt.filter(e=>e.status==='completed').reduce((s,e) => s + (+e.actualAttendance || +e.attendance || 0), 0);
+
+    const fmtRange = `${new Date(from + 'T00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} – ${new Date(to + 'T00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`;
+
+    document.getElementById('printReportArea').innerHTML = `
+      <div class="print-report">
+        <h1>Event & Sponsorship Report</h1>
+        <div class="pr-sub">Priority Waste · ${fmtRange}${stFilter!=='all' ? ' · Status: ' + stFilter : ''}</div>
+        <h2>Summary</h2>
+        <table class="report-table">
+          <tbody>
+            <tr><td>Events in range</td><td class="num">${filt.length}</td></tr>
+            <tr><td>Total approved budget</td><td class="num">${fmt$(budget)}</td></tr>
+            <tr><td>Actual spend (completed)</td><td class="num">${fmt$(spend)}</td></tr>
+            <tr><td>Total attendance (completed)</td><td class="num">${attendance.toLocaleString()}</td></tr>
+            <tr><td>Avg cost / attendee</td><td class="num">${attendance ? '$' + (spend/attendance).toFixed(2) : '—'}</td></tr>
+          </tbody>
+        </table>
+        <h2>Event Details</h2>
+        ${filt.length ? `
+          <table class="report-table">
+            <thead><tr><th>Date</th><th>Event</th><th>Partner</th><th>Status</th><th class="num">Budget</th><th class="num">Actual</th><th class="num">Attendance</th></tr></thead>
+            <tbody>${filt.map(e => `
+              <tr>
+                <td>${fmtDate(e.date)}</td>
+                <td><strong>${escapeHtml(e.name)}</strong><br/><span style="font-size:11px;color:#777">${escapeHtml(e.location||'')}</span></td>
+                <td>${escapeHtml(e.partner||'—')}</td>
+                <td>${e.status}</td>
+                <td class="num">${fmt$(totalBudget(e))}</td>
+                <td class="num">${e.status==='completed' ? fmt$(+e.actualSpend || totalBudget(e)) : '—'}</td>
+                <td class="num">${e.status==='completed' && (+e.actualAttendance || +e.attendance) ? (+e.actualAttendance || +e.attendance).toLocaleString() : '—'}</td>
+              </tr>
+            `).join('')}</tbody>
+          </table>
+        ` : '<div style="color:#888">No events in this range.</div>'}
+        <div style="margin-top:32px;font-size:11px;color:#888;text-align:center">Generated ${new Date().toLocaleString()}</div>
+      </div>
+    `;
+  };
+  draw();
+  document.getElementById('prRefresh').onclick = draw;
+}
+
+/* ---------- Staff Roster View ---------- */
+function renderStaffView() {
+  // Build set of all staff names from events + persisted roster
+  const rosterSet = new Set(getRoster());
+  events.forEach(e => (e.staff || []).forEach(s => rosterSet.add(s)));
+  const roster = [...rosterSet].sort((a,b) => a.localeCompare(b));
+
+  // For each staff person, compute upcoming events
+  const today = new Date(); today.setHours(0,0,0,0);
+  const staffStats = roster.map(name => {
+    const assigned = events.filter(e => (e.staff||[]).includes(name) && ['approved','executing'].includes(e.status));
+    const upcoming = assigned.filter(e => e.date && new Date(e.date+'T00:00') >= today).sort((a,b)=>a.date.localeCompare(b.date));
+    return { name, upcomingCount: upcoming.length, upcoming };
+  });
+
+  document.getElementById('content').innerHTML = `
+    <div class="report-card wide">
+      <h3>Staff Roster <span class="rc-sub">${roster.length} people</span></h3>
+      <p style="color:#666;margin-bottom:12px">People here can be assigned to events. Add names to the roster, or names auto-populate when you assign someone to an event.</p>
+      <div class="export-bar">
+        <input type="text" id="newStaffName" placeholder="Add staff member name..." style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:4px;min-width:200px" />
+        <button class="btn" id="addStaffBtn">+ Add to Roster</button>
+      </div>
+      ${roster.length ? `
+        <table class="report-table">
+          <thead><tr><th>Name</th><th class="num">Upcoming events</th><th>Next 3 events</th><th></th></tr></thead>
+          <tbody>${staffStats.map(s => `
+            <tr>
+              <td><strong>${escapeHtml(s.name)}</strong></td>
+              <td class="num">${s.upcomingCount}</td>
+              <td>${s.upcoming.slice(0,3).map(e => `<div style="font-size:12px">${fmtDate(e.date)} — <span style="color:var(--pw-yellow);font-weight:700">${escapeHtml(e.name)}</span></div>`).join('') || '<span style="color:#999">No upcoming</span>'}</td>
+              <td><button class="btn ghost small" onclick="removeStaffFromRoster('${escapeAttr(s.name)}')">Remove</button></td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      ` : '<div style="color:#888;padding:24px;text-align:center">No staff added yet. Type a name above to get started.</div>'}
+    </div>
+  `;
+  document.getElementById('addStaffBtn').onclick = () => {
+    const input = document.getElementById('newStaffName');
+    const name = (input.value || '').trim();
+    if (!name) return;
+    addStaffToRoster(name);
+    input.value = '';
+    render();
+  };
+  document.getElementById('newStaffName').onkeydown = (ev) => {
+    if (ev.key === 'Enter') { ev.preventDefault(); document.getElementById('addStaffBtn').click(); }
+  };
+}
+
+/* ---------- Roster persistence (localStorage) ---------- */
+const ROSTER_KEY = 'pw_staff_roster';
+function getRoster() {
+  try {
+    const raw = localStorage.getItem(ROSTER_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function setRoster(arr) {
+  try { localStorage.setItem(ROSTER_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function addStaffToRoster(name) {
+  name = (name || '').trim(); if (!name) return;
+  const roster = getRoster();
+  if (!roster.includes(name)) { roster.push(name); setRoster(roster); }
+}
+function removeStaffFromRoster(name) {
+  const inUse = events.some(e => (e.staff||[]).includes(name));
+  if (inUse && !confirm(`${name} is currently assigned to one or more events. Remove from roster anyway? (They will stay on their assigned events.)`)) return;
+  const roster = getRoster().filter(n => n !== name);
+  setRoster(roster);
+  render();
+}
+function escapeAttr(s) { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,"\\'"); }
 
 /* ---------- Detail Modal ---------- */
 function openDetail(id) {
@@ -1602,9 +3350,70 @@ function openDetail(id) {
   const submittedByDisplay = e.submittedBy || (e.log && e.log[0] && e.log[0].by) || '—';
   const isPast = e.date && new Date(e.date + 'T23:59') < new Date();
 
+  // Build task checklist HTML
+  const tasks = e.tasks || [];
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tasksHtml = tasks.length ? tasks.map(t => {
+    const overdue = !t.done && t.due && new Date(t.due + 'T23:59') < new Date();
+    return `
+      <div class="checklist-item ${t.done?'done':''}">
+        <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${e.id}','${t.id}')" />
+        <div class="ci-text">
+          ${escapeHtml(t.title)}
+          ${(t.assignee||t.due||t.doneBy) ? `
+            <div class="ci-meta ${overdue?'overdue':''}">
+              ${t.assignee ? `<span>👤 ${escapeHtml(t.assignee)}</span>` : ''}
+              ${t.due ? `<span>📅 ${overdue?'OVERDUE — ':''}${fmtDate(t.due)}</span>` : ''}
+              ${t.done && t.doneBy ? `<span>✓ by ${escapeHtml(t.doneBy)}</span>` : ''}
+            </div>` : ''}
+        </div>
+        <button class="ci-remove" onclick="removeTask('${e.id}','${t.id}')" title="Remove task">×</button>
+      </div>
+    `;
+  }).join('') : '<div style="color:#888;font-size:12px;padding:8px">No tasks yet. Add one below to start tracking execution.</div>';
+
+  const taskAddHtml = ['approved','executing','pending'].includes(e.status) ? `
+    <div class="checklist-add">
+      <input type="text" id="newTaskTitle" placeholder="New task (e.g. 'Order banner')" />
+      <input type="text" id="newTaskAssignee" list="rosterList" placeholder="Assignee" />
+      <input type="date" id="newTaskDue" />
+      <button type="button" class="btn small" onclick="addTask('${e.id}')">+ Add</button>
+    </div>
+    <datalist id="rosterList">${getRoster().map(n => `<option value="${escapeHtml(n)}">`).join('')}</datalist>
+  ` : '';
+
+  const taskProgress = tasks.length ? (() => {
+    const done = tasks.filter(t => t.done).length;
+    const pct = Math.round((done / tasks.length) * 100);
+    return `<div style="margin-top:6px"><div class="task-progress"><div class="task-progress-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#777;margin-top:4px">${done}/${tasks.length} complete · ${pct}%</div></div>`;
+  })() : '';
+
+  // Build staff section
+  const staffList = e.staff || [];
+  const staffChipsHtml = staffList.length ? staffList.map(name => `
+    <span class="staff-chip">
+      <span class="sc-avatar">${escapeHtml((name||'?').split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase())}</span>
+      ${escapeHtml(name)}
+      ${role==='coordinator' ? `<button onclick="removeStaffFromEvent('${e.id}','${escapeAttr(name)}')" title="Unassign">×</button>` : ''}
+    </span>
+  `).join('') : '<span style="color:#888;font-size:12px">No staff assigned yet.</span>';
+  const staffAddHtml = role === 'coordinator' && e.status !== 'completed' ? `
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+      <input type="text" id="newStaffPick" list="rosterList" placeholder="Type a name (autocomplete from roster)" style="flex:1;padding:8px 10px;border:1px solid #ddd;border-radius:4px;min-width:180px" />
+      <button type="button" class="btn small" onclick="const v=document.getElementById('newStaffPick').value;addStaffToEvent('${e.id}',v);">+ Assign</button>
+    </div>
+  ` : '';
+
   document.getElementById('detailContent').innerHTML = `
     <h2>${escapeHtml(e.name)}</h2>
-    <div class="modal-sub">${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span>${isPast && e.status !== 'completed' ? ' · <span style="color:#EF4444">PAST DATE</span>' : ''}</div>
+    <div class="modal-sub">
+      ${e.type} · ${escapeHtml(e.partner||'No partner listed')} · <span style="color:var(--pw-yellow)">${e.status.toUpperCase()}</span>${isPast && e.status !== 'completed' ? ' · <span style="color:#EF4444">PAST DATE</span>' : ''}
+      ${countdown(e) ? `<span class="countdown-pill ${countdown(e).cls}" style="margin-left:8px">${countdown(e).text}</span>` : ''}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;margin-bottom:6px">
+      <button class="btn ghost small" onclick="downloadEventIcs('${e.id}')" title="Download as .ics for Outlook">📅 Add to Outlook (.ics)</button>
+      ${e.geo && e.geo.lat ? `<button class="btn ghost small" onclick="setView('map');closeDetail();">📍 Show on Map</button>` : ''}
+    </div>
 
     <div class="form-grid">
       <div class="row"><span class="lbl">Date</span><span class="val">${fmtDate(e.date)}</span></div>
@@ -1646,6 +3455,19 @@ function openDetail(id) {
     <fieldset>
       <legend>Deliverables</legend>
       <div style="white-space:pre-wrap">${escapeHtml(e.deliverables||'—')}</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Execution Tasks ${tasks.length ? `(${tasks.filter(t=>t.done).length}/${tasks.length})` : ''}</legend>
+      <div class="checklist">${tasksHtml}</div>
+      ${taskAddHtml}
+      ${taskProgress}
+    </fieldset>
+
+    <fieldset>
+      <legend>Assigned PW Staff${e.staffCount ? ` (${staffList.length}/${e.staffCount} needed)` : ''}</legend>
+      <div class="staff-chips">${staffChipsHtml}</div>
+      ${staffAddHtml}
     </fieldset>
 
     <fieldset>
@@ -1783,6 +3605,48 @@ document.getElementById('newBtn').onclick = () => {
 };
 document.getElementById('cancelForm').onclick = () => document.getElementById('formModal').classList.remove('open');
 
+// Bulk .ics export button (in the list toolbar)
+{
+  const bulkBtn = document.getElementById('exportAllIcs');
+  if (bulkBtn) {
+    bulkBtn.onclick = (ev) => {
+      ev.preventDefault();
+      // If user holds Shift, show subscribe instructions; otherwise bulk download
+      if (ev.shiftKey) {
+        showSubscribeInstructions();
+      } else {
+        // Quick menu via prompt
+        const choice = window.confirm('Click OK for a one-time download (.ics file with all approved + executing events).\n\nClick Cancel to set up a subscribable calendar URL for Outlook.');
+        if (choice) downloadAllIcs();
+        else showSubscribeInstructions();
+      }
+    };
+  }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (ev) => {
+  // Don't trigger if user is typing in an input
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+  // Don't trigger if a modal is open
+  const modalOpen = document.querySelector('.modal-overlay.open');
+  if (modalOpen && ev.key !== 'Escape') return;
+  if (ev.key === 'Escape') {
+    // Close any open modal
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    return;
+  }
+  // 1-9 to switch views
+  const viewMap = { '1':'list', '2':'calendar', '3':'map', '4':'roi', '5':'coverage', '6':'monthly', '7':'print', '8':'staff', '9':'sync' };
+  if (viewMap[ev.key] && VIEW_DEFS[viewMap[ev.key]] && VIEW_DEFS[viewMap[ev.key]].roles.includes(role)) {
+    setView(viewMap[ev.key]);
+  }
+  // 'n' for new event (coordinator only)
+  if (ev.key === 'n' && role === 'coordinator') {
+    document.getElementById('newBtn').click();
+  }
+});
+
 // Wire up the intake-form file picker
 document.getElementById('f_attachInput').onchange = (ev) => handleFormFilesPicked(ev.target.files);
 
@@ -1883,6 +3747,546 @@ function escapeHtml(s) {
 }
 function labelize(k) {
   return ({sponsor:'Sponsorship Fee', marketing:'Marketing/Print', swag:'Swag/Giveaways', staff:'Staff/Travel', equipment:'Equipment/Booth', other:'Other'})[k] || k;
+}
+
+/* ---------- iCalendar (.ics) Export for Outlook / Google / Apple Calendar ---------- */
+function icsEscape(s) {
+  return String(s || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n');
+}
+function icsDateOnly(d) {
+  // YYYY-MM-DD -> YYYYMMDD
+  return d.replace(/-/g, '');
+}
+function icsDateTime(d, t) {
+  // Combine date + time into a floating local datetime (Outlook adopts user's timezone)
+  if (!t) return null;
+  const [hh, mm] = t.split(':');
+  return icsDateOnly(d) + 'T' + (hh||'00').padStart(2,'0') + (mm||'00').padStart(2,'0') + '00';
+}
+function icsAddDays(yyyymmdd, days) {
+  // yyyymmdd to next-day yyyymmdd for DTEND on all-day events
+  const y = parseInt(yyyymmdd.slice(0,4), 10);
+  const m = parseInt(yyyymmdd.slice(4,6), 10) - 1;
+  const d = parseInt(yyyymmdd.slice(6,8), 10);
+  const dt = new Date(Date.UTC(y, m, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return `${dt.getUTCFullYear()}${String(dt.getUTCMonth()+1).padStart(2,'0')}${String(dt.getUTCDate()).padStart(2,'0')}`;
+}
+function icsParseDuration(durationStr) {
+  // Loose parsing: "2 hours" -> 2, "9am–3pm" -> 6, "all day" -> null
+  if (!durationStr) return null;
+  const s = durationStr.toLowerCase();
+  if (/all\s*day/.test(s)) return null;
+  const hourMatch = s.match(/(\d+(\.\d+)?)\s*(h|hr|hour)/);
+  if (hourMatch) return parseFloat(hourMatch[1]);
+  return null;
+}
+function eventToVevent(e) {
+  if (!e.date) return null;
+  const lines = ['BEGIN:VEVENT'];
+  lines.push('UID:' + e.id + '@priority-waste-events');
+  lines.push('DTSTAMP:' + new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''));
+
+  const dt = icsDateTime(e.date, e.time);
+  if (dt) {
+    lines.push('DTSTART:' + dt);
+    const dur = icsParseDuration(e.duration) || 2;
+    const endHours = dur;
+    // Compute end by adding hours
+    const [hh, mm] = (e.time || '00:00').split(':').map(Number);
+    const endTotal = hh * 60 + mm + Math.round(endHours * 60);
+    const endHH = Math.floor(endTotal / 60) % 24;
+    const endMM = endTotal % 60;
+    const endDateOffset = Math.floor(endTotal / 60 / 24);
+    const endDate = endDateOffset > 0 ? icsAddDays(icsDateOnly(e.date), endDateOffset) : icsDateOnly(e.date);
+    lines.push('DTEND:' + endDate + 'T' + String(endHH).padStart(2,'0') + String(endMM).padStart(2,'0') + '00');
+  } else {
+    lines.push('DTSTART;VALUE=DATE:' + icsDateOnly(e.date));
+    lines.push('DTEND;VALUE=DATE:' + icsAddDays(icsDateOnly(e.date), 1));
+  }
+
+  lines.push('SUMMARY:' + icsEscape(`[PW] ${e.name}`));
+  if (e.location) lines.push('LOCATION:' + icsEscape(e.location));
+
+  const descParts = [];
+  if (e.type) descParts.push('Type: ' + e.type);
+  if (e.partner) descParts.push('Partner: ' + e.partner);
+  if (e.contact) descParts.push('Contact: ' + e.contact + (e.contactInfo ? ' (' + e.contactInfo + ')' : ''));
+  if (e.staff && e.staff.length) descParts.push('PW Staff: ' + e.staff.join(', '));
+  descParts.push('Status: ' + (e.status || 'pending').toUpperCase());
+  descParts.push('Budget: $' + totalBudget(e).toLocaleString());
+  if (e.desc) descParts.push('\nDescription:\n' + e.desc);
+  if (e.deliverables) descParts.push('\nDeliverables:\n' + e.deliverables);
+  if (e.tasks && e.tasks.length) {
+    descParts.push('\nTasks:');
+    e.tasks.forEach(t => descParts.push('  [' + (t.done ? 'x' : ' ') + '] ' + t.title + (t.assignee ? ' (' + t.assignee + ')' : '') + (t.due ? ' — due ' + t.due : '')));
+  }
+  descParts.push('\n— Synced from Event & Sponsorship Tracker');
+
+  lines.push('DESCRIPTION:' + icsEscape(descParts.join('\n')));
+  lines.push('STATUS:' + (e.status === 'completed' ? 'CONFIRMED' : e.status === 'denied' ? 'CANCELLED' : 'CONFIRMED'));
+  lines.push('CATEGORIES:' + icsEscape((e.type || 'Event').toUpperCase()));
+
+  // Reminder 1 day before
+  lines.push('BEGIN:VALARM');
+  lines.push('ACTION:DISPLAY');
+  lines.push('DESCRIPTION:' + icsEscape('Event tomorrow: ' + e.name));
+  lines.push('TRIGGER:-P1D');
+  lines.push('END:VALARM');
+
+  lines.push('END:VEVENT');
+  return lines.join('\r\n');
+}
+function buildIcsCalendar(eventList, calName) {
+  const header = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Priority Waste//Event Tracker//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:' + icsEscape(calName || 'Priority Waste Events'),
+    'X-WR-CALDESC:' + icsEscape('Events & sponsorships tracked by Priority Waste')
+  ];
+  const body = eventList.map(eventToVevent).filter(Boolean);
+  return header.concat(body, ['END:VCALENDAR']).join('\r\n');
+}
+function downloadFile(filename, content, mime) {
+  const blob = new Blob([content], { type: mime || 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 200);
+}
+function downloadEventIcs(id) {
+  const e = events.find(x => x.id === id);
+  if (!e) return;
+  if (!e.date) { toast('No date — set a date first'); return; }
+  const ics = buildIcsCalendar([e], 'PW: ' + e.name);
+  const fname = e.name.replace(/[^a-z0-9\-]+/gi, '-').slice(0, 60) + '.ics';
+  downloadFile(fname, ics);
+  toast('📅 .ics downloaded — open it to add to Outlook');
+}
+function downloadAllIcs() {
+  const eligible = events.filter(e => e.date && ['approved','executing'].includes(e.status));
+  if (!eligible.length) { toast('No approved/executing events with dates yet'); return; }
+  const ics = buildIcsCalendar(eligible, 'Priority Waste — All Approved Events');
+  downloadFile('priority-waste-events.ics', ics);
+  toast(`📅 Downloaded ${eligible.length} events as one .ics`);
+}
+function showSubscribeInstructions() {
+  // Generate a fresh feed string and copy URL pattern
+  const eligible = events.filter(e => e.date && ['approved','executing'].includes(e.status));
+  const ics = buildIcsCalendar(eligible, 'Priority Waste — Live Feed');
+  downloadFile('events.ics', ics);
+  alert(
+`Outlook calendar subscription setup (3 steps):
+
+1. The file "events.ics" was just downloaded.
+2. Commit it to your GitHub repo at the root:
+   https://github.com/Priority-Waste/-Event-Sponsorship-Tracker
+3. In Outlook, choose "Add Calendar" → "Subscribe from web" and paste:
+   https://priority-waste.github.io/-Event-Sponsorship-Tracker/events.ics
+
+Outlook will refresh automatically. Re-download + push events.ics whenever you want subscribers to see the latest list.`
+  );
+}
+
+/* ---------- iCalendar Parser (Outlook → Tracker import) ---------- */
+function unfoldIcs(text) {
+  // RFC 5545: lines continued with \r\n followed by a space/tab are folds — unfold them
+  return text.replace(/\r?\n[ \t]/g, '');
+}
+function icsUnescape(s) {
+  return String(s || '')
+    .replace(/\\n/g, '\n')
+    .replace(/\\N/g, '\n')
+    .replace(/\\,/g, ',')
+    .replace(/\\;/g, ';')
+    .replace(/\\\\/g, '\\');
+}
+function parseIcsDate(value) {
+  // Returns { date: 'YYYY-MM-DD', time: 'HH:MM' | '', allDay: boolean }
+  // Handles: 20251215T140000Z, 20251215T140000, 20251215
+  if (!value) return null;
+  const v = String(value).trim();
+  const m = v.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?$/);
+  if (!m) return null;
+  const [, y, mo, d, hh, mm, , z] = m;
+  if (!hh) return { date: `${y}-${mo}-${d}`, time: '', allDay: true };
+  // If Z (UTC), convert to local time; otherwise treat as local
+  let dateObj;
+  if (z) {
+    dateObj = new Date(Date.UTC(+y, +mo - 1, +d, +hh, +mm, 0));
+  } else {
+    dateObj = new Date(+y, +mo - 1, +d, +hh, +mm, 0);
+  }
+  const pad = (n) => String(n).padStart(2, '0');
+  return {
+    date: `${dateObj.getFullYear()}-${pad(dateObj.getMonth()+1)}-${pad(dateObj.getDate())}`,
+    time: `${pad(dateObj.getHours())}:${pad(dateObj.getMinutes())}`,
+    allDay: false
+  };
+}
+function parseIcsCalendar(text) {
+  const unfolded = unfoldIcs(text);
+  const lines = unfolded.split(/\r?\n/);
+  const vevents = [];
+  let current = null;
+  for (const line of lines) {
+    if (line === 'BEGIN:VEVENT') {
+      current = { _props: {} };
+      continue;
+    }
+    if (line === 'END:VEVENT') {
+      if (current) vevents.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) continue;
+    // Parse "PROPERTY[;params]:value"
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) continue;
+    const left = line.slice(0, colonIdx);
+    const value = line.slice(colonIdx + 1);
+    const [propRaw, ...paramParts] = left.split(';');
+    const prop = propRaw.toUpperCase();
+    const params = {};
+    paramParts.forEach(p => {
+      const [k,v] = p.split('=');
+      if (k) params[k.toUpperCase()] = v || '';
+    });
+    current._props[prop] = { value, params };
+  }
+  // Map raw VEVENT props to a friendlier object
+  return vevents.map(v => {
+    const get = (k) => v._props[k]?.value;
+    const dtstart = parseIcsDate(get('DTSTART'));
+    const dtend = parseIcsDate(get('DTEND'));
+    return {
+      uid: get('UID') || '',
+      summary: icsUnescape(get('SUMMARY') || '(no title)'),
+      description: icsUnescape(get('DESCRIPTION') || ''),
+      location: icsUnescape(get('LOCATION') || ''),
+      organizer: icsUnescape((get('ORGANIZER') || '').replace(/^MAILTO:/i, '')),
+      categories: icsUnescape(get('CATEGORIES') || ''),
+      status: (get('STATUS') || '').toLowerCase(),
+      date: dtstart?.date || '',
+      time: dtstart?.time || '',
+      allDay: dtstart?.allDay || false,
+      dtend: dtend,
+      raw: v._props
+    };
+  });
+}
+
+function veventToTrackerEvent(ve, existingMap) {
+  // Compute duration from dtstart/dtend
+  let duration = '';
+  if (ve.time && ve.dtend && ve.dtend.time) {
+    const startMin = +ve.time.split(':')[0] * 60 + +ve.time.split(':')[1];
+    const endMin = +ve.dtend.time.split(':')[0] * 60 + +ve.dtend.time.split(':')[1];
+    const diff = endMin - startMin;
+    if (diff > 0) {
+      const hours = diff / 60;
+      duration = hours === Math.floor(hours) ? `${hours} hour${hours!==1?'s':''}` : `${hours.toFixed(1)} hours`;
+    }
+  }
+  const newEv = {
+    id: 'e_otlk_' + (ve.uid || Math.random().toString(36).slice(2,9)).replace(/[^a-z0-9]/gi,'').slice(0,16),
+    name: (ve.summary || '(untitled)').replace(/^\[PW\]\s*/i,''),
+    type: 'Community Event',
+    partner: ve.organizer || '',
+    date: ve.date || '',
+    time: ve.time || '',
+    duration,
+    location: ve.location || '',
+    contact: ve.organizer || '',
+    contactInfo: '',
+    desc: ve.description || '',
+    deliverables: '',
+    budget: { sponsor: 0, marketing: 0, swag: 0, staff: 0, equipment: 0, other: 0 },
+    attendance: 0,
+    staffCount: 0,
+    roi: '',
+    payment: 'not_requested',
+    status: ve.status === 'cancelled' ? 'denied' : 'pending',
+    source: 'outlook',
+    sourceUid: ve.uid,
+    createdAt: Date.now(),
+    submittedBy: (getSubmitter() || 'Outlook Import'),
+    log: [{ action: 'Imported from Outlook', by: getSubmitter() || 'Outlook Import', note: 'Source UID: ' + (ve.uid||'(none)'), at: Date.now() }],
+    attachments: [],
+    tasks: [],
+    staff: []
+  };
+  return newEv;
+}
+
+async function importIcsText(text, opts = {}) {
+  const { mergeMode = 'skip' } = opts; // 'skip' | 'update' | 'create-new'
+  let parsed;
+  try {
+    parsed = parseIcsCalendar(text);
+  } catch (err) {
+    toast('❌ Could not parse .ics: ' + err.message);
+    return { imported: 0, skipped: 0, updated: 0, total: 0 };
+  }
+  if (!parsed.length) {
+    toast('No events found in that file');
+    return { imported: 0, skipped: 0, updated: 0, total: 0 };
+  }
+  // Filter: only future events + last 90 days
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 90);
+  const filtered = parsed.filter(ve => {
+    if (!ve.date) return false;
+    return new Date(ve.date + 'T00:00') >= cutoff;
+  });
+
+  // Build UID lookup of existing events
+  const existingByUid = {};
+  events.forEach(e => { if (e.sourceUid) existingByUid[e.sourceUid] = e; });
+
+  let imported = 0, skipped = 0, updated = 0;
+  for (const ve of filtered) {
+    const existing = ve.uid ? existingByUid[ve.uid] : null;
+    if (existing) {
+      if (mergeMode === 'skip') { skipped++; continue; }
+      if (mergeMode === 'update') {
+        // Update key fields, preserve workflow data (tasks, staff, payment, status, etc.)
+        const fresh = veventToTrackerEvent(ve, existingByUid);
+        existing.name = fresh.name;
+        existing.date = fresh.date;
+        existing.time = fresh.time;
+        existing.duration = fresh.duration;
+        existing.location = fresh.location;
+        existing.desc = fresh.desc;
+        existing.contact = fresh.contact;
+        existing.log = existing.log || [];
+        existing.log.push({ action: 'Updated from Outlook re-sync', by: getSubmitter() || 'Outlook Import', note: '', at: Date.now() });
+        updated++;
+        continue;
+      }
+    }
+    const newEv = veventToTrackerEvent(ve, existingByUid);
+    events.push(newEv);
+    imported++;
+  }
+  await saveEvents();
+  toast(`📥 Imported ${imported} · Updated ${updated} · Skipped ${skipped}`);
+  return { imported, skipped, updated, total: filtered.length };
+}
+
+async function importIcsFile(file, opts) {
+  const text = await file.text();
+  return importIcsText(text, opts);
+}
+
+async function importIcsUrl(url, opts) {
+  // First try direct fetch (works if the server sends CORS headers — most Outlook feeds don't)
+  let text;
+  try {
+    const resp = await fetch(url, { mode: 'cors' });
+    if (resp.ok) { text = await resp.text(); }
+  } catch (err) {
+    console.log('Direct fetch failed (CORS likely):', err);
+  }
+  // Fall back to a CORS proxy
+  if (!text) {
+    try {
+      const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+      const resp = await fetch(proxyUrl);
+      if (resp.ok) { text = await resp.text(); }
+    } catch (err) {
+      console.log('Proxy fetch failed:', err);
+    }
+  }
+  if (!text) {
+    toast('❌ Could not fetch URL. Outlook feeds usually block cross-origin. Try the file-upload method instead.');
+    return { imported: 0, skipped: 0, updated: 0, total: 0 };
+  }
+  return importIcsText(text, opts);
+}
+
+/* ---------- Sync View (Outlook two-way sync) ---------- */
+const OUTLOOK_URL_KEY = 'pw_outlook_feed_url';
+function getOutlookFeedUrl() {
+  try { return localStorage.getItem(OUTLOOK_URL_KEY) || ''; } catch (e) { return ''; }
+}
+function setOutlookFeedUrl(u) {
+  try { localStorage.setItem(OUTLOOK_URL_KEY, u || ''); } catch (e) {}
+}
+
+function renderSyncView() {
+  const eligible = events.filter(e => e.date && ['approved','executing'].includes(e.status));
+  const completedCt = events.filter(e => e.status === 'completed').length;
+  const imported = events.filter(e => e.source === 'outlook').length;
+  const feedUrl = getOutlookFeedUrl();
+  const ghPagesUrl = 'https://priority-waste.github.io/-Event-Sponsorship-Tracker/events.ics';
+
+  document.getElementById('content').innerHTML = `
+    <div class="roi-kpi-grid">
+      <div class="roi-kpi"><div class="rk-label">Eligible for Export</div><div class="rk-value">${eligible.length}</div><div class="rk-delta">Approved + In Progress</div></div>
+      <div class="roi-kpi"><div class="rk-label">Imported from Outlook</div><div class="rk-value">${imported}</div><div class="rk-delta">Tagged source=outlook</div></div>
+      <div class="roi-kpi"><div class="rk-label">Completed Archive</div><div class="rk-value">${completedCt}</div><div class="rk-delta">Past events</div></div>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <h3>📤 Push to Outlook <span class="rc-sub">Tracker → Outlook</span></h3>
+        <p style="color:#666;margin-bottom:14px;font-size:13px">Generate an .ics file you can drop into Outlook either as a one-time import or a subscribable feed.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+          <button class="btn" onclick="downloadAllIcs()">📅 Download Bulk .ics</button>
+          <button class="btn ghost" onclick="showSubscribeInstructions()">🔄 Set Up Subscribable Feed</button>
+        </div>
+        <div style="background:#f9fafb;padding:14px;border-radius:6px;font-size:12px;color:#555">
+          <strong style="color:var(--pw-black)">Subscribable feed URL (after you push events.ics to GitHub):</strong>
+          <code style="display:block;margin-top:6px;padding:6px 10px;background:#fff;border:1px solid #ddd;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all">${ghPagesUrl}</code>
+          <p style="margin-top:8px">In Outlook: Calendar → Add Calendar → Subscribe from web → paste this URL.</p>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <h3>📥 Pull from Outlook <span class="rc-sub">Outlook → Tracker</span></h3>
+        <p style="color:#666;margin-bottom:14px;font-size:13px">Import meetings from Outlook into the tracker as draft events. Easiest method: export a .ics from Outlook and upload it here. The tracker matches on UID, so re-importing updates the same events instead of duplicating.</p>
+
+        <fieldset style="border:1px solid #ddd;border-radius:6px;padding:14px;margin-bottom:14px">
+          <legend style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:0 6px">Option A — Upload .ics file</legend>
+          <input type="file" id="syncIcsFile" accept=".ics,text/calendar" style="display:none" />
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" onclick="document.getElementById('syncIcsFile').click()">📁 Choose .ics File</button>
+            <select id="syncMergeMode" style="padding:10px 12px;border:1px solid #ddd;border-radius:4px">
+              <option value="skip">If exists: skip</option>
+              <option value="update" selected>If exists: update from Outlook</option>
+              <option value="create-new">Always create new</option>
+            </select>
+          </div>
+          <p style="font-size:11px;color:#888;margin-top:8px">In Outlook: File → Save Calendar → save as .ics. Or in Outlook Web: Settings → Calendar → Export → Save calendar to file.</p>
+        </fieldset>
+
+        <fieldset style="border:1px solid #ddd;border-radius:6px;padding:14px">
+          <legend style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:0 6px">Option B — Subscribe to URL (live sync)</legend>
+          <input type="url" id="syncFeedUrl" placeholder="https://outlook.office365.com/owa/calendar/.../calendar.ics" value="${escapeHtml(feedUrl)}" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:8px" />
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="btn" id="syncFeedBtn">📡 Pull Now</button>
+            <button class="btn ghost small" id="syncSaveUrlBtn">💾 Save URL</button>
+            <span style="font-size:11px;color:#888">CORS may block direct fetch — we'll try a proxy fallback.</span>
+          </div>
+          <p style="font-size:11px;color:#888;margin-top:8px">In Outlook Web: Settings → Calendar → Shared calendars → Publish a calendar → "ICS link". Copy and paste here.</p>
+        </fieldset>
+      </div>
+
+      <div class="report-card wide">
+        <h3>📋 Imported Events <span class="rc-sub">${imported} from Outlook</span></h3>
+        ${imported ? `
+          <table class="report-table">
+            <thead><tr><th>Date</th><th>Event</th><th>Status</th><th>Location</th><th></th></tr></thead>
+            <tbody>${events.filter(e => e.source === 'outlook').sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map(e => `
+              <tr>
+                <td>${fmtDate(e.date)}</td>
+                <td><strong>${escapeHtml(e.name)}</strong></td>
+                <td>${e.status}</td>
+                <td>${escapeHtml(e.location||'—')}</td>
+                <td><button class="btn ghost small" onclick="openDetail('${e.id}')">Open</button></td>
+              </tr>
+            `).join('')}</tbody>
+          </table>
+        ` : '<div style="color:#888;text-align:center;padding:24px">No Outlook-imported events yet. Use the import buttons above.</div>'}
+      </div>
+    </div>
+  `;
+
+  // Wire up handlers
+  document.getElementById('syncIcsFile').onchange = async (ev) => {
+    const f = ev.target.files[0];
+    if (!f) return;
+    const mode = document.getElementById('syncMergeMode').value;
+    const result = await importIcsFile(f, { mergeMode: mode });
+    if (result.imported || result.updated) render();
+  };
+  document.getElementById('syncFeedBtn').onclick = async () => {
+    const url = document.getElementById('syncFeedUrl').value.trim();
+    if (!url) { toast('Enter a URL first'); return; }
+    setOutlookFeedUrl(url);
+    const btn = document.getElementById('syncFeedBtn');
+    btn.disabled = true;
+    btn.textContent = 'Fetching...';
+    const mode = document.getElementById('syncMergeMode').value;
+    const result = await importIcsUrl(url, { mergeMode: mode });
+    btn.disabled = false;
+    btn.textContent = '📡 Pull Now';
+    if (result.imported || result.updated) render();
+  };
+  document.getElementById('syncSaveUrlBtn').onclick = () => {
+    const url = document.getElementById('syncFeedUrl').value.trim();
+    setOutlookFeedUrl(url);
+    toast('URL saved — will be pre-filled on next visit');
+  };
+}
+
+/* ---------- Task management on event detail ---------- */
+async function addTask(eventId) {
+  const e = events.find(x => x.id === eventId);
+  if (!e) return;
+  const title = (document.getElementById('newTaskTitle')?.value || '').trim();
+  if (!title) { toast('Enter a task title'); return; }
+  const assignee = (document.getElementById('newTaskAssignee')?.value || '').trim();
+  const due = (document.getElementById('newTaskDue')?.value || '').trim();
+  e.tasks = e.tasks || [];
+  e.tasks.push({ id: 't_' + Math.random().toString(36).slice(2,8), title, assignee, due, done: false });
+  e.log = e.log || [];
+  e.log.push({ action: `Added task: ${title}`, by: logBy(), note: '', at: Date.now() });
+  if (assignee) addStaffToRoster(assignee);
+  await saveEvents();
+  toast('Task added');
+  openDetail(eventId);
+}
+async function toggleTask(eventId, taskId) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const t = (e.tasks||[]).find(x => x.id === taskId); if (!t) return;
+  t.done = !t.done;
+  t.doneAt = t.done ? Date.now() : null;
+  t.doneBy = t.done ? logBy() : null;
+  e.log = e.log || [];
+  e.log.push({ action: `${t.done ? 'Completed' : 'Reopened'} task: ${t.title}`, by: logBy(), note: '', at: Date.now() });
+  await saveEvents();
+  openDetail(eventId);
+}
+async function removeTask(eventId, taskId) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  const t = (e.tasks||[]).find(x => x.id === taskId);
+  if (!confirm(`Remove task "${t?.title || ''}"?`)) return;
+  e.tasks = (e.tasks || []).filter(x => x.id !== taskId);
+  e.log = e.log || [];
+  e.log.push({ action: `Removed task: ${t?.title || ''}`, by: logBy(), note: '', at: Date.now() });
+  await saveEvents();
+  openDetail(eventId);
+}
+async function addStaffToEvent(eventId, name) {
+  name = (name || '').trim(); if (!name) return;
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  e.staff = e.staff || [];
+  if (e.staff.includes(name)) { toast('Already assigned'); return; }
+  e.staff.push(name);
+  addStaffToRoster(name);
+  e.log = e.log || [];
+  e.log.push({ action: `Assigned staff: ${name}`, by: logBy(), note: '', at: Date.now() });
+  await saveEvents();
+  toast('Assigned');
+  openDetail(eventId);
+}
+async function removeStaffFromEvent(eventId, name) {
+  const e = events.find(x => x.id === eventId); if (!e) return;
+  e.staff = (e.staff || []).filter(s => s !== name);
+  e.log = e.log || [];
+  e.log.push({ action: `Unassigned staff: ${name}`, by: logBy(), note: '', at: Date.now() });
+  await saveEvents();
+  openDetail(eventId);
 }
 
 /* ---------- CSV Import Data ---------- */
