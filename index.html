@@ -2323,7 +2323,45 @@ function subscribeSettings() {
 const uid = () => 'e_' + Math.random().toString(36).slice(2, 9);
 const fmt$ = n => '$' + (Number(n)||0).toLocaleString();
 const fmtDate = d => d ? new Date(d + 'T00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
-const totalBudget = e => Object.values(e.budget||{}).reduce((a,b)=>a+(+b||0),0);
+// Only sum the 6 canonical budget categories. Defensive against:
+//   - strings that look like numbers ("500") — parsed via Number()
+//   - NaN / Infinity / null / undefined — coerced to 0
+//   - negative values — coerced to 0 (budgets cannot be negative)
+//   - rogue keys added accidentally (e.g. budget.tax) — ignored
+const BUDGET_CATEGORIES = ['sponsor','marketing','swag','staff','equipment','other'];
+function safeNum(v) {
+  const n = Number(v);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return n;
+}
+const totalBudget = e => {
+  const b = e?.budget || {};
+  let sum = 0;
+  for (const k of BUDGET_CATEGORIES) sum += safeNum(b[k]);
+  return sum;
+};
+// Returns per-category breakdown for one event (always 6 entries, all numbers ≥ 0)
+function budgetBreakdown(e) {
+  const b = e?.budget || {};
+  const out = {};
+  for (const k of BUDGET_CATEGORIES) out[k] = safeNum(b[k]);
+  return out;
+}
+// Detect any keys on e.budget that aren't recognized — possible data issue
+function unknownBudgetKeys(e) {
+  const b = e?.budget || {};
+  return Object.keys(b).filter(k => !BUDGET_CATEGORIES.includes(k) && safeNum(b[k]) > 0);
+}
+// Effective spend for a completed event — explicit actualSpend if set, else falls back to budget
+function effectiveSpend(e) {
+  const a = Number(e?.actualSpend);
+  if (Number.isFinite(a) && a > 0) return a;
+  return totalBudget(e);
+}
+// Same for attendance
+function effectiveAttendance(e) {
+  return safeNum(e?.actualAttendance) || safeNum(e?.attendance);
+}
 const isArchived = e => e.status === 'completed' || (e.date && new Date(e.date + 'T23:59') < new Date());
 function labelizePayment(p) {
   return ({
@@ -2528,18 +2566,23 @@ function renderStats() {
     completed: events.filter(e=>e.status==='completed').length,
     denied: events.filter(e=>e.status==='denied').length,
   };
-  const totalApproved = events.filter(e=>['approved','executing','completed'].includes(e.status))
-    .reduce((s,e)=>s+totalBudget(e), 0);
-  const totalSpent = events.filter(e=>e.status==='completed')
-    .reduce((s,e)=>s+(+e.actualSpend||totalBudget(e)), 0);
+  // "Approved budget" = only events with status='approved' (NOT executing/completed — those each get their own KPI)
+  const approvedOnly = events.filter(e => e.status === 'approved');
+  const totalApprovedOnly = approvedOnly.reduce((s,e) => s + totalBudget(e), 0);
+  // Total committed = everything approved-or-later (the lifetime view)
+  const committedEvents = events.filter(e => ['approved','executing','completed'].includes(e.status));
+  const totalCommitted = committedEvents.reduce((s,e) => s + totalBudget(e), 0);
+  const totalSpent = events.filter(e => e.status==='completed')
+    .reduce((s,e) => s + (Number.isFinite(+e.actualSpend) && +e.actualSpend > 0 ? +e.actualSpend : totalBudget(e)), 0);
 
   const stats = [
     { label: 'Pending Approval', value: counts.pending, delta: 'Awaiting VP review' },
-    { label: 'Approved', value: counts.approved, delta: 'Ready to execute' },
+    { label: 'Approved (ready)', value: counts.approved, delta: 'Ready to execute' },
     { label: 'In Progress', value: counts.executing, delta: 'Currently executing' },
     { label: 'Completed', value: counts.completed, delta: 'Fiscal year' },
-    { label: 'Approved Budget', value: fmt$(totalApproved), delta: 'Committed budget' },
-    { label: 'Actual Spend', value: fmt$(totalSpent), delta: 'On completed events' },
+    { label: 'Approved $ (status=approved)', value: fmt$(totalApprovedOnly), delta: `${approvedOnly.length} event${approvedOnly.length!==1?'s':''}` },
+    { label: 'Committed $ (lifetime)', value: fmt$(totalCommitted), delta: `Approved + executing + completed (${committedEvents.length})` },
+    { label: 'Actual Spend', value: fmt$(totalSpent), delta: `${counts.completed} completed event${counts.completed!==1?'s':''}` },
   ];
   document.getElementById('stats').innerHTML = stats.map(s=>`
     <div class="stat">
@@ -3225,75 +3268,215 @@ function renderMapView() {
 }
 
 /* ---------- ROI Dashboard ---------- */
+let _roiScope = 'committed';        // 'approved' | 'committed' | 'all' | 'completed'
+let _roiShowBreakdown = false;      // toggled by user
+
+function eventsForRoiScope(scope) {
+  if (scope === 'approved') return events.filter(e => e.status === 'approved');
+  if (scope === 'completed') return events.filter(e => e.status === 'completed');
+  if (scope === 'all') return events.filter(e => e.status !== 'denied');
+  // default 'committed' = approved + executing + completed
+  return events.filter(e => ['approved','executing','completed'].includes(e.status));
+}
+
 function renderRoiView() {
   const completed = events.filter(e => e.status === 'completed');
-  const approvedLike = events.filter(e => ['approved','executing','completed'].includes(e.status));
-  const totalBudgetSum = approvedLike.reduce((s,e) => s + totalBudget(e), 0);
-  const actualSpend = completed.reduce((s,e) => s + (+e.actualSpend || totalBudget(e)), 0);
-  const totalAttendance = completed.reduce((s,e) => s + (+e.actualAttendance || +e.attendance || 0), 0);
+  const scoped = eventsForRoiScope(_roiScope);
+  const totalBudgetSum = scoped.reduce((s,e) => s + totalBudget(e), 0);
+  // Actual spend: only use actualSpend when it was explicitly set on a completed event
+  const actualSpend = completed.reduce((s,e) => {
+    const a = Number(e.actualSpend);
+    return s + (Number.isFinite(a) && a > 0 ? a : totalBudget(e));
+  }, 0);
+  const totalAttendance = completed.reduce((s,e) => s + safeNum(e.actualAttendance || e.attendance), 0);
   const cpa = totalAttendance ? actualSpend / totalAttendance : 0;
-  const variance = completed.reduce((s,e) => s + ((+e.actualSpend || totalBudget(e)) - totalBudget(e)), 0);
+  const variance = completed.reduce((s,e) => {
+    const a = Number(e.actualSpend);
+    const used = (Number.isFinite(a) && a > 0) ? a : totalBudget(e);
+    return s + (used - totalBudget(e));
+  }, 0);
 
-  // Budget by category
+  // Budget by category (only canonical categories — defensive)
   const budgetByCat = { sponsor: 0, marketing: 0, swag: 0, staff: 0, equipment: 0, other: 0 };
-  approvedLike.forEach(e => {
-    Object.entries(e.budget || {}).forEach(([k,v]) => { budgetByCat[k] = (budgetByCat[k]||0) + (+v||0); });
+  scoped.forEach(e => {
+    const b = budgetBreakdown(e);
+    for (const k of BUDGET_CATEGORIES) budgetByCat[k] += b[k];
   });
   const maxCat = Math.max(1, ...Object.values(budgetByCat));
 
   // Spend by event type
   const byType = {};
-  approvedLike.forEach(e => {
-    byType[e.type] = (byType[e.type] || 0) + totalBudget(e);
+  scoped.forEach(e => {
+    byType[e.type || '(no type)'] = (byType[e.type || '(no type)'] || 0) + totalBudget(e);
   });
   const maxType = Math.max(1, ...Object.values(byType));
 
-  // Cost per attendee per event (completed only)
+  // Cost per attendee per event (completed only, attendance > 0)
   const cpaRows = completed
-    .filter(e => (+e.actualAttendance || +e.attendance) > 0)
-    .map(e => ({
-      name: e.name, type: e.type,
-      spend: +e.actualSpend || totalBudget(e),
-      att: +e.actualAttendance || +e.attendance,
-      cpa: ((+e.actualSpend || totalBudget(e)) / (+e.actualAttendance || +e.attendance))
-    }))
+    .filter(e => safeNum(e.actualAttendance || e.attendance) > 0)
+    .map(e => {
+      const att = safeNum(e.actualAttendance || e.attendance);
+      const a = Number(e.actualSpend);
+      const spend = (Number.isFinite(a) && a > 0) ? a : totalBudget(e);
+      return { name: e.name, type: e.type, spend, att, cpa: spend / att };
+    })
     .sort((a,b) => a.cpa - b.cpa);
 
-  // Top partners by spend
+  // Top partners by spend (scoped)
   const byPartner = {};
-  approvedLike.forEach(e => {
-    const key = (e.partner || '(no partner)').trim() || '(no partner)';
+  scoped.forEach(e => {
+    const key = (e.partner || '').trim() || '(no partner)';
     byPartner[key] = (byPartner[key] || 0) + totalBudget(e);
   });
   const partnerRows = Object.entries(byPartner).sort((a,b) => b[1] - a[1]).slice(0, 10);
 
   // Budget variance per event
   const varianceRows = completed
-    .map(e => ({ name: e.name, budget: totalBudget(e), spend: +e.actualSpend || totalBudget(e) }))
-    .map(r => ({ ...r, diff: r.spend - r.budget }))
+    .map(e => {
+      const b = totalBudget(e);
+      const a = Number(e.actualSpend);
+      const spend = (Number.isFinite(a) && a > 0) ? a : b;
+      return { name: e.name, budget: b, spend, diff: spend - b };
+    })
     .sort((a,b) => Math.abs(b.diff) - Math.abs(a.diff))
     .slice(0, 10);
 
   // Leads aggregation
   const allLeads = events.flatMap(e => (e.leads||[]).map(l => ({ ...l, eventName: e.name, eventDate: e.date })));
-  const leadsPipeline = allLeads.reduce((s,l) => s + (+l.value||0), 0);
-  const leadsWon = allLeads.filter(l => l.status === 'won').reduce((s,l) => s + (+l.value||0), 0);
+  const leadsPipeline = allLeads.reduce((s,l) => s + safeNum(l.value), 0);
+  const leadsWon = allLeads.filter(l => l.status === 'won').reduce((s,l) => s + safeNum(l.value), 0);
   const leadsCount = allLeads.length;
   const leadsByStatus = allLeads.reduce((m,l) => { m[l.status||'new'] = (m[l.status||'new']||0) + 1; return m; }, {});
-  // True ROI = (leadsWon - actualSpend) / actualSpend
   const trueRoiPct = actualSpend ? ((leadsWon - actualSpend) / actualSpend * 100) : 0;
 
+  // Data Health checks
+  const healthIssues = [];
+  events.forEach(e => {
+    const unknown = unknownBudgetKeys(e);
+    if (unknown.length) healthIssues.push({ event: e, kind: 'unknown_budget_key', detail: `Unknown budget keys: ${unknown.join(', ')}` });
+    // Negative values
+    Object.entries(e.budget||{}).forEach(([k,v]) => {
+      if (Number.isFinite(+v) && +v < 0) healthIssues.push({ event: e, kind: 'negative_budget', detail: `${k}: ${v}` });
+      if (!Number.isFinite(+v) && v !== undefined && v !== null && v !== '') healthIssues.push({ event: e, kind: 'non_numeric_budget', detail: `${k}: ${JSON.stringify(v)}` });
+    });
+    // Status set but no date
+    if (['approved','executing','completed'].includes(e.status) && !e.date) {
+      healthIssues.push({ event: e, kind: 'missing_date', detail: 'Approved but no date set' });
+    }
+    // Completed but no actual spend or attendance recorded
+    if (e.status === 'completed' && !Number.isFinite(+e.actualSpend) && !e.actualAttendance) {
+      healthIssues.push({ event: e, kind: 'missing_actuals', detail: 'Completed without actual spend or attendance — falling back to budget' });
+    }
+    // Very large budget (data entry sanity check)
+    const tb = totalBudget(e);
+    if (tb > 50000) healthIssues.push({ event: e, kind: 'large_budget', detail: `Total budget ${fmt$(tb)} — verify` });
+  });
+  const issuesByKind = healthIssues.reduce((m,i) => { (m[i.kind] = m[i.kind] || []).push(i); return m; }, {});
+
+  // Build a per-event breakdown table (sorted by total contribution desc) for verification
+  const breakdownRows = scoped
+    .map(e => ({ e, total: totalBudget(e), breakdown: budgetBreakdown(e) }))
+    .sort((a,b) => b.total - a.total);
+
+  const scopeLabels = {
+    approved:  ['Approved (status="approved")',  'Only events still in approved status (haven\'t moved to in-progress yet)'],
+    committed: ['Committed (approved + executing + completed)', 'Everything that ever cleared VP — lifetime view'],
+    all:       ['All (excludes denied)',         'Includes pending submissions'],
+    completed: ['Completed only',                'Closed-out events with actuals']
+  };
+  const [scopeLabel, scopeHint] = scopeLabels[_roiScope];
+
   document.getElementById('content').innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;background:var(--pw-white);padding:12px 16px;border-radius:8px;box-shadow:var(--shadow-card)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#666">Budget scope:</span>
+      ${Object.entries(scopeLabels).map(([k,[lbl]]) =>
+        `<button class="filter-pill ${_roiScope===k?'active':''}" data-roi-scope="${k}">${lbl}</button>`
+      ).join('')}
+      <span style="font-size:11px;color:#888;flex:1;text-align:right">${escapeHtml(scopeHint)}</span>
+    </div>
+
     <div class="roi-kpi-grid">
-      <div class="roi-kpi"><div class="rk-label">Total Approved Budget</div><div class="rk-value">${fmt$(totalBudgetSum)}</div><div class="rk-delta">${approvedLike.length} approved events</div></div>
-      <div class="roi-kpi"><div class="rk-label">Actual Spend</div><div class="rk-value">${fmt$(actualSpend)}</div><div class="rk-delta">${completed.length} completed</div></div>
-      <div class="roi-kpi ${variance <= 0 ? 'good' : 'bad'}"><div class="rk-label">Budget Variance</div><div class="rk-value">${variance >= 0 ? '+' : ''}${fmt$(variance)}</div><div class="rk-delta">${variance <= 0 ? 'Under budget' : 'Over budget'}</div></div>
-      <div class="roi-kpi"><div class="rk-label">Total Attendance</div><div class="rk-value">${totalAttendance.toLocaleString()}</div><div class="rk-delta">Completed events</div></div>
-      <div class="roi-kpi"><div class="rk-label">Avg Cost / Attendee</div><div class="rk-value">${cpa ? '$' + cpa.toFixed(2) : '—'}</div><div class="rk-delta">Across completed</div></div>
+      <div class="roi-kpi"><div class="rk-label">${escapeHtml(scopeLabel.split(' (')[0])} Budget</div><div class="rk-value">${fmt$(totalBudgetSum)}</div><div class="rk-delta">${scoped.length} event${scoped.length!==1?'s':''} · sum of all 6 categories</div></div>
+      <div class="roi-kpi"><div class="rk-label">Actual Spend</div><div class="rk-value">${fmt$(actualSpend)}</div><div class="rk-delta">${completed.length} completed${completed.filter(e => !Number.isFinite(+e.actualSpend) || +e.actualSpend <= 0).length ? ' · ' + completed.filter(e => !Number.isFinite(+e.actualSpend) || +e.actualSpend <= 0).length + ' using budget as fallback' : ''}</div></div>
+      <div class="roi-kpi ${variance <= 0 ? 'good' : 'bad'}"><div class="rk-label">Budget Variance</div><div class="rk-value">${variance >= 0 ? '+' : ''}${fmt$(variance)}</div><div class="rk-delta">${variance <= 0 ? 'Under budget' : 'Over budget'} (completed only)</div></div>
+      <div class="roi-kpi"><div class="rk-label">Attendance</div><div class="rk-value">${totalAttendance.toLocaleString()}</div><div class="rk-delta">Sum across completed events</div></div>
+      <div class="roi-kpi"><div class="rk-label">Cost / Attendee</div><div class="rk-value">${cpa ? '$' + cpa.toFixed(2) : '—'}</div><div class="rk-delta">${cpa ? 'actual spend ÷ attendance' : 'No attendance data yet'}</div></div>
       <div class="roi-kpi ${leadsWon > 0 ? 'good' : ''}"><div class="rk-label">Leads Pipeline</div><div class="rk-value">${fmt$(leadsPipeline)}</div><div class="rk-delta">${leadsCount} total leads</div></div>
       <div class="roi-kpi ${leadsWon > 0 ? 'good' : ''}"><div class="rk-label">Closed Won</div><div class="rk-value">${fmt$(leadsWon)}</div><div class="rk-delta">${leadsByStatus.won||0} won · ${leadsByStatus.lost||0} lost</div></div>
       <div class="roi-kpi ${trueRoiPct >= 0 ? 'good' : 'bad'}"><div class="rk-label">True ROI%</div><div class="rk-value">${actualSpend && leadsWon ? (trueRoiPct >= 0 ? '+' : '') + trueRoiPct.toFixed(0) + '%' : '—'}</div><div class="rk-delta">(won − spend) / spend</div></div>
     </div>
+
+    <div class="report-card wide">
+      <h3>🔬 Verify the Total <span class="rc-sub">Every event contributing to ${fmt$(totalBudgetSum)}</span></h3>
+      <div style="margin-bottom:10px;font-size:13px;color:#555">Sum of <strong>${scoped.length} event${scoped.length!==1?'s':''}</strong> in the <strong>${escapeHtml(_roiScope)}</strong> scope, by total budget (largest first). Each row's total = sponsor + marketing + swag + staff + equipment + other.</div>
+      <button class="btn ghost small" id="roiBreakdownToggle" style="margin-bottom:10px">${_roiShowBreakdown ? 'Hide breakdown' : 'Show full breakdown'}</button>
+      ${_roiShowBreakdown ? `
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Event</th><th>Status</th><th>Date</th>
+              <th class="num">Sponsor</th><th class="num">Marketing</th><th class="num">Swag</th>
+              <th class="num">Staff</th><th class="num">Equipment</th><th class="num">Other</th>
+              <th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>${breakdownRows.map((r, i) => `
+            <tr>
+              <td>${i+1}</td>
+              <td><strong>${escapeHtml(r.e.name)}</strong><br/><span style="font-size:11px;color:#777">${escapeHtml(r.e.partner||'')}</span></td>
+              <td>${escapeHtml(r.e.status||'')}</td>
+              <td>${fmtDate(r.e.date)}</td>
+              <td class="num">${r.breakdown.sponsor ? fmt$(r.breakdown.sponsor) : '—'}</td>
+              <td class="num">${r.breakdown.marketing ? fmt$(r.breakdown.marketing) : '—'}</td>
+              <td class="num">${r.breakdown.swag ? fmt$(r.breakdown.swag) : '—'}</td>
+              <td class="num">${r.breakdown.staff ? fmt$(r.breakdown.staff) : '—'}</td>
+              <td class="num">${r.breakdown.equipment ? fmt$(r.breakdown.equipment) : '—'}</td>
+              <td class="num">${r.breakdown.other ? fmt$(r.breakdown.other) : '—'}</td>
+              <td class="num"><strong>${fmt$(r.total)}</strong></td>
+            </tr>
+          `).join('')}</tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">Total (${breakdownRows.length})</td>
+              <td class="num">${fmt$(budgetByCat.sponsor)}</td>
+              <td class="num">${fmt$(budgetByCat.marketing)}</td>
+              <td class="num">${fmt$(budgetByCat.swag)}</td>
+              <td class="num">${fmt$(budgetByCat.staff)}</td>
+              <td class="num">${fmt$(budgetByCat.equipment)}</td>
+              <td class="num">${fmt$(budgetByCat.other)}</td>
+              <td class="num"><strong>${fmt$(totalBudgetSum)}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      ` : `
+        <p style="font-size:12px;color:#888">Click <strong>Show full breakdown</strong> above to see every event's category-by-category budget that adds up to ${fmt$(totalBudgetSum)}.</p>
+      `}
+    </div>
+
+    ${healthIssues.length ? `
+    <div class="report-card wide" style="border-top-color:#ef4444">
+      <h3>⚠ Data Health Check <span class="rc-sub">${healthIssues.length} potential issue${healthIssues.length>1?'s':''} found</span></h3>
+      <p style="font-size:13px;color:#555;margin-bottom:14px">These flags don't necessarily mean numbers are wrong — they're points to verify. Click any event to inspect it.</p>
+      ${Object.entries(issuesByKind).map(([kind, items]) => {
+        const titles = {
+          large_budget: '💰 Large budgets (>$50k) — confirm data entry',
+          unknown_budget_key: '🔑 Unknown budget categories (legacy/manual data)',
+          negative_budget: '➖ Negative budget values (should be ≥ 0)',
+          non_numeric_budget: '🔤 Non-numeric budget values',
+          missing_date: '📅 Approved but no date',
+          missing_actuals: '📝 Completed without entered actuals — using budget as fallback'
+        };
+        return `
+          <div style="margin-bottom:12px">
+            <strong>${titles[kind] || kind}</strong> (${items.length})
+            <ul style="margin:6px 0 0 20px;font-size:13px">${items.slice(0,10).map(i =>
+              `<li><a href="#" onclick="event.preventDefault();openDetail('${i.event.id}')" style="color:var(--pw-yellow-hover);font-weight:600">${escapeHtml(i.event.name)}</a> — <span style="color:#777">${escapeHtml(i.detail)}</span></li>`
+            ).join('')}${items.length > 10 ? `<li style="color:#888;font-style:italic">+ ${items.length - 10} more…</li>` : ''}</ul>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    ` : ''}
 
     <div class="report-grid">
       <div class="report-card">
@@ -3388,6 +3571,14 @@ function renderRoiView() {
       </div>
     </div>
   `;
+
+  // Wire scope switcher
+  document.querySelectorAll('[data-roi-scope]').forEach(b => {
+    b.onclick = () => { _roiScope = b.dataset.roiScope; render(); };
+  });
+  // Wire breakdown toggle
+  const tog = document.getElementById('roiBreakdownToggle');
+  if (tog) tog.onclick = () => { _roiShowBreakdown = !_roiShowBreakdown; render(); };
 }
 
 /* ---------- Coverage View (address-based) ---------- */
@@ -3549,8 +3740,8 @@ function renderMonthlyView() {
     byMonth[ym].count++;
     byMonth[ym].budget += totalBudget(e);
     if (e.status === 'completed') {
-      byMonth[ym].spend += (+e.actualSpend || totalBudget(e));
-      byMonth[ym].attendance += (+e.actualAttendance || +e.attendance || 0);
+      byMonth[ym].spend += effectiveSpend(e);
+      byMonth[ym].attendance += effectiveAttendance(e);
     }
     byMonth[ym].events.push(e);
   });
@@ -3648,9 +3839,11 @@ function renderPrintView() {
       if (stFilter !== 'all' && e.status !== stFilter) return false;
       return true;
     }).sort((a,b) => a.date.localeCompare(b.date));
-    const budget = filt.reduce((s,e) => s + totalBudget(e), 0);
-    const spend = filt.filter(e=>e.status==='completed').reduce((s,e) => s + (+e.actualSpend || totalBudget(e)), 0);
-    const attendance = filt.filter(e=>e.status==='completed').reduce((s,e) => s + (+e.actualAttendance || +e.attendance || 0), 0);
+    // Only include status that should count toward "approved budget" — exclude denied + pending
+    const approvedOnly = filt.filter(e => ['approved','executing','completed'].includes(e.status));
+    const budget = approvedOnly.reduce((s,e) => s + totalBudget(e), 0);
+    const spend = filt.filter(e=>e.status==='completed').reduce((s,e) => s + effectiveSpend(e), 0);
+    const attendance = filt.filter(e=>e.status==='completed').reduce((s,e) => s + effectiveAttendance(e), 0);
 
     const fmtRange = `${new Date(from + 'T00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} – ${new Date(to + 'T00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`;
 
@@ -3662,7 +3855,7 @@ function renderPrintView() {
         <table class="report-table">
           <tbody>
             <tr><td>Events in range</td><td class="num">${filt.length}</td></tr>
-            <tr><td>Total approved budget</td><td class="num">${fmt$(budget)}</td></tr>
+            <tr><td>Committed budget (approved + executing + completed only · ${approvedOnly.length} of ${filt.length})</td><td class="num">${fmt$(budget)}</td></tr>
             <tr><td>Actual spend (completed)</td><td class="num">${fmt$(spend)}</td></tr>
             <tr><td>Total attendance (completed)</td><td class="num">${attendance.toLocaleString()}</td></tr>
             <tr><td>Avg cost / attendee</td><td class="num">${attendance ? '$' + (spend/attendance).toFixed(2) : '—'}</td></tr>
@@ -3679,8 +3872,8 @@ function renderPrintView() {
                 <td>${escapeHtml(e.partner||'—')}</td>
                 <td>${e.status}</td>
                 <td class="num">${fmt$(totalBudget(e))}</td>
-                <td class="num">${e.status==='completed' ? fmt$(+e.actualSpend || totalBudget(e)) : '—'}</td>
-                <td class="num">${e.status==='completed' && (+e.actualAttendance || +e.attendance) ? (+e.actualAttendance || +e.attendance).toLocaleString() : '—'}</td>
+                <td class="num">${e.status==='completed' ? fmt$(effectiveSpend(e)) : '—'}</td>
+                <td class="num">${e.status==='completed' && effectiveAttendance(e) ? effectiveAttendance(e).toLocaleString() : '—'}</td>
               </tr>
             `).join('')}</tbody>
           </table>
